@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flimp Timeline Generator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background:#fff; color:#000; min-height:100vh; padding:2rem 1rem; line-height:1.5; }
+  .container { max-width:1100px; margin:0 auto; }
+  h1 { font-size:24px; font-weight:600; margin-bottom:4px; }
+  h2 { font-size:18px; font-weight:600; margin-bottom:10px; }
+  h3 { font-size:13px; font-weight:600; margin-bottom:8px; text-transform:uppercase; letter-spacing:.05em; color:#333; }
+  p { font-size:14px; }
+  .subtitle { color:#555; margin-bottom:1.5rem; }
+  .tabs { display:flex; border-bottom:1px solid #ccc; margin-bottom:1.5rem; }
+  .tab { padding:10px 18px; font-size:14px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; color:#666; background:transparent; border-left:none; border-right:none; border-top:none; font-family:inherit; }
+  .tab.active { color:#000; border-bottom-color:#000; font-weight:600; }
+  .card { background:#fff; border:1px solid #ccc; padding:1.25rem; margin-bottom:1rem; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:1rem; }
+  .field { display:flex; flex-direction:column; gap:4px; flex:1; min-width:200px; }
+  .field label { font-size:13px; color:#333; }
+  select, input[type=date], input[type=text], input[type=number] {
+    width:100%; padding:8px 10px; border:1px solid #999; background:#fff; color:#000;
+    font-size:14px; font-family:inherit; outline:none;
+  }
+  select:focus, input:focus { border-color:#000; }
+  .req { color:#000; font-weight:600; }
+  .checkbox-row { display:flex; align-items:flex-start; gap:8px; font-size:14px; cursor:pointer; padding:4px 0; }
+  .checkbox-row input[type=checkbox] { width:15px; height:15px; cursor:pointer; margin-top:3px; }
+  .btn { padding:8px 16px; border:1px solid #000; background:#fff; color:#000; font-size:14px; font-family:inherit; cursor:pointer; }
+  .btn:hover { background:#f0f0f0; }
+  .btn-primary { background:#000; color:#fff; }
+  .btn-primary:hover { background:#333; }
+  .btn-sm { padding:4px 10px; font-size:12px; }
+  .btn-danger { border-color:#a32d2d; color:#a32d2d; }
+  .btn-danger:hover { background:#fceaea; }
+  .deliverable-card { border:1px solid #ccc; padding:1rem; margin-bottom:.75rem; background:#fafafa; }
+  .deliverable-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .deliverable-card-title { font-size:14px; font-weight:600; }
+  .small-hint { font-size:11px; color:#666; margin-top:4px; }
+  .mode-toggle { display:inline-flex; gap:0; border:1px solid #999; margin-bottom:4px; }
+  .mode-btn { padding:6px 14px; cursor:pointer; font-size:13px; border:none; background:#fff; color:#333; font-family:inherit; border-right:1px solid #999; }
+  .mode-btn:last-child { border-right:none; }
+  .mode-btn.active { background:#000; color:#fff; }
+  .mode-btn:hover:not(.active) { background:#f0f0f0; }
+  .mode-toggle.required-unset { border-color:#b8860b; box-shadow: 0 0 0 1px #fff8e0; }
+  .mode-toggle.required-unset .mode-btn { color:#6b4f00; background:#fffaf0; }
+  .result-headline { border:2px solid #000; padding:18px; margin-bottom:1rem; }
+  .result-headline-eyebrow { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#333; margin-bottom:6px; }
+  .result-headline-title { font-size:30px; font-weight:700; margin-bottom:6px; line-height:1.2; }
+  .result-headline-copy { font-size:13px; color:#333; margin-top:10px; padding:10px 12px; background:#f5f5f5; border-left:3px solid #000; }
+  .result-headline-meta { font-size:12px; color:#555; margin-top:8px; }
+  .warning-box { padding:12px 14px; margin-bottom:1rem; border:2px solid #a32d2d; background:#fceaea; }
+  .warning-box.compressed { border-color:#b8860b; background:#fff8e0; }
+  .warning-box.compressed .warning-title { color:#6b4f00; }
+  .warning-box.compressed .warning-body { color:#6b4f00; }
+  .warning-title { font-weight:600; color:#a32d2d; margin-bottom:4px; }
+  .warning-body { font-size:13px; color:#333; }
+  .timeline-grid { display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom:1.5rem; }
+  .timeline-col { border:1px solid #ccc; padding:12px; background:#fff; }
+  .timeline-col.compressed { border-left:4px solid #b8860b; }
+  .timeline-col.infeasible { border-left:4px solid #a32d2d; }
+  .timeline-col.print { border-left:4px solid #000; background:#fafafa; }
+  .timeline-col-header { padding-bottom:10px; border-bottom:1px solid #ddd; margin-bottom:10px; }
+  .timeline-col-title { font-size:14px; font-weight:700; margin-bottom:4px; word-break:break-word; line-height:1.3; }
+  .timeline-col-meta { font-size:12px; color:#555; }
+  .timeline-col-total { font-size:13px; font-weight:600; margin-top:6px; }
+  .phase-block { padding:8px 10px; border-left:3px solid #888; background:#fff; margin-bottom:6px; }
+  .phase-block.kickoff { border-left-color:#3C3489; }
+  .phase-block.production { border-left-color:#185FA5; }
+  .phase-block.qc { border-left-color:#854F0B; }
+  .phase-block.translation { border-left-color:#993556; background:#fafafa; }
+  .phase-block.printmail { border-left-color:#000; background:#f5f5f5; }
+  .phase-block.alternate { border-left-color:#0B6E4F; background:#f3faf6; }
+  .phase-block.approval { border-left-color:#2a7f4e; background:#f0f8f3; }
+  .phase-block.delivery { border-left-color:#000; background:#fff; border-left-width:4px; }
+  .alt-services { margin-left:23px; margin-top:6px; padding:8px 10px; border-left:2px solid #0B6E4F; background:#f3faf6; }
+  .alt-services-label { font-size:11px; font-weight:600; color:#0B6E4F; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }
+  .section-header { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#333; margin:10px 0 6px 0; padding-bottom:3px; border-bottom:1px solid #ddd; }
+  .section-header.alternate { color:#0B6E4F; border-bottom-color:#cde9dc; }
+  .pre-production-card { border:1px solid #3C3489; background:#fafaff; }
+  .pre-prod-list { font-size:13px; color:#333; line-height:1.7; padding-left:22px; }
+  .pre-prod-list li { margin-bottom:3px; }
+  .phase-block.kickoff { border-left-color:#3C3489; background:#f5f4fb; }
+  .project-setup-card { border:2px solid #3C3489; padding:14px 16px; margin-bottom:1rem; background:#f5f4fb; }
+  .project-setup-card .setup-eyebrow { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#3C3489; margin-bottom:6px; }
+  .project-setup-card .setup-title { font-size:14px; font-weight:600; margin-bottom:8px; color:#3C3489; }
+  .production-start-banner { background:#f5f4fb; border-left:3px solid #3C3489; padding:6px 10px; margin:6px 0 10px 0; font-size:12px; color:#3C3489; }
+  .varies-pill { display:inline-block; padding:2px 8px; font-size:11px; font-weight:700; background:#fff8e0; color:#6b4f00; border:1px solid #b8860b; margin-left:6px; }
+  .varies-hint { font-size:11px; color:#6b4f00; font-style:italic; margin-top:2px; }
+  .phase-label { font-size:12px; font-weight:600; display:flex; justify-content:space-between; gap:6px; }
+  .phase-bd { font-size:11px; color:#555; }
+  .phase-dates { font-size:11px; color:#555; margin-top:2px; }
+  .inhand-block { margin-top:10px; padding:8px 10px; border:2px solid #000; background:#fff; font-weight:700; font-size:13px; }
+  .compressed-pill { display:inline-block; padding:2px 8px; font-size:11px; font-weight:700; background:#fff8e0; color:#6b4f00; border:1px solid #b8860b; }
+  .infeasible-pill { display:inline-block; padding:2px 8px; font-size:11px; font-weight:700; background:#fceaea; color:#a32d2d; border:1px solid #a32d2d; }
+  .disclaimer-section { border:1px solid #ccc; padding:1rem; margin-top:1rem; }
+  .disclaimer-list { font-size:12px; color:#444; line-height:1.7; padding-left:18px; }
+  .disclaimer-list li { margin-bottom:5px; }
+  .empty-state { text-align:center; padding:1.5rem; color:#666; font-size:13px; border:1px dashed #ccc; }
+  .bp-example { border-left:3px solid #000; padding:10px 14px; margin:12px 0; background:#fafafa; }
+  .bp-note { padding:12px 14px; background:#fff8e0; border:1px solid #b8860b; margin-bottom:1rem; }
+  .bp-note-title { font-weight:600; color:#6b4f00; margin-bottom:4px; }
+  .bp-note-body { font-size:13px; color:#6b4f00; }
+  .footer-note { font-size:11px; color:#666; margin-top:16px; }
+  .latest-start-section { border:1px solid #ccc; padding:12px 14px; margin-top:1rem; background:#fafafa; }
+  .latest-start-row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; border-bottom:1px dotted #ddd; gap:8px; flex-wrap:wrap; }
+  .latest-start-row:last-child { border-bottom:none; }
+  .latest-start-product { font-weight:500; }
+  .latest-start-date { font-weight:600; }
+  .latest-start-note { font-size:11px; color:#555; margin-left:8px; font-weight:normal; }
+  .sticky-calc { position:sticky; bottom:0; background:#fff; border-top:1px solid #ccc; padding:10px 16px; margin:1rem -1rem 0 -1rem; text-align:center; z-index:10; }
+  optgroup { font-weight:600; }
+  @media print { .input-card,.btn,button,.tabs,.sticky-calc { display:none !important; } .card { border:1px solid #000; } }
+  @media (max-width: 700px) {
+    .timeline-grid { grid-template-columns: minmax(0, 1fr); }
+    .sticky-calc { padding:8px 12px; }
+    .result-headline-title { font-size:22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Flimp Timeline Generator</h1>
+  <p class="subtitle">Add deliverables, select services, see when work needs to start.</p>
+
+  <div class="tabs">
+    <button type="button" class="tab active" id="tab-timeline" onclick="switchTab('timeline')">Timeline</button>
+    <button type="button" class="tab" id="tab-bp" onclick="switchTab('bp')">Best Practices</button>
+  </div>
+
+  <div id="view-timeline">
+    <div class="card">
+      <h3>Project Details</h3>
+      <div class="row">
+        <div class="field">
+          <label>Project due date <span class="req">*</span></label>
+          <input type="date" id="project-due-date" />
+          <div class="small-hint">The date materials need to be <strong>in your office and/or in your employees' hands</strong>. Not your open enrollment date — that's typically later. Default in-hand date used by every deliverable unless overridden below.</div>
+        </div>
+        <div class="field">
+          <label>Client name (optional)</label>
+          <input type="text" id="project-name" placeholder="e.g., Acme Corp" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card pre-production-card">
+      <h3 style="color:#3C3489">Pre-Production Checklist</h3>
+      <div style="font-size:13px;color:#333;margin-bottom:10px">These items must be completed before project kickoff can be scheduled. Pre-production has no allocated time in the project timeline — the longer this takes, the later kickoff begins.</div>
+      <ul class="pre-prod-list">
+        <li>SOW finalized and signed</li>
+        <li>Intake forms completed</li>
+        <li>Branding guidelines provided</li>
+        <li>Logos and assets provided</li>
+        <li>Other project-specific materials (as defined per project)</li>
+      </ul>
+      <div style="font-size:12px;color:#6b4f00;margin-top:10px;padding:8px 10px;background:#fff8e0;border-left:3px solid #b8860b">Project kickoff assumes all pre-production requirements are met. Delays here push the kickoff date and the final delivery date by an equal amount of time.</div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3 style="margin:0">Deliverables</h3>
+        <button type="button" class="btn btn-primary btn-sm" onclick="addDeliverable()">+ Add Deliverable</button>
+      </div>
+      <div id="deliverables-list"></div>
+    </div>
+
+    <div id="results-container"></div>
+
+    <div class="card">
+      <h3>Timeline Assumptions</h3>
+      <ul class="disclaimer-list">
+        <li>Kickoff meeting completed</li>
+        <li>Required intake materials received</li>
+        <li>Branding assets and logos finalized</li>
+        <li>Timely review feedback and approvals provided throughout the project</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Important Notes</h3>
+      <p style="font-size:13px;color:#444;margin-bottom:10px">Projects beginning after the target start date may require adjusted timelines, condensed review cycles, or prioritization of deliverables in order to support the requested delivery timeframe.</p>
+      <p style="font-size:13px;color:#444">Final timelines may vary based on project complexity, scope changes, and turnaround times for feedback, approvals, and required materials.</p>
+    </div>
+
+    <div class="sticky-calc">
+      <button type="button" class="btn btn-primary" onclick="runCalculation()" style="padding:12px 28px;font-size:15px;font-weight:600">Calculate Timeline</button>
+      <button type="button" class="btn" onclick="window.print()" style="padding:12px 20px;font-size:14px;margin-left:8px">Print / Save as PDF</button>
+    </div>
+  </div>
+
+  <div id="view-bp" style="display:none">
+    <div class="card">
+      <h3>Best Practices: Example of a Successful Project</h3>
+      <div class="bp-note">
+        <div class="bp-note-title">This is an example of a project where the client met every deadline.</div>
+        <div class="bp-note-body">Your timeline depends on your responsiveness. Missed milestones extend the project day-for-day.</div>
+      </div>
+      <p style="margin-bottom:12px">A typical Open Enrollment project with three overlapping deliverables, due Monday, August 31, 2026. Each deliverable's advertised weeks include Kickoff lead time, Active production, Final QC, and Final approval. Pre-production (SOW, intake, branding, logos, project-specific materials) is a checklist that must be complete <em>before</em> kickoff — no allocated time, but delays push kickoff and delivery day-for-day. For multi-deliverable projects, one shared kickoff covers all deliverables; renewals with no pre-first-draft changes skip kickoff lead time entirely.</p>
+      <div class="bp-example"><strong>Custom Benefits Guide (Renewal)</strong> — print &amp; mail required. Tool rolls back 10 business days from in-hand for print/mail production. Main production starts mid-June.</div>
+      <div class="bp-example"><strong>Benefits Showcase Microsite</strong> — digital only. Due Aug 31. Runs in parallel with the guide.</div>
+      <div class="bp-example"><strong>Spanish Benefits Guide</strong> — separate deliverable with translation required. Tool rolls back 5 days (renewal) or 10 days (new) from in-hand.</div>
+      <p style="margin-top:16px"><strong>Why this works:</strong> Deliverables run in parallel. Print/mail and translation timing roll back from each in-hand date automatically. The headline Project Start Date reflects the earliest required kickoff across everything.</p>
+      <p style="margin-top:16px"><strong>What breaks this:</strong> Late content delivery, missed review windows, scope changes mid-flight, or trying to compress timelines without acknowledging reduced flexibility.</p>
+    </div>
+  </div>
+
+  <div class="disclaimer-section">
+    <h3>Disclaimers &amp; Disclosures</h3>
+    <ul class="disclaimer-list">
+      <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
+      <li><strong>Estimates represent typical maximums.</strong> Project completion may be faster with prepared content, responsive client/broker reviews, and minimal scope changes.</li>
+      <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates).</li>
+      <li>The <strong>advertised weeks per product</strong> are the <strong>active production timeline</strong>, including Final Client QA &amp; QC (1 business day) and Approval (1 business day) at the end. Short products (under 10 business days) are rendered as a single Production phase. Pre-production is NOT part of the catalog — it lives in the universal 10-business-day minimum pre-production window before the catalog timeline starts.</li>
+      <li><strong>Universal 10-business-day minimum pre-production window:</strong> every project gets a 10-business-day window (minimum) before catalog work begins. This covers sales conversations, scoping, SOW signature, intake forms, providing required materials (branding, logos, plan documents), and scheduling the kickoff call. The kickoff call itself happens inside this window. The window can be longer if scope or stakeholder availability requires — we always welcome starting earlier.</li>
+      <li><strong>Delivery phase:</strong> long products include an explicit Delivery (or Estimated Delivery if print/mail or translation is involved) marker at the end of the phase sequence. The "In hand by" date is the stated due date you entered.</li>
+      <li>Timeline assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
+      <li>Print &amp; Mail: 10 business days rollback from in-hand date. Pricing is quoted and invoiced separately.</li>
+      <li>Translation: up to 5 business days rollback from the in-hand date (applies to both new and renewal projects).</li>
+      <li>Alternate version: 10 business days of development, beginning after main production is complete. Inherits the deliverable's in-hand date.</li>
+      <li><strong>Within a deliverable, services run sequentially:</strong> main translation must complete before alt translation begins (translator is a single resource), and main print/mail must complete before alt print/mail begins (printer is a single resource). This may extend the timeline when both main and alt require the same service.</li>
+      <li><strong>Across deliverables, services run in parallel:</strong> different deliverables are handled by different resources. Multiple deliverables in one project share a single kickoff event but their production phases run independently.</li>
+      <li>Custom pieces cannot be rushed; standard schedule applies regardless of urgency.</li>
+      <li><strong>Renewal definition:</strong> a renewal is the same product as last year with <strong>no significant style or design changes</strong> required before the first draft. If significant changes are required, the project is treated as <strong>New</strong>. Confirm with your account manager that the SOW reflects the work actually needed. Renewals do not change the phase math in this tool — they tend to move faster in practice through reduced pre-production prep.</li>
+      <li><strong>Rounds of revisions have no carry-forward value.</strong> Unused rounds cannot be banked for future projects or used for additional edits after a project closes. If a project finishes ahead of schedule, that does not create a credit toward later work.</li>
+      <li><strong>Project closure:</strong> a project is considered closed when the final distribution email is sent. The final distribution email will not be sent until the client has delivered both final approval and final quality control. After closure, no further edits will be performed on the closed deliverable.</li>
+      <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work. Project managers cannot perform edits to a closed deliverable, and leftover edits cannot be applied to create an alternate without a new SOW.</li>
+      <li><strong>"In-hand date" meaning:</strong> the date you enter as the project due date is the date materials need to be <em>in your office or in your employees' hands</em>. This is typically NOT your open enrollment kickoff date — that is later. Confirm with your account manager which date to use for scoping.</li>
+      <li><strong>Tight timelines are possible</strong> when the client is ready to be highly responsive, has all required materials and final plan decisions in hand at kickoff, and accepts that not all revision rounds may be used. Coordinate with your account manager to confirm scope feasibility before committing to a compressed schedule.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG — v1 simplified. All service offsets are system-controlled.
+// User cannot override these in the UI.
+// ============================================================
+const CONFIG = {
+  print_mail_lead_bd: 10,             // print/mail rollback from in-hand
+  translation_new_bd: 5,              // translation lead — 5 BD universal
+  translation_renewal_bd: 5,          // same as new (no renewal benefit on translation)
+  final_qc_bd: 1,                     // Final QC (internal review)
+  final_approval_bd: 1,               // Final approval (client sign-off)
+  short_product_threshold_bd: 10,     // catalog BD < this = single 'Production' phase
+  alternate_bd: 10,                   // alternate development, sequential after main production
+  compressed_threshold_bd: 10,        // compressed warning threshold
+  varies_default_bd: 15,              // default for 'Varies' products
+  pre_production_window_bd: 10,       // UNIVERSAL 10-BD pre-production window (sales/scoping/SOW/intake/materials/kickoff scheduling)
+  catalog_version: '2026-05-26'
+};
+
+// 2026/27 holidays
+const FLIMP_HOLIDAYS = new Set([
+  '2026-01-01','2026-01-19','2026-02-16','2026-05-25','2026-06-19','2026-07-03',
+  '2026-09-07','2026-10-12','2026-11-11','2026-11-26','2026-11-27','2026-12-24','2026-12-25',
+  '2027-01-01','2027-01-18','2027-02-15','2027-05-31','2027-06-18','2027-07-05',
+  '2027-09-06','2027-10-11','2027-11-11','2027-11-25','2027-11-26','2027-12-24'
+]);
+
+// PRODUCT CATALOG — source of truth for deliverable types and durations.
+// Each deliverable uses duration_new_bd (max BD per Gage's conservative scoping).
+// Renewal currently uses the same total BD; only translation lead differs by new/renewal.
+const PRODUCT_TYPES = [
+  // Benefit Guides — all printable; all support alternates per PDF
+  { id:'premium-bg', category:'Benefit Guide', name:'Premium Benefits Guide', duration_new_bd:30, printable:true, hasAlternateAvailable:true },
+  { id:'custom-bg', category:'Benefit Guide', name:'Custom Benefits Guide', duration_new_bd:40, custom:true, printable:true, hasAlternateAvailable:true },
+  { id:'topical-mini-guide', category:'Benefit Guide', name:'Topical Mini Guide (8-Page)', duration_new_bd:25, printable:true, hasAlternateAvailable:true },
+  { id:'guide-ai-agent', category:'Benefit Guide', name:'Guide-Based Benefits AI Agent', duration_new_bd:10, printable:true, hasAlternateAvailable:true },
+  // Companion Pieces — printable EXCEPT Digital Newsletter; alternates per PDF
+  { id:'baag', category:'Companion Piece', name:'Benefits-at-a-Glance / Home Mailer (4-Page)', duration_new_bd:15, printable:true, hasAlternateAvailable:true },
+  { id:'postcard-flyer-poster', category:'Companion Piece', name:'Postcard, Flyer, Poster, Rate Sheet, Table Tent', duration_new_bd:10, printable:true, hasAlternateAvailable:true },
+  { id:'ppt-presentation', category:'Companion Piece', name:'PPT Benefits Presentation', duration_new_bd:20, printable:true, hasAlternateAvailable:true },
+  { id:'total-rewards', category:'Companion Piece', name:'Total Rewards Statements', duration_new_bd:20, printable:true, hasAlternateAvailable:false },
+  { id:'wallet-card', category:'Companion Piece', name:'Wallet Card / Email Banner / Digital Signage', duration_new_bd:10, printable:true, hasAlternateAvailable:true },
+  { id:'ots-newsletter', category:'Companion Piece', name:'Off-the-Shelf Monthly Newsletter', duration_new_bd:2, printable:true, hasAlternateAvailable:false },
+  { id:'digital-newsletter', category:'Companion Piece', name:'Digital Employee Newsletter', duration_new_bd:10, printable:false, hasAlternateAvailable:false },
+  // Microsites — digital only (no print); alternates per PDF
+  { id:'benefits-showcase', category:'Microsite', name:'Benefits Showcase / New Hire Onboarding Hub', duration_new_bd:30, custom:true, printable:false, hasAlternateAvailable:true },
+  { id:'virtual-benefits-fair', category:'Microsite', name:'Virtual Benefits Fair / Tiled Microsite', duration_new_bd:30, custom:true, printable:false, hasAlternateAvailable:true },
+  { id:'employee-resource-center', category:'Microsite', name:'Employee Resource Center (single-page)', duration_new_bd:20, printable:false, hasAlternateAvailable:false },
+  { id:'microsite-ai-agent', category:'Microsite', name:'Custom Benefits AI Agent for Microsites', duration_new_bd:10, printable:false, hasAlternateAvailable:true },
+  // Digital Postcard — digital only; supports alt for different groups per PDF
+  // duration bumped from 5 → 14 to fit Active production = 10 BD (per Ashleigh)
+  { id:'digital-postcard', category:'Digital Postcard', name:'Digital Postcard', duration_new_bd:14, printable:false, hasAlternateAvailable:true },
+  // Digital Postcard + Video — no alternates per PDF
+  { id:'dp-platinum', category:'Digital Postcard + Video', name:'Digital Postcard + Video — Platinum', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
+  { id:'dp-gold', category:'Digital Postcard + Video', name:'Digital Postcard + Video — Gold', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
+  { id:'dp-silver', category:'Digital Postcard + Video', name:'Digital Postcard + Video — Silver', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
+  { id:'dp-bronze', category:'Digital Postcard + Video', name:'Digital Postcard + Video — Bronze', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
+  // Decision Support — digital, no alternates
+  { id:'decision-support', category:'Decision Support', name:'Medical & Voluntary Decision Support Tool', duration_new_bd:7, printable:false, hasAlternateAvailable:false },
+  { id:'plan-analytics', category:'Decision Support', name:'Medical Plan Analytics & Forecasting', duration_new_bd:7, printable:false, hasAlternateAvailable:false },
+  // Video — no print, no alternates per PDF
+  // Semi-Custom Teaser duration bumped from 5 → 14 (Active production = 10 BD per Ashleigh)
+  { id:'semi-custom-teaser', category:'Video', name:'OE / New Hire Semi-Custom Teaser', duration_new_bd:14, printable:false, hasAlternateAvailable:false },
+  { id:'customized-hr-video', category:'Video', name:'Customized HR Explainer Video', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
+  { id:'fully-custom-video', category:'Video', name:'Fully Custom Video', duration_new_bd:40, custom:true, printable:false, hasAlternateAvailable:false },
+  { id:'straight-conversion', category:'Video', name:'Straight Conversion (PPT to Video)', duration_new_bd:5, printable:false, hasAlternateAvailable:false },
+  { id:'branded-design-video', category:'Video', name:'Branded Design Video', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
+  { id:'custom-creative-video', category:'Video', name:'Custom Creative Video', duration_new_bd:30, custom:true, printable:false, hasAlternateAvailable:false },
+  // Texting — no print, no alternates per PDF and Ashleigh
+  { id:'oe-texting', category:'Texting', name:'Flimp-Managed OE Texting Campaign', duration_new_bd:15, varies:true, printable:false, hasAlternateAvailable:false },
+  { id:'year-round-texting', category:'Texting', name:'Flimp-Managed Year-Round Texting Services', duration_new_bd:15, varies:true, printable:false, hasAlternateAvailable:false },
+  { id:'single-license', category:'Texting', name:'Single Account Texting License', duration_new_bd:5, printable:false, hasAlternateAvailable:false },
+  { id:'single-office-multi-tenant', category:'Texting', name:'Single-Office Multi-Tenant Account License', duration_new_bd:15, varies:true, printable:false, hasAlternateAvailable:false },
+  { id:'multi-office-multi-tenant', category:'Texting', name:'Multi-Office Multi-Tenant Account', duration_new_bd:15, varies:true, printable:false, hasAlternateAvailable:false },
+  { id:'voicemail-drop', category:'Texting', name:'Voicemail Drop (IVR)', duration_new_bd:15, varies:true, printable:false, hasAlternateAvailable:false }
+];
+
+function getProductType(id) { return PRODUCT_TYPES.find(p => p.id === id); }
+
+// ============================================================
+// STATE
+// ============================================================
+let state = { deliverables: [] };
+let nextInstanceId = 1;
+
+// Per-deliverable state shape:
+// { instanceId, productTypeId, newOrRenewal: null|'new'|'renewal',
+//   hasCustomDueDate: false, customDueDate: null,
+//   requiresPrintMail: false, requiresTranslation: false }
+
+
+// ============================================================
+// DATE HELPERS
+// ============================================================
+function isoStr(d) { var y=d.getFullYear(); var m=String(d.getMonth()+1).padStart(2,'0'); var day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; }
+function isWorkingDay(d) { var dow=d.getDay(); if(dow===0||dow===6) return false; return !FLIMP_HOLIDAYS.has(isoStr(d)); }
+function subBDays(date, bd) { var d=new Date(date); var c=0; while(c<bd){ d.setDate(d.getDate()-1); if(isWorkingDay(d)) c++; } return d; }
+function addBDays(date, bd) { var d=new Date(date); var c=0; while(c<bd){ d.setDate(d.getDate()+1); if(isWorkingDay(d)) c++; } return d; }
+function bDaysBetween(start, end) { var s=new Date(start); s.setHours(0,0,0,0); var e=new Date(end); e.setHours(0,0,0,0); if(e<s) return 0; var c=0; var cur=new Date(s); while(cur<e){ cur.setDate(cur.getDate()+1); if(isWorkingDay(cur)) c++; } return c; }
+function fmt(d) { return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' }); }
+function fmtShort(d) { return d.toLocaleDateString('en-US', { month:'short', day:'numeric' }); }
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(t) {
+  document.getElementById('tab-timeline').classList.toggle('active', t==='timeline');
+  document.getElementById('tab-bp').classList.toggle('active', t==='bp');
+  document.getElementById('view-timeline').style.display = t==='timeline' ? '' : 'none';
+  document.getElementById('view-bp').style.display = t==='bp' ? '' : 'none';
+}
+
+// ============================================================
+// STATE MANAGEMENT
+// ============================================================
+function newDeliverable() {
+  return { instanceId: nextInstanceId++, productTypeId:'', newOrRenewal:null, hasCustomDueDate:false, customDueDate:null, requiresPrintMail:false, requiresTranslation:false, hasAlternate:false, alternateRequiresPrintMail:false, alternateRequiresTranslation:false };
+}
+
+function addDeliverable() {
+  state.deliverables.push(newDeliverable());
+  saveState();
+  renderDeliverables();
+}
+
+function removeDeliverable(id) {
+  state.deliverables = state.deliverables.filter(function(d){ return d.instanceId !== id; });
+  if (state.deliverables.length === 0) state.deliverables.push(newDeliverable());
+  renderDeliverables();
+}
+
+function duplicateDeliverable(id) {
+  var src = state.deliverables.find(function(d){ return d.instanceId === id; });
+  if (!src) return;
+  var copy = JSON.parse(JSON.stringify(src));
+  copy.instanceId = nextInstanceId++;
+  var idx = state.deliverables.indexOf(src);
+  state.deliverables.splice(idx + 1, 0, copy);
+  saveState();
+  renderDeliverables();
+}
+
+function updateDeliverableField(id, field, value) {
+  var d = state.deliverables.find(function(x){ return x.instanceId === id; });
+  if (!d) return;
+  d[field] = value;
+  saveState();
+  renderDeliverables();
+}
+
+// ============================================================
+// localStorage PERSISTENCE
+// ============================================================
+var STORAGE_KEY = 'flimp_timeline_v1';
+function saveState() {
+  try {
+    var snap = {
+      deliverables: state.deliverables,
+      projectDueDate: document.getElementById('project-due-date') ? document.getElementById('project-due-date').value : '',
+      projectName: document.getElementById('project-name') ? document.getElementById('project-name').value : '',
+      nextInstanceId: nextInstanceId
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snap));
+  } catch(e) {}
+}
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    var snap = JSON.parse(raw);
+    if (snap && Array.isArray(snap.deliverables) && snap.deliverables.length > 0) {
+      state.deliverables = snap.deliverables;
+      nextInstanceId = snap.nextInstanceId || (Math.max.apply(null, snap.deliverables.map(function(d){return d.instanceId;})) + 1);
+      return { dueDate: snap.projectDueDate, projectName: snap.projectName };
+    }
+  } catch(e) {}
+  return false;
+}
+
+// ============================================================
+// RENDER DELIVERABLES
+// ============================================================
+function renderDeliverables() {
+  var container = document.getElementById('deliverables-list');
+  if (!container) return;
+  if (state.deliverables.length === 0) {
+    container.innerHTML = '<div class="empty-state">No deliverables yet. Click "+ Add Deliverable" to start.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < state.deliverables.length; i++) html += renderDeliverableCard(state.deliverables[i], i);
+  container.innerHTML = html;
+}
+
+function renderDeliverableCard(d, idx) {
+  var pt = getProductType(d.productTypeId);
+  var categories = [];
+  for (var k = 0; k < PRODUCT_TYPES.length; k++) if (categories.indexOf(PRODUCT_TYPES[k].category) < 0) categories.push(PRODUCT_TYPES[k].category);
+  var typeOptions = '<option value="">-- Select deliverable type --</option>';
+  categories.forEach(function(cat){
+    typeOptions += '<optgroup label="' + cat + '">';
+    PRODUCT_TYPES.filter(function(t){ return t.category === cat; }).forEach(function(t){
+      var sel = (d.productTypeId === t.id) ? ' selected' : '';
+      var label = t.name + (t.varies ? ' (Varies)' : '');
+      typeOptions += '<option value="' + t.id + '"' + sel + '>' + label + '</option>';
+    });
+    typeOptions += '</optgroup>';
+  });
+
+  var html = '<div class="deliverable-card">';
+  html += '<div class="deliverable-card-header"><span class="deliverable-card-title">Deliverable ' + (idx+1) + (pt ? ': ' + pt.name : '') + '</span>';
+  html += '<div style="display:flex;gap:6px">';
+  html += '<button type="button" class="btn btn-sm" onclick="duplicateDeliverable(' + d.instanceId + ')">Duplicate</button>';
+  if (state.deliverables.length > 1) html += '<button type="button" class="btn btn-sm btn-danger" onclick="removeDeliverable(' + d.instanceId + ')">Remove</button>';
+  html += '</div></div>';
+
+  html += '<div class="field" style="margin-bottom:10px"><label>Deliverable type <span class="req">*</span></label>';
+  html += '<select onchange="updateDeliverableField(' + d.instanceId + ', &quot;productTypeId&quot;, this.value)">' + typeOptions + '</select></div>';
+
+  if (pt) {
+    var nrSet = d.newOrRenewal === 'new' || d.newOrRenewal === 'renewal';
+    html += '<div style="margin-bottom:10px"><label style="display:block;font-size:13px;color:#333;margin-bottom:4px">Is this a new deliverable or a renewal deliverable?</label>';
+    html += '<div class="mode-toggle">';
+    html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'new' || !nrSet ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;new&quot;)">New</button>';
+    html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'renewal' ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;renewal&quot;)">Renewal</button>';
+    html += '</div>';
+    html += '<div class="small-hint"><strong>Renewal</strong> = same product as last year with no significant style or design changes pre-first-draft. If significant changes are required, select <strong>New</strong> and check with your account manager that the SOW reflects the work needed.</div>';
+    html += '<div class="small-hint" style="margin-top:4px">Up to ' + pt.duration_new_bd + ' business days total (kickoff lead, active production, final QC, and final approval included)' + (pt.varies ? '. Timelines may vary — check with your product manager for estimates.' : '') + '.</div></div>';
+
+    html += '<div style="margin-bottom:8px"><label class="checkbox-row"><input type="checkbox" ' + (d.hasCustomDueDate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasCustomDueDate&quot;, this.checked)"/>';
+    html += '<span>This deliverable has a different due date</span></label>';
+    if (d.hasCustomDueDate) {
+      html += '<div style="margin-left:23px;margin-top:4px"><input type="date" value="' + (d.customDueDate || '') + '" onchange="updateDeliverableField(' + d.instanceId + ', &quot;customDueDate&quot;, this.value)" style="max-width:200px"/></div>';
+    }
+    html += '</div>';
+
+    if (pt.printable) {
+      html += '<div style="margin-bottom:6px"><label class="checkbox-row"><input type="checkbox" ' + (d.requiresPrintMail ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;requiresPrintMail&quot;, this.checked)"/>';
+      html += '<span>Requires print &amp; mail</span></label>';
+      if (d.requiresPrintMail) html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.print_mail_lead_bd + ' business days rollback from in-hand date (system-controlled).</div>';
+      html += '</div>';
+    }
+
+    html += '<div style="margin-bottom:6px"><label class="checkbox-row"><input type="checkbox" ' + (d.requiresTranslation ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;requiresTranslation&quot;, this.checked)"/>';
+    html += '<span>Requires translation</span></label>';
+    if (d.requiresTranslation) {
+      html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.translation_new_bd + ' business days rollback from in-hand date (system-controlled).</div>';
+    }
+    html += '</div>';
+
+    if (pt.hasAlternateAvailable) {
+      html += '<div><label class="checkbox-row"><input type="checkbox" ' + (d.hasAlternate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasAlternate&quot;, this.checked)"/>';
+      html += '<span>Includes an alternate version</span></label>';
+      if (d.hasAlternate) {
+        html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.alternate_bd + ' business days of alternate-version development. Begins after main production is complete. Same in-hand date as the main piece.</div>';
+        html += '<div class="alt-services">';
+        html += '<div class="alt-services-label">Alternate version services</div>';
+        if (pt.printable) {
+          html += '<label class="checkbox-row" style="padding:2px 0"><input type="checkbox" ' + (d.alternateRequiresPrintMail ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;alternateRequiresPrintMail&quot;, this.checked)"/>';
+          html += '<span>Alternate requires print &amp; mail</span></label>';
+          if (d.alternateRequiresPrintMail) html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.print_mail_lead_bd + ' business days rollback for the alternate version. Main print/mail completes before alt print/mail starts (single-resource).</div>';
+        }
+        html += '<label class="checkbox-row" style="padding:2px 0"><input type="checkbox" ' + (d.alternateRequiresTranslation ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;alternateRequiresTranslation&quot;, this.checked)"/>';
+        html += '<span>Alternate requires translation</span></label>';
+        if (d.alternateRequiresTranslation) {
+          var aTBD = CONFIG.translation_new_bd;
+          html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + aTBD + ' business days for the alternate translation. Main translation completes before alt translation starts (single-resource).</div>';
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// ============================================================
+// CALCULATION
+// Phase 13: 4-phase model (Kickoff lead / Active production / Final QC / Final approval)
+// + sequential service blocking + variable kickoff by product class + renewal kickoff = 1 BD
+// ============================================================
+function calcDeliverable(d, projectDue, isMulti) {
+  var pt = getProductType(d.productTypeId);
+  var mainBD = pt.duration_new_bd;
+  // Filter legacy state: clear flags if the product no longer supports them
+  var effRequiresPrintMail = !!(d.requiresPrintMail && pt.printable);
+  var effHasAlternate = !!(d.hasAlternate && pt.hasAlternateAvailable);
+  var effAltRequiresPrintMail = !!(d.alternateRequiresPrintMail && pt.printable && effHasAlternate);
+  var effAltRequiresTranslation = !!(d.alternateRequiresTranslation && effHasAlternate);
+  var statedDue = (d.hasCustomDueDate && d.customDueDate)
+    ? new Date(d.customDueDate + 'T12:00:00')
+    : new Date(projectDue);
+  // In-hand = stated due date (no end cushion). 5-BD window sits at the START of project.
+  var inHand = new Date(statedDue);
+
+  // ---- SERVICES with resource-blocking constraints ----
+  // Translator and printer are single-resource within a deliverable.
+  var altPrintStart = null, altPrintEnd = null;
+  var mainPrintStart = null, mainPrintEnd = null;
+  if (effAltRequiresPrintMail) {
+    altPrintEnd = new Date(inHand);
+    altPrintStart = subBDays(altPrintEnd, CONFIG.print_mail_lead_bd);
+  }
+  if (effRequiresPrintMail) {
+    mainPrintEnd = altPrintStart ? new Date(altPrintStart) : new Date(inHand);
+    mainPrintStart = subBDays(mainPrintEnd, CONFIG.print_mail_lead_bd);
+  }
+
+  var altTransStart = null, altTransEnd = null, altTransBD = 0;
+  var mainTransStart = null, mainTransEnd = null, mainTransBD = 0;
+  if (effAltRequiresTranslation) {
+    altTransBD = d.newOrRenewal === 'renewal' ? CONFIG.translation_renewal_bd : CONFIG.translation_new_bd;
+    altTransEnd = altPrintStart ? new Date(altPrintStart) : new Date(inHand);
+    altTransStart = subBDays(altTransEnd, altTransBD);
+  }
+  if (d.requiresTranslation) {
+    mainTransBD = d.newOrRenewal === 'renewal' ? CONFIG.translation_renewal_bd : CONFIG.translation_new_bd;
+    var mainTransLatest = new Date(inHand);
+    if (mainPrintStart && mainPrintStart < mainTransLatest) mainTransLatest = new Date(mainPrintStart);
+    if (altTransStart && altTransStart < mainTransLatest) mainTransLatest = new Date(altTransStart);
+    mainTransEnd = mainTransLatest;
+    mainTransStart = subBDays(mainTransEnd, mainTransBD);
+  }
+
+  var altDevStart = null, altDevEnd = null;
+  if (effHasAlternate) {
+    if (altTransStart) altDevEnd = new Date(altTransStart);
+    else if (altPrintStart) altDevEnd = new Date(altPrintStart);
+    else altDevEnd = new Date(inHand);
+    altDevStart = subBDays(altDevEnd, CONFIG.alternate_bd);
+  }
+
+  var effectiveMainEnd = new Date(inHand);
+  if (mainTransStart) effectiveMainEnd = new Date(mainTransStart);
+  else if (mainPrintStart) effectiveMainEnd = new Date(mainPrintStart);
+  if (altDevStart && altDevStart < effectiveMainEnd) effectiveMainEnd = new Date(altDevStart);
+
+  // ---- Phase model (Phase 18 — simplified) ----
+  // Long products (catalog >= 10 BD): Active production + Final QC + Final approval = catalog BD
+  // Short products (catalog < 10 BD): single 'Production' phase = catalog BD
+  // No kickoff phase inside catalog. Pre-production lives in universal 5-BD window BEFORE catalog.
+  var phases;
+  var mainStart;
+  var finalQCBD = CONFIG.final_qc_bd;
+  var finalApprovalBD = CONFIG.final_approval_bd;
+
+  if (mainBD >= CONFIG.short_product_threshold_bd) {
+    var activeBD = Math.max(1, mainBD - finalQCBD - finalApprovalBD);
+    var individualSpan = activeBD + finalQCBD + finalApprovalBD;
+    mainStart = subBDays(effectiveMainEnd, individualSpan);
+    var cursor = new Date(mainStart);
+    function place(label, days, cls) {
+      var start = new Date(cursor);
+      var end = addBDays(cursor, Math.max(1, days) - 1);
+      cursor = addBDays(cursor, days);
+      return { label:label, days:days, start:start, end:end, cls:cls };
+    }
+    phases = [
+      place('Active production', activeBD, 'production'),
+      place('Final Client QA & QC', finalQCBD, 'qc'),
+      place('Approval', finalApprovalBD, 'approval')
+    ];
+  } else {
+    mainStart = subBDays(effectiveMainEnd, mainBD);
+    var sEnd = addBDays(mainStart, Math.max(1, mainBD) - 1);
+    phases = [{ label: 'Production', days: mainBD, start: new Date(mainStart), end: sEnd, cls: 'production' }];
+  }
+
+  var elapsedBD = bDaysBetween(mainStart, inHand);
+
+  var today = new Date(); today.setHours(0,0,0,0);
+  var compressedThreshold = addBDays(today, CONFIG.compressed_threshold_bd);
+  var feasibility = 'feasible';
+  if (mainStart < today) feasibility = 'infeasible';
+  else if (mainStart < compressedThreshold) feasibility = 'compressed';
+
+  // Kickoff window start = 5 BD before mainStart (the latest kickoff date)
+  var kickoffWindowStart = subBDays(mainStart, CONFIG.pre_production_window_bd);
+  return {
+    instance: d, productType: pt,
+    mainBD: mainBD, elapsedBD: elapsedBD,
+    mainStart: mainStart, kickoffWindowStart: kickoffWindowStart, effectiveMainEnd: effectiveMainEnd, inHand: inHand, statedDue: statedDue,
+    phases: phases,
+    requiresPrintMail: effRequiresPrintMail, mainPrintStart: mainPrintStart, mainPrintEnd: mainPrintEnd,
+    requiresTranslation: d.requiresTranslation, mainTransStart: mainTransStart, mainTransEnd: mainTransEnd, mainTransBD: mainTransBD,
+    hasAlternate: effHasAlternate, altDevStart: altDevStart, altDevEnd: altDevEnd,
+    alternateRequiresPrintMail: effAltRequiresPrintMail, altPrintStart: altPrintStart, altPrintEnd: altPrintEnd,
+    alternateRequiresTranslation: effAltRequiresTranslation, altTransStart: altTransStart, altTransEnd: altTransEnd, altTransBD: altTransBD,
+    feasibility: feasibility
+  };
+}
+
+// ============================================================
+// MAIN CALCULATION & RENDER
+// ============================================================
+function runCalculation() {
+  var dueDate = document.getElementById('project-due-date').value;
+  var projectName = document.getElementById('project-name').value;
+  var container = document.getElementById('results-container');
+
+  if (!dueDate) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Project due date required</div><div class="warning-body">Enter a project due date above to calculate.</div></div>'; return; }
+  var validDeliverables = state.deliverables.filter(function(d){ return d.productTypeId && getProductType(d.productTypeId); });
+  if (validDeliverables.length === 0) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Select a deliverable type</div><div class="warning-body">Choose a deliverable type for each item before calculating.</div></div>'; return; }
+
+  validDeliverables.forEach(function(d){
+    if (d.newOrRenewal !== 'new' && d.newOrRenewal !== 'renewal') d.newOrRenewal = 'new';
+  });
+
+  var missingCustom = validDeliverables.filter(function(d){ return d.hasCustomDueDate && !d.customDueDate; });
+  if (missingCustom.length > 0) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Deliverable due date required</div><div class="warning-body">For any deliverable with a different due date checked, enter the date.</div></div>'; return; }
+
+  var projectDue = new Date(dueDate + 'T12:00:00');
+  var isMultiProject = validDeliverables.length > 1;
+  var results = validDeliverables.map(function(d){ return calcDeliverable(d, projectDue, isMultiProject); });
+
+  results.sort(function(a, b){ return a.mainStart - b.mainStart; });
+
+  var projectStart = results[0].mainStart;
+  // Universal 10-BD pre-production window BEFORE catalog timeline starts (= X to Y)
+  // Same for solo and multi-deliverable, no per-product variation
+  var projectWindowStart = subBDays(projectStart, CONFIG.pre_production_window_bd);
+  var projectWindowEnd = new Date(projectStart);
+  var driverNames = results.filter(function(r){ return r.mainStart.getTime() === projectStart.getTime(); }).map(function(r){ return r.productType.name; });
+  var drivenBy = driverNames.length === 1 ? driverNames[0]
+                 : driverNames.length === 2 ? (driverNames[0] + ' and ' + driverNames[1])
+                 : (driverNames.slice(0,-1).join(', ') + ', and ' + driverNames[driverNames.length-1]);
+
+  var isMulti = results.length > 1;
+
+  var anyInfeasible = results.some(function(r){ return r.feasibility === 'infeasible'; });
+  var anyCompressed = results.some(function(r){ return r.feasibility === 'compressed'; });
+
+  var html = '';
+
+  if (anyInfeasible) {
+    var infeasList = results.filter(function(r){ return r.feasibility === 'infeasible'; });
+    html += '<div class="warning-box"><div class="warning-title">Very tight timeline — coordinate immediately with your account manager</div><div class="warning-body">The following deliverables require immediate action to meet the in-hand date. Work should be starting now or already underway:<ul style="margin-top:6px;margin-left:18px">';
+    infeasList.forEach(function(r){ html += '<li>' + r.productType.name + ' (work would need to begin by ' + fmt(r.mainStart) + ')</li>'; });
+    html += '</ul>This is achievable with full client readiness — required materials in hand, all plan decisions finalized, and accepting that revision rounds may be condensed. If the schedule cannot accommodate immediate kickoff, discuss adjusting the in-hand date or scope with your account manager.</div></div>';
+  }
+  if (anyCompressed && !anyInfeasible) {
+    html += '<div class="warning-box compressed"><div class="warning-title">Tight timeline</div><div class="warning-body">This is a tight timeline. To meet the in-hand date, the client should be ready to: respond quickly to reviews, have all required materials and final plan decisions ready at kickoff, and accept that not all revision rounds may be used. Coordinate with your account manager to confirm the scope is workable.</div></div>';
+  }
+
+  html += '<div class="result-headline">';
+  // Pre-production recommended start — supporting block above the main title
+  html += '<div class="pre-prod-recommend">Recommended pre-production start: <strong>' + fmt(projectWindowStart) + '</strong> <em>(or earlier — earlier is always welcome)</em></div>';
+  html += '<div class="result-headline-eyebrow">Production Start Date</div>';
+  html += '<div class="result-headline-title">' + fmt(projectWindowEnd) + '</div>';
+  html += '<div class="result-headline-copy">Active production begins on this date. All pre-production must be complete by now — SOW signed, intake forms in, materials provided, and the kickoff call <strong>held</strong> (not just scheduled).</div>';
+  html += '<div class="kickoff-warning"><strong>Watch the kickoff call.</strong> Scheduling the kickoff call is a frequent point of slippage — even when everything else is ready. Clients often finish SOW, intake, and materials within days but can\'t get all required participants together for two weeks. <strong>Get the kickoff call on the calendar as soon as your SOW is signed</strong>; production cannot officially begin without it.</div>';
+  html += '<div class="pre-prod-window-detail">The ' + CONFIG.pre_production_window_bd + ' business days before the production start are for SOW signature, intake forms, providing required materials (branding, logos, plan documents), and scheduling + holding the kickoff call. ' + CONFIG.pre_production_window_bd + ' business days is a recommended minimum — more time is welcome.</div>';
+  html += '<div class="result-headline-meta">Driven by: <strong>' + drivenBy + '</strong> &middot; In-hand date: ' + fmt(projectDue) + (projectName ? ' &middot; ' + projectName : '') + ' &middot; ' + results.length + ' deliverable' + (results.length===1?'':'s') + '</div>';
+  html += '</div>';
+
+  // Phase 18: shared kickoff card removed — universal pre-production window in headline covers it.
+
+  html += '<div class="timeline-grid">';
+  results.forEach(function(r){
+    var hasAnyPrint = r.requiresPrintMail || r.alternateRequiresPrintMail;
+    var colCls = r.feasibility === 'infeasible' ? 'infeasible' : (r.feasibility === 'compressed' ? 'compressed' : (hasAnyPrint ? 'print' : ''));
+    html += '<div class="timeline-col ' + colCls + '">';
+    html += '<div class="timeline-col-header">';
+    html += '<div class="timeline-col-title">' + r.productType.name + '</div>';
+    html += '<div class="timeline-col-meta">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New');
+    if (r.productType.custom) html += ' &middot; Custom — cannot be rushed';
+    if (r.instance.hasCustomDueDate) html += ' &middot; Custom due date';
+    if (r.hasAlternate) html += ' &middot; Includes alternate';
+    if (r.productType.varies) html += ' &middot; <span class="varies-pill">Varies</span>';
+    html += '</div>';
+    if (r.productType.varies) html += '<div class="varies-hint">Timelines may vary — check with your product manager for estimates.</div>';
+    if (r.feasibility === 'infeasible') html += '<div style="margin-top:6px"><span class="infeasible-pill">Very tight</span></div>';
+    else if (r.feasibility === 'compressed') html += '<div style="margin-top:6px"><span class="compressed-pill">Tight</span></div>';
+    html += '<div class="timeline-col-total">Up to ' + r.elapsedBD + ' business days from kickoff to in-hand</div>';
+    html += '</div>';
+
+    html += '<div class="section-header">Main Piece</div>';
+    var phasesToRender = isMulti ? r.phases.filter(function(ph){ return ph.cls !== 'kickoff'; }) : r.phases;
+    if (isMulti && phasesToRender.length > 0) {
+      var firstProdPhase = phasesToRender[0];
+      html += '<div class="production-start-banner">Production begins: <strong>' + fmt(firstProdPhase.start) + '</strong></div>';
+    }
+    phasesToRender.forEach(function(ph){
+      html += '<div class="phase-block ' + ph.cls + '">';
+      html += '<div class="phase-label"><span>' + ph.label + '</span><span class="phase-bd">up to ' + ph.days + ' business days</span></div>';
+      html += '<div class="phase-dates">' + fmtShort(ph.start) + ' → ' + fmtShort(ph.end) + '</div>';
+      html += '</div>';
+    });
+    if (r.requiresTranslation && r.mainTransStart) {
+      html += '<div class="phase-block translation">';
+      html += '<div class="phase-label"><span>Translation</span><span class="phase-bd">up to ' + r.mainTransBD + ' business days</span></div>';
+      html += '<div class="phase-dates">' + fmtShort(r.mainTransStart) + ' → ' + fmtShort(r.mainTransEnd) + '</div>';
+      html += '<div class="small-hint">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New') + ' translation lead, rolled back from in-hand.</div>';
+      html += '</div>';
+    }
+    if (r.requiresPrintMail && r.mainPrintStart) {
+      html += '<div class="phase-block printmail">';
+      html += '<div class="phase-label"><span>Print &amp; Mail</span><span class="phase-bd">up to ' + CONFIG.print_mail_lead_bd + ' business days</span></div>';
+      html += '<div class="phase-dates">' + fmtShort(r.mainPrintStart) + ' → ' + fmtShort(r.mainPrintEnd) + '</div>';
+      html += '<div class="small-hint">' + CONFIG.print_mail_lead_bd + ' business days rollback from in-hand date.</div>';
+      html += '</div>';
+    }
+
+    if (r.hasAlternate && r.altDevStart) {
+      html += '<div class="section-header alternate">Alternate Version</div>';
+      html += '<div class="phase-block alternate">';
+      html += '<div class="phase-label"><span>Alternate Development</span><span class="phase-bd">up to ' + CONFIG.alternate_bd + ' business days</span></div>';
+      html += '<div class="phase-dates">' + fmtShort(r.altDevStart) + ' → ' + fmtShort(r.altDevEnd) + '</div>';
+      html += '<div class="small-hint">Begins after main production is complete.</div>';
+      html += '</div>';
+      if (r.alternateRequiresTranslation && r.altTransStart) {
+        html += '<div class="phase-block translation">';
+        html += '<div class="phase-label"><span>Alternate Translation</span><span class="phase-bd">up to ' + r.altTransBD + ' business days</span></div>';
+        html += '<div class="phase-dates">' + fmtShort(r.altTransStart) + ' → ' + fmtShort(r.altTransEnd) + '</div>';
+        html += '<div class="small-hint">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New') + ' translation lead for the alternate. Runs after main translation.</div>';
+        html += '</div>';
+      }
+      if (r.alternateRequiresPrintMail && r.altPrintStart) {
+        html += '<div class="phase-block printmail">';
+        html += '<div class="phase-label"><span>Alternate Print &amp; Mail</span><span class="phase-bd">up to ' + CONFIG.print_mail_lead_bd + ' business days</span></div>';
+        html += '<div class="phase-dates">' + fmtShort(r.altPrintStart) + ' → ' + fmtShort(r.altPrintEnd) + '</div>';
+        html += '<div class="small-hint">' + CONFIG.print_mail_lead_bd + ' business days rollback for the alternate version. Runs after main print/mail.</div>';
+        html += '</div>';
+      }
+    }
+
+    // Delivery phase block (long products only) — sits after services, before In-hand capstone
+    if (r.mainBD >= CONFIG.short_product_threshold_bd) {
+      var hasAnyService = r.requiresPrintMail || r.requiresTranslation || (r.hasAlternate && (r.alternateRequiresPrintMail || r.alternateRequiresTranslation));
+      var deliveryLabel = hasAnyService ? 'Estimated Delivery' : 'Delivery';
+      html += '<div class="phase-block delivery">';
+      html += '<div class="phase-label"><span>' + deliveryLabel + '</span><span class="phase-bd"></span></div>';
+      html += '<div class="phase-dates"><strong>' + fmt(r.statedDue) + '</strong></div>';
+      html += '</div>';
+    }
+    html += '<div class="inhand-block">In hand by: ' + fmt(r.statedDue) + (r.hasAlternate ? ' (main &amp; alternate)' : '') + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  html += '<div class="latest-start-section">';
+  html += '<h3 style="margin-top:0">' + (isMulti ? 'Recommended production start dates per deliverable' : 'Recommended kickoff dates per deliverable') + '</h3>';
+  html += '<div style="font-size:12px;color:#555;margin-bottom:8px">' + (isMulti
+    ? 'For each deliverable, here\'s when active production should begin to comfortably meet the in-hand date. Earlier starts give more breathing room for reviews and revisions. Shorter deliverables start later.'
+    : 'For best results, plan to start work by the date shown. Earlier starts give more breathing room for reviews and revisions. Shorter timelines are possible with client responsiveness and ready materials.') + '</div>';
+  results.forEach(function(r){
+    var drives = r.mainStart.getTime() === projectStart.getTime();
+    var tags = [];
+    if (r.requiresPrintMail) tags.push('print & mail');
+    if (r.requiresTranslation) tags.push('translation');
+    if (r.hasAlternate) {
+      var altTags = ['alternate'];
+      if (r.alternateRequiresTranslation) altTags.push('alt translation');
+      if (r.alternateRequiresPrintMail) altTags.push('alt print & mail');
+      tags.push(altTags.join(' + '));
+    }
+    var tagStr = tags.length ? ' (' + tags.join('; ') + ')' : '';
+    var rowDate = r.mainStart;
+    if (isMulti) {
+      var firstProd = r.phases.filter(function(p){ return p.cls !== 'kickoff'; })[0];
+      if (firstProd) rowDate = firstProd.start;
+    }
+    html += '<div class="latest-start-row">';
+    html += '<span class="latest-start-product">' + r.productType.name + tagStr + '</span>';
+    html += '<span class="latest-start-date">' + fmt(rowDate);
+    if (drives && !isMulti) html += ' <span class="latest-start-note">(drives Project Start Date)</span>';
+    if (drives && isMulti) html += ' <span class="latest-start-note">(longest deliverable — drives shared kickoff)</span>';
+    if (r.feasibility === 'compressed') html += ' <span class="compressed-pill" style="margin-left:6px">Tight</span>';
+    if (r.feasibility === 'infeasible') html += ' <span class="infeasible-pill" style="margin-left:6px">Very tight</span>';
+    html += '</span></div>';
+  });
+  html += '</div>';
+  html += '<div class="footer-note">Calendar excludes weekends and 2026/27 holidays. <strong>Universal ' + CONFIG.pre_production_window_bd + '-business-day pre-production window</strong> at project start covers sales, scoping, SOW, intake, materials, and kickoff scheduling. Each deliverable\'s catalog = Active production + Final QC (1 BD) + Final approval (1 BD). Short products (under 10 BD) are a single Production phase. Within a deliverable, main translation completes before alt translation, and main print/mail before alt print/mail (single-resource). Print &amp; mail: up to ' + CONFIG.print_mail_lead_bd + ' BD rollback. Translation: up to ' + CONFIG.translation_new_bd + ' BD. Alternate dev: up to ' + CONFIG.alternate_bd + ' BD. System-controlled.</div>';
+
+  container.innerHTML = html;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function initialize() {
+  var today = new Date();
+  var defaultDue = new Date(today); defaultDue.setDate(defaultDue.getDate() + 90);
+  var dueInput = document.getElementById('project-due-date');
+  var restored = loadState();
+  if (restored) {
+    if (dueInput && restored.dueDate) dueInput.value = restored.dueDate;
+    var nameInput = document.getElementById('project-name');
+    if (nameInput && restored.projectName) nameInput.value = restored.projectName;
+  }
+  if (dueInput) {
+    if (!dueInput.value) dueInput.value = defaultDue.toISOString().split('T')[0];
+    dueInput.min = today.toISOString().split('T')[0];
+    dueInput.addEventListener('change', saveState);
+  }
+  var nameInput2 = document.getElementById('project-name');
+  if (nameInput2) nameInput2.addEventListener('input', saveState);
+  if (state.deliverables.length === 0) state.deliverables.push(newDeliverable());
+  renderDeliverables();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initialize);
+} else {
+  initialize();
+}
+</script>
+</body>
+</html>
