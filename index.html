@@ -188,6 +188,7 @@
     <div class="sticky-calc">
       <button type="button" class="btn btn-primary" onclick="runCalculation()" style="padding:12px 28px;font-size:15px;font-weight:600">Calculate Timeline</button>
       <button type="button" class="btn" onclick="window.print()" style="padding:12px 20px;font-size:14px;margin-left:8px">Print / Save as PDF</button>
+      <button type="button" class="btn" onclick="resetProject()" style="padding:12px 20px;font-size:14px;margin-left:8px">Reset / Start Over</button>
     </div>
   </div>
 
@@ -410,6 +411,24 @@ function loadState() {
     }
   } catch(e) {}
   return false;
+}
+
+// Phase 23: explicit reset action — clear all state without a page reload.
+function resetProject() {
+  if (!confirm('Reset all fields and start a fresh project? This will clear all deliverables, the due date, and the client name.')) return;
+  state.deliverables = [newDeliverable()];
+  var dueInput = document.getElementById('project-due-date');
+  var nameInput = document.getElementById('project-name');
+  var results = document.getElementById('results-container');
+  if (dueInput) {
+    var today = new Date();
+    var defaultDue = new Date(today); defaultDue.setDate(defaultDue.getDate() + 90);
+    dueInput.value = defaultDue.toISOString().split('T')[0];
+  }
+  if (nameInput) nameInput.value = '';
+  if (results) results.innerHTML = '';
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  renderDeliverables();
 }
 
 // ============================================================
@@ -819,14 +838,10 @@ function initialize() {
   var today = new Date();
   var defaultDue = new Date(today); defaultDue.setDate(defaultDue.getDate() + 90);
   var dueInput = document.getElementById('project-due-date');
-  var restored = loadState();
-  if (restored) {
-    if (dueInput && restored.dueDate) dueInput.value = restored.dueDate;
-    var nameInput = document.getElementById('project-name');
-    if (nameInput && restored.projectName) nameInput.value = restored.projectName;
-  }
+  // Phase 23: every page open starts fresh — no carryover from prior sessions or prior users on shared browsers.
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   if (dueInput) {
-    if (!dueInput.value) dueInput.value = defaultDue.toISOString().split('T')[0];
+    dueInput.value = defaultDue.toISOString().split('T')[0];
     dueInput.min = today.toISOString().split('T')[0];
     dueInput.addEventListener('change', saveState);
   }
