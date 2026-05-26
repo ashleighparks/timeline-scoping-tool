@@ -1,0 +1,12 @@
+# Vercel CLI artifacts (local project linkage; GitHub deploy doesn't need this)
+.vercel/
+
+# LibreOffice / Office lock files
+.~lock.*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local validation / scratch
+*.xlsx.bak
