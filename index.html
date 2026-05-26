@@ -156,7 +156,7 @@
 
     <div class="card pre-production-card">
       <h3 style="color:#3C3489">Pre-Production Checklist</h3>
-      <div style="font-size:13px;color:#333;margin-bottom:10px">These items must be completed before project kickoff can be scheduled. Pre-production has no allocated time in the project timeline — the longer this takes, the later kickoff begins.</div>
+      <div style="font-size:13px;color:#333;margin-bottom:10px">The Pre-Production Window covers project alignment, scheduling, final material collection, and readiness confirmation prior to active production beginning. All required materials, branding, logos, plan information, and finalized decisions should be provided by the end of this window to avoid timeline delays.</div>
       <ul class="pre-prod-list">
         <li>SOW finalized and signed</li>
         <li>Intake forms completed</li>
@@ -222,21 +222,11 @@
       <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
       <li><strong>Estimates represent typical maximums.</strong> Project completion may be faster with prepared content, responsive client/broker reviews, and minimal scope changes.</li>
       <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates).</li>
-      <li>The <strong>advertised weeks per product</strong> are the <strong>active production timeline</strong>, including Final Client QA &amp; QC (1 business day) and Approval (1 business day) at the end. Short products (under 10 business days) are rendered as a single Production phase. Pre-production is NOT part of the catalog — it lives in the universal 10-business-day minimum pre-production window before the catalog timeline starts.</li>
-      <li><strong>Universal 10-business-day minimum pre-production window:</strong> every project gets a 10-business-day window (minimum) before catalog work begins. This covers sales conversations, scoping, SOW signature, intake forms, providing required materials (branding, logos, plan documents), and scheduling the kickoff call. The kickoff call itself happens inside this window. The window can be longer if scope or stakeholder availability requires — we always welcome starting earlier.</li>
-      <li><strong>Delivery phase:</strong> long products include an explicit Delivery (or Estimated Delivery if print/mail or translation is involved) marker at the end of the phase sequence. The "In hand by" date is the stated due date you entered.</li>
       <li>Timeline assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
-      <li>Print &amp; Mail: 10 business days rollback from in-hand date. Pricing is quoted and invoiced separately.</li>
-      <li>Translation: up to 5 business days rollback from the in-hand date (applies to both new and renewal projects).</li>
-      <li>Alternate version: 10 business days of development, beginning after main production is complete. Inherits the deliverable's in-hand date.</li>
-      <li><strong>Within a deliverable, services run sequentially:</strong> main translation must complete before alt translation begins (translator is a single resource), and main print/mail must complete before alt print/mail begins (printer is a single resource). This may extend the timeline when both main and alt require the same service.</li>
-      <li><strong>Across deliverables, services run in parallel:</strong> different deliverables are handled by different resources. Multiple deliverables in one project share a single kickoff event but their production phases run independently.</li>
       <li>Custom pieces cannot be rushed; standard schedule applies regardless of urgency.</li>
-      <li><strong>Renewal definition:</strong> a renewal is the same product as last year with <strong>no significant style or design changes</strong> required before the first draft. If significant changes are required, the project is treated as <strong>New</strong>. Confirm with your account manager that the SOW reflects the work actually needed. Renewals do not change the phase math in this tool — they tend to move faster in practice through reduced pre-production prep.</li>
       <li><strong>Rounds of revisions have no carry-forward value.</strong> Unused rounds cannot be banked for future projects or used for additional edits after a project closes. If a project finishes ahead of schedule, that does not create a credit toward later work.</li>
       <li><strong>Project closure:</strong> a project is considered closed when the final distribution email is sent. The final distribution email will not be sent until the client has delivered both final approval and final quality control. After closure, no further edits will be performed on the closed deliverable.</li>
       <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work. Project managers cannot perform edits to a closed deliverable, and leftover edits cannot be applied to create an alternate without a new SOW.</li>
-      <li><strong>"In-hand date" meaning:</strong> the date you enter as the project due date is the date materials need to be <em>in your office or in your employees' hands</em>. This is typically NOT your open enrollment kickoff date — that is later. Confirm with your account manager which date to use for scoping.</li>
       <li><strong>Tight timelines are possible</strong> when the client is ready to be highly responsive, has all required materials and final plan decisions in hand at kickoff, and accepts that not all revision rounds may be used. Coordinate with your account manager to confirm scope feasibility before committing to a compressed schedule.</li>
     </ul>
   </div>
@@ -486,7 +476,7 @@ function renderDeliverableCard(d, idx) {
     html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'new' || !nrSet ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;new&quot;)">New</button>';
     html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'renewal' ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;renewal&quot;)">Renewal</button>';
     html += '</div>';
-    html += '<div class="small-hint"><strong>Renewal</strong> = same product as last year with no significant style or design changes pre-first-draft. If significant changes are required, select <strong>New</strong> and check with your account manager that the SOW reflects the work needed.</div>';
+    html += '<div class="small-hint">Renewal timelines apply when the deliverable is substantially similar to the prior year and does not require significant design or structural changes before first draft creation. Significant layout, style, navigation, or restructuring changes may require the deliverable to be treated as new.</div>';
     html += '<div class="small-hint" style="margin-top:4px">Up to ' + pt.duration_new_bd + ' business days total (kickoff lead, active production, final QC, and final approval included)' + (pt.varies ? '. Timelines may vary — check with your product manager for estimates.' : '') + '.</div></div>';
 
     html += '<div style="margin-bottom:8px"><label class="checkbox-row"><input type="checkbox" ' + (d.hasCustomDueDate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasCustomDueDate&quot;, this.checked)"/>';
@@ -499,14 +489,14 @@ function renderDeliverableCard(d, idx) {
     if (pt.printable) {
       html += '<div style="margin-bottom:6px"><label class="checkbox-row"><input type="checkbox" ' + (d.requiresPrintMail ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;requiresPrintMail&quot;, this.checked)"/>';
       html += '<span>Requires print &amp; mail</span></label>';
-      if (d.requiresPrintMail) html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.print_mail_lead_bd + ' business days rollback from in-hand date (system-controlled).</div>';
+      if (d.requiresPrintMail) html += '<div class="small-hint" style="margin-left:23px">Print and mail production typically requires approximately ' + CONFIG.print_mail_lead_bd + ' business days from final approval and is quoted separately from digital deliverables. Timing and pricing may change if mailing quantities, lists, formatting, or distribution requirements change after scoping.</div>';
       html += '</div>';
     }
 
     html += '<div style="margin-bottom:6px"><label class="checkbox-row"><input type="checkbox" ' + (d.requiresTranslation ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;requiresTranslation&quot;, this.checked)"/>';
     html += '<span>Requires translation</span></label>';
     if (d.requiresTranslation) {
-      html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.translation_new_bd + ' business days rollback from in-hand date (system-controlled).</div>';
+      html += '<div class="small-hint" style="margin-left:23px">Translation services require additional production time and begin after main content is finalized unless otherwise coordinated. Approximately ' + CONFIG.translation_new_bd + ' business days for most deliverables.</div>';
     }
     html += '</div>';
 
@@ -514,7 +504,7 @@ function renderDeliverableCard(d, idx) {
       html += '<div><label class="checkbox-row"><input type="checkbox" ' + (d.hasAlternate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasAlternate&quot;, this.checked)"/>';
       html += '<span>Includes an alternate version</span></label>';
       if (d.hasAlternate) {
-        html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.alternate_bd + ' business days of alternate-version development. Begins after main production is complete. Same in-hand date as the main piece.</div>';
+        html += '<div class="small-hint" style="margin-left:23px">Alternate versions generally begin after the primary deliverable is finalized to prevent duplicate revisions and version-control conflicts. Approximately ' + CONFIG.alternate_bd + ' business days of additional development. If alternate versions are needed on a compressed timeline, discuss workflow options with your account manager during scoping.</div>';
         html += '<div class="alt-services">';
         html += '<div class="alt-services-label">Alternate version services</div>';
         if (pt.printable) {
