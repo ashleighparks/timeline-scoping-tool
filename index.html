@@ -121,7 +121,67 @@
   .result-headline-date { font-size:20px; font-weight:600; margin-bottom:4px; line-height:1.25; }
   .result-headline-subtle { font-size:12px; color:#666; margin-bottom:10px; }
   .result-headline-body { font-size:13px; color:#333; line-height:1.55; }
-  @media print { .input-card,.btn,button,.tabs,.sticky-calc { display:none !important; } .card { border:1px solid #000; } }
+  /* Phase 29: Print/PDF view — client-facing share-out */
+  .print-cover, .print-only-planning { display: none; }
+  @media print {
+    @page {
+      size: letter;
+      margin: 0.6in 0.7in 0.75in 0.7in;
+    }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    html, body { background: #fff !important; color: #000; font-size: 10.5pt; line-height: 1.45; margin: 0; padding: 0; }
+    body > *:not(.print-cover):not(#results-container):not(.print-only-planning):not(.disclaimer-section) { display: none !important; }
+    .important-planning-note, .footer-note, header, .tabs, .sticky-calc, .input-card, .btn, button, h1, .subtitle, #view-bp { display: none !important; }
+    .print-cover { display: block !important; page-break-after: always; padding: 0; }
+    #results-container { display: block !important; }
+    .print-only-planning { display: block !important; page-break-before: always; padding: 0; margin-top: 0; }
+    .disclaimer-section { display: block !important; border: 1px solid #999; padding: 14px 16px; margin-top: 14px; page-break-inside: avoid; }
+    /* Cover page typography */
+    .print-cover-eyebrow { font-size: 9pt; letter-spacing: .18em; text-transform: uppercase; color: #555; padding-bottom: 10px; border-bottom: 2px solid #000; margin-bottom: 28px; }
+    .print-cover-eyebrow-right { float: right; font-weight: 400; color: #777; letter-spacing: .08em; }
+    .print-cover-title { font-size: 26pt; font-weight: 700; line-height: 1.15; margin: 0 0 6px 0; color: #000; }
+    .print-cover-subtitle { font-size: 11pt; color: #555; margin-bottom: 32px; }
+    .print-cover-section { margin-bottom: 22px; }
+    .print-cover-label { font-size: 9pt; letter-spacing: .12em; text-transform: uppercase; color: #666; margin-bottom: 5px; font-weight: 600; }
+    .print-cover-value { font-size: 14pt; font-weight: 600; color: #000; }
+    .print-cover-keydates { border: 1.5px solid #000; padding: 14px 16px; margin: 14px 0 22px 0; }
+    .print-cover-keydates-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dotted #bbb; font-size: 11pt; }
+    .print-cover-keydates-row:last-child { border-bottom: none; }
+    .print-cover-keydates-label { color: #555; }
+    .print-cover-keydates-value { font-weight: 700; color: #000; }
+    .print-cover-deliverables { padding: 0; margin: 0; list-style: none; }
+    .print-cover-deliverables li { padding: 9px 0; border-bottom: 1px dotted #ccc; font-size: 11pt; line-height: 1.5; }
+    .print-cover-deliverables li:last-child { border-bottom: none; }
+    .print-cover-deliverable-name { font-weight: 600; color: #000; }
+    .print-cover-deliverable-meta { font-size: 9.5pt; color: #666; margin-top: 2px; }
+    .print-cover-meta { font-size: 9pt; color: #888; font-style: italic; margin-top: 40px; padding-top: 12px; border-top: 1px solid #ccc; }
+    /* Print-only planning note (last page) */
+    .print-only-planning .print-planning-title { font-size: 10pt; letter-spacing: .1em; text-transform: uppercase; color: #2c4a6b; font-weight: 700; margin-bottom: 6px; }
+    .print-only-planning .print-planning-body { font-size: 10.5pt; color: #333; line-height: 1.55; padding: 12px 14px; border: 1px solid #4a6b8a; background: #f5f8fb !important; margin-bottom: 14px; page-break-inside: avoid; }
+    /* Timeline area — print-friendly tightening */
+    #results-container { padding: 0; margin: 0; }
+    .result-headline { border: 1.5px solid #000 !important; padding: 14px; margin-bottom: 14px; page-break-inside: avoid; box-shadow: none !important; }
+    .result-headline-title { font-size: 18pt !important; }
+    .result-headline-date { font-size: 13pt !important; }
+    .timeline-grid { display: block !important; }
+    .timeline-col { page-break-inside: avoid; border: 1px solid #999 !important; background: #fff !important; margin-bottom: 12px; padding: 12px; }
+    .timeline-col.print, .timeline-col.compressed, .timeline-col.infeasible { background: #fafafa !important; }
+    .phase-block { page-break-inside: avoid; border-left-width: 4px !important; box-shadow: none !important; }
+    .warning-box { page-break-inside: avoid; }
+    .latest-start-section { page-break-inside: avoid; border: 1px solid #999; padding: 14px; margin-top: 14px; }
+    /* Disclaimer */
+    .disclaimer-section ul { font-size: 9.5pt; line-height: 1.55; }
+    .disclaimer-section h4, .disclaimer-section strong { font-size: 10pt; }
+    /* Footer line on every page */
+    .print-page-footer { display: none; }
+    body::after {
+      content: "";
+    }
+    @page {
+      @bottom-left { content: "Generated by Flimp"; font-size: 8.5pt; color: #888; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      @bottom-right { content: "Page " counter(page) " of " counter(pages); font-size: 8.5pt; color: #888; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    }
+  }
   @media (max-width: 700px) {
     .timeline-grid { grid-template-columns: minmax(0, 1fr); }
     .sticky-calc { padding:8px 12px; }
@@ -181,6 +241,7 @@
       <div id="deliverables-list"></div>
     </div>
 
+    <div class="print-cover" id="print-cover" aria-hidden="true"></div>
     <div id="results-container"></div>
 
     <div class="card">
@@ -201,7 +262,7 @@
 
     <div class="sticky-calc">
       <button type="button" class="btn btn-primary" onclick="runCalculation()" style="padding:12px 28px;font-size:15px;font-weight:600">Calculate Timeline</button>
-      <button type="button" class="btn" onclick="window.print()" style="padding:12px 20px;font-size:14px;margin-left:8px">Print / Save as PDF</button>
+      <button type="button" class="btn" onclick="handlePrint()" style="padding:12px 20px;font-size:14px;margin-left:8px">Print / Save as PDF</button>
       <button type="button" class="btn" onclick="resetProject()" style="padding:12px 20px;font-size:14px;margin-left:8px">Reset / Start Over</button>
     </div>
   </div>
@@ -227,6 +288,7 @@
     </div>
   </div>
 
+  <div class="print-only-planning" id="print-only-planning" aria-hidden="true"></div>
   <div class="disclaimer-section">
     <h3>Disclaimers &amp; Disclosures</h3>
     <ul class="disclaimer-list">
@@ -840,6 +902,88 @@ function runCalculation() {
   html += '<div class="footer-note">Calendar excludes weekends and observed federal holidays. Within a deliverable, main translation completes before alt translation, and main print/mail before alt print/mail (single-resource). All scheduling parameters are system-controlled.</div>';
 
   container.innerHTML = html;
+  // Phase 29: populate print-only cover from current calc state
+  buildPrintCover({
+    projectName: projectName,
+    projectDue: projectDue,
+    projectWindowStart: projectWindowStart,
+    projectWindowEnd: projectWindowEnd,
+    results: results,
+    drivenBy: drivenBy,
+    isMulti: isMulti
+  });
+}
+
+// ============================================================
+// PRINT / PDF VIEW (Phase 29)
+// ============================================================
+function buildPrintCover(ctx) {
+  var cover = document.getElementById('print-cover');
+  if (!cover) return;
+  var projectName = (ctx.projectName || '').trim();
+  var titleText = projectName ? projectName : 'Project Timeline';
+  var subtitleText = projectName ? 'Project Timeline' : 'Deliverable schedule and key dates';
+  var deliverableCount = ctx.results.length;
+  var deliverablesHtml = ctx.results.map(function(r){
+    var tags = [];
+    tags.push(r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New');
+    if (r.requiresPrintMail) tags.push('print & mail');
+    if (r.requiresTranslation) tags.push('translation');
+    if (r.hasAlternate) tags.push('alternate');
+    var startDate = r.mainStart;
+    if (ctx.isMulti) {
+      var firstProd = r.phases.filter(function(p){ return p.cls !== 'kickoff'; })[0];
+      if (firstProd) startDate = firstProd.start;
+    }
+    return '<li>' +
+      '<div class="print-cover-deliverable-name">' + r.productType.name + '</div>' +
+      '<div class="print-cover-deliverable-meta">' + tags.join(' &middot; ') + ' &middot; In hand by ' + fmt(r.statedDue) + ' &middot; Recommended start ' + fmt(startDate) + '</div>' +
+      '</li>';
+  }).join('');
+  var today = new Date();
+  var generatedDate = today.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+  var coverHtml = '';
+  coverHtml += '<div class="print-cover-eyebrow">Project Timeline<span class="print-cover-eyebrow-right">Flimp Communications</span></div>';
+  coverHtml += '<h1 class="print-cover-title">' + escapeHtml(titleText) + '</h1>';
+  coverHtml += '<div class="print-cover-subtitle">' + escapeHtml(subtitleText) + '</div>';
+  coverHtml += '<div class="print-cover-keydates">';
+  coverHtml += '<div class="print-cover-keydates-row"><span class="print-cover-keydates-label">In-Hand Date</span><span class="print-cover-keydates-value">' + fmt(ctx.projectDue) + '</span></div>';
+  coverHtml += '<div class="print-cover-keydates-row"><span class="print-cover-keydates-label">Pre-Production Window Starts</span><span class="print-cover-keydates-value">' + fmt(ctx.projectWindowStart) + '</span></div>';
+  coverHtml += '<div class="print-cover-keydates-row"><span class="print-cover-keydates-label">Active Production Starts No Later Than</span><span class="print-cover-keydates-value">' + fmt(ctx.projectWindowEnd) + '</span></div>';
+  coverHtml += '<div class="print-cover-keydates-row"><span class="print-cover-keydates-label">Driven By</span><span class="print-cover-keydates-value">' + escapeHtml(ctx.drivenBy) + '</span></div>';
+  coverHtml += '</div>';
+  coverHtml += '<div class="print-cover-section">';
+  coverHtml += '<div class="print-cover-label">Deliverables (' + deliverableCount + ')</div>';
+  coverHtml += '<ul class="print-cover-deliverables">' + deliverablesHtml + '</ul>';
+  coverHtml += '</div>';
+  coverHtml += '<div class="print-cover-meta">Generated ' + generatedDate + ' &middot; Timeline reflects standard production schedules based on the inputs provided. See disclaimers on the final page.</div>';
+  cover.innerHTML = coverHtml;
+}
+
+function buildPrintPlanningNote() {
+  var src = document.querySelector('.important-planning-note-body');
+  var dst = document.getElementById('print-only-planning');
+  if (!src || !dst) return;
+  dst.innerHTML =
+    '<div class="print-planning-title">Important Planning Note</div>' +
+    '<div class="print-planning-body">' + src.innerHTML + '</div>';
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, function(c){
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+  });
+}
+
+function handlePrint() {
+  var rc = document.getElementById('results-container');
+  if (!rc || !rc.innerHTML.trim()) {
+    alert('Please click "Calculate Timeline" before printing — the PDF needs a calculated schedule to render.');
+    return;
+  }
+  // Ensure print-only planning note is populated (idempotent)
+  buildPrintPlanningNote();
+  window.print();
 }
 
 // ============================================================
@@ -851,6 +995,8 @@ function initialize() {
   var dueInput = document.getElementById('project-due-date');
   // Phase 23: every page open starts fresh — no carryover from prior sessions or prior users on shared browsers.
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  // Phase 29: populate the print-only planning note clone once on load
+  buildPrintPlanningNote();
   if (dueInput) {
     // Phase 27: due date starts empty — no default pre-population
     dueInput.min = today.toISOString().split('T')[0];
