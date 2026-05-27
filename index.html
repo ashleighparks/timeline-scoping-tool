@@ -151,7 +151,7 @@
         <div class="field">
           <label>Project due date <span class="req">*</span></label>
           <input type="date" id="project-due-date" />
-          <div class="small-hint">The date materials need to be <strong>in your office and/or in your employees' hands</strong>. Not your open enrollment date — that's typically later. Default in-hand date used by every deliverable unless overridden below.</div>
+          <div class="small-hint">The date final deliverables must be in-hand, in-office, and/or in your employees' hands.</div>
         </div>
         <div class="field">
           <label>Client name (optional)</label>
@@ -164,13 +164,13 @@
       <h3 style="color:#3C3489">Pre-Production Checklist</h3>
       <div style="font-size:13px;color:#333;margin-bottom:10px">The Pre-Production Window covers project alignment, scheduling, final material collection, and readiness confirmation prior to active production beginning. All required materials, branding, logos, plan information, and finalized decisions should be provided by the end of this window to avoid timeline delays.</div>
       <ul class="pre-prod-list">
-        <li>SOW finalized and signed</li>
-        <li>Intake forms completed</li>
-        <li>Branding guidelines provided</li>
-        <li>Logos and assets provided</li>
-        <li>Other project-specific materials (as defined per project)</li>
+        <li>Finalized SOW</li>
+        <li>Required intake materials</li>
+        <li>Branding guidelines</li>
+        <li>Logos and/or other required assets</li>
+        <li>Style and/or other project-specific creative decisions</li>
       </ul>
-      <div style="font-size:12px;color:#6b4f00;margin-top:10px;padding:8px 10px;background:#fff8e0;border-left:3px solid #b8860b">Project kickoff assumes all pre-production requirements are met. Delays here push the kickoff date and the final delivery date by an equal amount of time.</div>
+      <div style="font-size:13px;color:#0B4F2A;margin-top:10px;padding:10px 12px;background:#eaf6ef;border-left:3px solid #0B6E4F"><strong>Tip:</strong> Start the conversation with your account manager as soon as you know a project is coming. You don't need every detail finalized to begin — earlier engagement helps lock in production capacity and gives more flexibility on scope, revisions, and timing.</div>
     </div>
 
     <div class="card">
@@ -425,9 +425,8 @@ function resetProject() {
   var nameInput = document.getElementById('project-name');
   var results = document.getElementById('results-container');
   if (dueInput) {
-    var today = new Date();
-    var defaultDue = new Date(today); defaultDue.setDate(defaultDue.getDate() + 90);
-    dueInput.value = defaultDue.toISOString().split('T')[0];
+    // Phase 27: reset clears the date entirely (no pre-populated default)
+    dueInput.value = '';
   }
   if (nameInput) nameInput.value = '';
   if (results) results.innerHTML = '';
@@ -848,7 +847,7 @@ function initialize() {
   // Phase 23: every page open starts fresh — no carryover from prior sessions or prior users on shared browsers.
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   if (dueInput) {
-    dueInput.value = defaultDue.toISOString().split('T')[0];
+    // Phase 27: due date starts empty — no default pre-population
     dueInput.min = today.toISOString().split('T')[0];
     dueInput.addEventListener('change', saveState);
   }
