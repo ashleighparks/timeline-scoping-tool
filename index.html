@@ -115,6 +115,12 @@
   .important-planning-note { border:1px solid #4a6b8a; background:#f5f8fb; padding:14px 16px; margin-bottom:1.5rem; }
   .important-planning-note-title { font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#2c4a6b; margin-bottom:6px; }
   .important-planning-note-body { font-size:13px; color:#333; line-height:1.55; }
+  .result-headline-section { padding:14px 0; border-bottom:1px solid #ddd; }
+  .result-headline-section:first-of-type { padding-top:0; }
+  .result-headline-section:last-of-type { border-bottom:none; padding-bottom:8px; }
+  .result-headline-date { font-size:20px; font-weight:600; margin-bottom:4px; line-height:1.25; }
+  .result-headline-subtle { font-size:12px; color:#666; margin-bottom:10px; }
+  .result-headline-body { font-size:13px; color:#333; line-height:1.55; }
   @media print { .input-card,.btn,button,.tabs,.sticky-calc { display:none !important; } .card { border:1px solid #000; } }
   @media (max-width: 700px) {
     .timeline-grid { grid-template-columns: minmax(0, 1fr); }
@@ -697,13 +703,19 @@ function runCalculation() {
   }
 
   html += '<div class="result-headline">';
-  // Pre-production recommended start — supporting block above the main title
-  html += '<div class="pre-prod-recommend">Recommended pre-production start: <strong>' + fmt(projectWindowStart) + '</strong> <em>(or earlier — earlier is always welcome)</em></div>';
-  html += '<div class="result-headline-eyebrow">Production Start Date</div>';
+  // Pre-Production Window block — date range + activity list
+  html += '<div class="result-headline-section">';
+  html += '<div class="result-headline-eyebrow">Pre-Production Window</div>';
+  html += '<div class="result-headline-date">' + fmt(projectWindowStart) + ' → ' + fmt(projectWindowEnd) + '</div>';
+  html += '<div class="result-headline-subtle">At least ' + CONFIG.pre_production_window_bd + ' business days</div>';
+  html += '<div class="result-headline-body">Use this window for: initial project scoping with your account manager, finalizing deliverables, SOW signature, completing intake, providing required project materials (branding, logos, plan documents), and holding the kickoff call.</div>';
+  html += '</div>';
+  // Active Production deadline block
+  html += '<div class="result-headline-section">';
+  html += '<div class="result-headline-eyebrow">Active Production Must Start No Later Than</div>';
   html += '<div class="result-headline-title">' + fmt(projectWindowEnd) + '</div>';
-  html += '<div class="result-headline-copy">Active production begins on this date. All pre-production must be complete by now — SOW signed, intake forms in, materials provided, and the kickoff call <strong>held</strong> (not just scheduled).</div>';
-  html += '<div class="kickoff-warning"><strong>Watch the kickoff call.</strong> Scheduling the kickoff call is a frequent point of slippage — even when everything else is ready. Clients often finish SOW, intake, and materials within days but can\'t get all required participants together for two weeks. <strong>Get the kickoff call on the calendar as soon as your SOW is signed</strong>; production cannot officially begin without it.</div>';
-  html += '<div class="pre-prod-window-detail">The ' + CONFIG.pre_production_window_bd + ' business days before the production start are for SOW signature, intake forms, providing required materials (branding, logos, plan documents), and scheduling + holding the kickoff call. ' + CONFIG.pre_production_window_bd + ' business days is a recommended minimum — more time is welcome.</div>';
+  html += '</div>';
+  // Meta line
   html += '<div class="result-headline-meta">Driven by: <strong>' + drivenBy + '</strong> &middot; In-hand date: ' + fmt(projectDue) + (projectName ? ' &middot; ' + projectName : '') + ' &middot; ' + results.length + ' deliverable' + (results.length===1?'':'s') + '</div>';
   html += '</div>';
 
@@ -793,10 +805,7 @@ function runCalculation() {
   html += '</div>';
 
   html += '<div class="latest-start-section">';
-  html += '<h3 style="margin-top:0">' + (isMulti ? 'Recommended production start dates per deliverable' : 'Recommended kickoff dates per deliverable') + '</h3>';
-  html += '<div style="font-size:12px;color:#555;margin-bottom:8px">' + (isMulti
-    ? 'For each deliverable, here\'s when active production should begin to comfortably meet the in-hand date. Earlier starts give more breathing room for reviews and revisions. Shorter deliverables start later.'
-    : 'For best results, plan to start work by the date shown. Earlier starts give more breathing room for reviews and revisions. Shorter timelines are possible with client responsiveness and ready materials.') + '</div>';
+  html += '<h3 style="margin-top:0">Recommended Start Dates</h3>';
   results.forEach(function(r){
     var drives = r.mainStart.getTime() === projectStart.getTime();
     var tags = [];
@@ -816,7 +825,7 @@ function runCalculation() {
     }
     html += '<div class="latest-start-row">';
     html += '<span class="latest-start-product">' + r.productType.name + tagStr + '</span>';
-    html += '<span class="latest-start-date">' + fmt(rowDate);
+    html += '<span class="latest-start-date">We recommend starting no later than ' + fmt(rowDate);
     if (drives && !isMulti) html += ' <span class="latest-start-note">(drives Project Start Date)</span>';
     if (drives && isMulti) html += ' <span class="latest-start-note">(longest deliverable — drives shared kickoff)</span>';
     if (r.feasibility === 'compressed') html += ' <span class="compressed-pill" style="margin-left:6px">Tight</span>';
