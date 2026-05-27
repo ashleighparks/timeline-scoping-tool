@@ -130,8 +130,16 @@
     }
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     html, body { background: #fff !important; color: #000; font-size: 10.5pt; line-height: 1.45; margin: 0; padding: 0; }
-    body > *:not(.print-cover):not(#results-container):not(.print-only-planning):not(.disclaimer-section) { display: none !important; }
-    .important-planning-note, .footer-note, header, .tabs, .sticky-calc, .input-card, .btn, button, h1, .subtitle, #view-bp { display: none !important; }
+    .container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+    /* Hide screen-only UI */
+    h1, .subtitle, .tabs, .sticky-calc, .input-card, .btn, button,
+    .important-planning-note, .footer-note, header, #view-bp { display: none !important; }
+    /* Hide the input cards inside #view-timeline (Project Details, Pre-Production Checklist,
+       Deliverables, Timeline Assumptions, Important Notes) — but NOT .print-cover or
+       #results-container which also live in this container. */
+    #view-timeline > .card { display: none !important; }
+    /* Show print-only and result blocks */
+    #view-timeline { display: block !important; }
     .print-cover { display: block !important; page-break-after: always; padding: 0; }
     #results-container { display: block !important; }
     .print-only-planning { display: block !important; page-break-before: always; padding: 0; margin-top: 0; }
