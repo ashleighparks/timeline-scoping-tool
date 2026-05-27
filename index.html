@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Flimp Timeline Generator</title>
+<title>Timeline Scoping Tool</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background:#fff; color:#000; min-height:100vh; padding:2rem 1rem; line-height:1.5; }
@@ -131,8 +131,9 @@
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     html, body { background: #fff !important; color: #000; font-size: 10.5pt; line-height: 1.45; margin: 0; padding: 0; }
     .container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
-    /* Hide screen-only UI */
-    h1, .subtitle, .tabs, .sticky-calc, .input-card, .btn, button,
+    /* Hide screen-only UI — note: .container > h1 targets ONLY the on-screen
+       title, leaving .print-cover-title (an h1 nested deeper) visible. */
+    .container > h1, .subtitle, .tabs, .sticky-calc, .input-card, .btn, button,
     .important-planning-note, .footer-note, header, #view-bp { display: none !important; }
     /* Hide the input cards inside #view-timeline (Project Details, Pre-Production Checklist,
        Deliverables, Timeline Assumptions, Important Notes) — but NOT .print-cover or
@@ -199,7 +200,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>Flimp Timeline Generator</h1>
+  <h1>Timeline Scoping Tool</h1>
   <p class="subtitle">This tool provides estimated project timelines based on deliverable type, production requirements, and standard review assumptions. Timelines represent estimated active production and business-day scheduling only and may vary based on project readiness, scope, and review responsiveness.</p>
 
   <div class="important-planning-note">
@@ -930,7 +931,7 @@ function buildPrintCover(ctx) {
   if (!cover) return;
   var projectName = (ctx.projectName || '').trim();
   var titleText = projectName ? projectName : 'Project Timeline';
-  var subtitleText = projectName ? 'Project Timeline' : 'Deliverable schedule and key dates';
+  var subtitleText = 'Estimated production schedule and key dates';
   var deliverableCount = ctx.results.length;
   var deliverablesHtml = ctx.results.map(function(r){
     var tags = [];
@@ -951,7 +952,7 @@ function buildPrintCover(ctx) {
   var today = new Date();
   var generatedDate = today.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
   var coverHtml = '';
-  coverHtml += '<div class="print-cover-eyebrow">Project Timeline<span class="print-cover-eyebrow-right">Flimp Communications</span></div>';
+  coverHtml += '<div class="print-cover-eyebrow">Timeline Scoping Tool<span class="print-cover-eyebrow-right">Flimp Communications</span></div>';
   coverHtml += '<h1 class="print-cover-title">' + escapeHtml(titleText) + '</h1>';
   coverHtml += '<div class="print-cover-subtitle">' + escapeHtml(subtitleText) + '</div>';
   coverHtml += '<div class="print-cover-keydates">';
