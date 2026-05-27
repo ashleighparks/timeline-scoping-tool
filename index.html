@@ -136,7 +136,7 @@
 
   <div class="important-planning-note">
     <div class="important-planning-note-title">Important Planning Note</div>
-    <div class="important-planning-note-body">The due date entered should reflect the date materials must be in employees' hands or available for distribution — not the open enrollment start date unless specifically confirmed with your account manager.</div>
+    <div class="important-planning-note-body">The due date is NOT your open enrollment start date — that's typically later. Confirm with your account manager which date applies for scoping.</div>
   </div>
 
   <div class="tabs">
@@ -208,16 +208,21 @@
 
   <div id="view-bp" style="display:none">
     <div class="card">
-      <h3>Best Practices: Example of a Successful Project</h3>
-      <div class="bp-note">
-        <div class="bp-note-title">This is an example of a project where the client met every deadline.</div>
-        <div class="bp-note-body">Your timeline depends on your responsiveness. Missed milestones extend the project day-for-day.</div>
-      </div>
-      <p style="margin-bottom:12px">A typical Open Enrollment project with three overlapping deliverables, due Monday, August 31, 2026. Each deliverable's advertised weeks include Kickoff lead time, Active production, Final QC, and Final approval. Pre-production (SOW, intake, branding, logos, project-specific materials) is a checklist that must be complete <em>before</em> kickoff — no allocated time, but delays push kickoff and delivery day-for-day. For multi-deliverable projects, one shared kickoff covers all deliverables; renewals with no pre-first-draft changes skip kickoff lead time entirely.</p>
-      <div class="bp-example"><strong>Custom Benefits Guide (Renewal)</strong> — print &amp; mail required. Tool rolls back 10 business days from in-hand for print/mail production. Main production starts mid-June.</div>
-      <div class="bp-example"><strong>Benefits Showcase Microsite</strong> — digital only. Due Aug 31. Runs in parallel with the guide.</div>
-      <div class="bp-example"><strong>Spanish Benefits Guide</strong> — separate deliverable with translation required. Tool rolls back 5 days (renewal) or 10 days (new) from in-hand.</div>
-      <p style="margin-top:16px"><strong>Why this works:</strong> Deliverables run in parallel. Print/mail and translation timing roll back from each in-hand date automatically. The headline Project Start Date reflects the earliest required kickoff across everything.</p>
+      <h3>Best Practices</h3>
+      <p style="margin-bottom:12px">These practices help projects stay on schedule and reduce friction for both your client and the production team. They apply to any deliverable type — guides, microsites, video, print.</p>
+      <ul style="font-size:13px;line-height:1.7;padding-left:22px;margin-bottom:1.5rem">
+        <li><strong>Submit feedback in consolidated review rounds.</strong> Multiple back-to-back rounds with small edits each are harder to manage than one consolidated round with all edits at once.</li>
+        <li><strong>If a small number of edits are pending internal approval, consider submitting the completed edits first.</strong> Waiting to consolidate everything can delay production unnecessarily.</li>
+        <li><strong>Ensure plan decisions and required content are finalized before kickoff whenever possible.</strong> Late-arriving plan changes are the most common source of timeline pressure.</li>
+        <li><strong>Designate a primary reviewer.</strong> A single accountable reviewer streamlines approvals and reduces conflicting feedback from multiple stakeholders.</li>
+        <li><strong>Notify your project manager early if timing priorities shift during production.</strong> Earlier visibility into changes gives the team more options to absorb them without pushing the in-hand date.</li>
+      </ul>
+      <h3 style="margin-top:1.5rem">How a successful project looks</h3>
+      <p style="margin-bottom:12px">A multi-deliverable Open Enrollment project with overlapping pieces: a Custom Benefits Guide (renewal, with print &amp; mail), a Benefits Showcase Microsite, and a Spanish Benefits Guide. The tool schedules them in parallel with one shared pre-production window. Each piece's services (print/mail, translation) are automatically scheduled to meet the same in-hand date.</p>
+      <div class="bp-example"><strong>Custom Benefits Guide (Renewal)</strong> — Print &amp; mail required. The tool schedules print/mail production so the deliverable arrives in-hand on the project due date. The renewal designation reduces pre-production friction but uses the same catalog time as new.</div>
+      <div class="bp-example"><strong>Benefits Showcase Microsite</strong> — Digital only, runs in parallel with the guide. No print/mail offsets, so the timeline is driven entirely by Active production, Final Client QA &amp; QC, and Approval.</div>
+      <div class="bp-example"><strong>Spanish Benefits Guide</strong> — Separate deliverable with translation required. Translation begins after main content is finalized; approximately 5 business days for most deliverables.</div>
+      <p style="margin-top:16px"><strong>Why this works:</strong> Deliverables run in parallel across the project. Print/mail and translation timing are scheduled to meet each deliverable's in-hand date. The headline Production Start Date reflects the earliest required production start across everything.</p>
       <p style="margin-top:16px"><strong>What breaks this:</strong> Late content delivery, missed review windows, scope changes mid-flight, or trying to compress timelines without acknowledging reduced flexibility.</p>
     </div>
   </div>
@@ -832,7 +837,7 @@ function runCalculation() {
     html += '</span></div>';
   });
   html += '</div>';
-  html += '<div class="footer-note">Calendar excludes weekends and 2026/27 holidays. <strong>Universal ' + CONFIG.pre_production_window_bd + '-business-day pre-production window</strong> at project start covers sales, scoping, SOW, intake, materials, and kickoff scheduling. Each deliverable\'s catalog = Active production + Final QC (1 BD) + Final approval (1 BD). Short products (under 10 BD) are a single Production phase. Within a deliverable, main translation completes before alt translation, and main print/mail before alt print/mail (single-resource). Print &amp; mail: up to ' + CONFIG.print_mail_lead_bd + ' BD rollback. Translation: up to ' + CONFIG.translation_new_bd + ' BD. Alternate dev: up to ' + CONFIG.alternate_bd + ' BD. System-controlled.</div>';
+  html += '<div class="footer-note">Calendar excludes weekends and observed federal holidays. Within a deliverable, main translation completes before alt translation, and main print/mail before alt print/mail (single-resource). All scheduling parameters are system-controlled.</div>';
 
   container.innerHTML = html;
 }
