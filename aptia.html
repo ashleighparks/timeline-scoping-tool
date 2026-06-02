@@ -143,7 +143,7 @@
        title, leaving .print-cover-title (an h1 nested deeper) visible. */
     .container > h1, .subtitle, .about-section, .tabs, .sticky-calc, .input-card, .btn, button,
     .important-planning-note, .footer-note, header, #view-bp { display: none !important; }
-    /* Hide the input cards inside #view-timeline (Project Details, Pre-Production Checklist,
+    /* Hide the input cards inside #view-timeline (Project Details, Pre-Production Window,
        Deliverables, Timeline Assumptions, Important Notes) — but NOT .print-cover or
        #results-container which also live in this container. */
     #view-timeline > .card { display: none !important; }
@@ -244,14 +244,16 @@
     </div>
 
     <div class="card pre-production-card">
-      <h3 style="color:#3C3489">Pre-Production Checklist</h3>
-      <div style="font-size:13px;color:#333;margin-bottom:10px">The Pre-Production Window covers project alignment, scheduling, final material collection, and readiness confirmation prior to active production beginning. All required materials, branding, logos, plan information, and finalized decisions should be provided by the end of this window to avoid timeline delays.</div>
+      <h3 style="color:#3C3489">Pre-Production Window</h3>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">The timeline reflects estimated active production time only. Active production begins after the project scope has been confirmed, the Change Order has been finalized, and all required project materials have been received. The Pre-Production Window is used for project alignment, scheduling, material collection, and readiness confirmation. Delays in completing pre-production requirements may impact project start dates and overall timeline estimates.</p>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#3C3489;margin:14px 0 6px 0">Pre-Production Requirements</div>
+      <p style="font-size:13px;color:#333;margin-bottom:8px">Before active production can begin, the following items should be completed and provided:</p>
       <ul class="pre-prod-list">
-        <li>Finalized Change Order</li>
         <li>Required intake materials</li>
         <li>Branding guidelines</li>
-        <li>Logos and/or other required assets</li>
-        <li>Style and/or other project-specific creative decisions</li>
+        <li>Logos and other required assets</li>
+        <li>Finalized plan information</li>
+        <li>Style selections and other project-specific creative decisions</li>
       </ul>
     </div>
 
@@ -268,27 +270,38 @@
 
     <div class="card">
       <h3>Timeline Assumptions</h3>
+      <p style="font-size:13px;color:#333;margin-bottom:8px">This timeline is based on:</p>
       <ul class="disclaimer-list">
-        <li>Kickoff meeting completed</li>
-        <li>Required intake materials received</li>
-        <li>Branding assets and logos finalized</li>
-        <li>Timely review feedback and approvals provided throughout the project</li>
+        <li>Completion of the project kickoff</li>
+        <li>Receipt of all required materials and intake information</li>
+        <li>Finalized branding assets, logos, and plan details</li>
+        <li>Timely feedback, approvals, and decision-making throughout the project</li>
       </ul>
+      <p style="font-size:13px;color:#333;margin-top:10px">Timeline estimates are based on standard production schedules and may vary depending on project complexity, scope changes, material readiness, and client and/or broker responsiveness. Delays in required materials, feedback, approvals, or final decisions may affect delivery timing.</p>
     </div>
 
     <div class="card">
       <h3>Important Notes</h3>
-      <p style="font-size:13px;color:#444;margin-bottom:10px">Projects beginning after the target start date may require adjusted timelines, condensed review cycles, or prioritization of deliverables in order to support the requested delivery timeframe.</p>
-      <p style="font-size:13px;color:#444">Final timelines may vary based on project complexity, scope changes, and turnaround times for feedback, approvals, and required materials.</p>
+      <p style="font-size:13px;color:#444;margin-bottom:10px">Results are estimates based on standard project timelines and business-day scheduling. Calendars exclude weekends and observed 2026/27 federal holidays. Custom pieces are not eligible for rush timelines.</p>
+      <p style="font-size:13px;color:#444;margin-bottom:10px">Timelines assume complete materials, timely feedback, required approvals, and finalized plan decisions by the dates shown. Delays in materials, feedback, approvals, or project start may require adjusted timelines, condensed review cycles, or reprioritization of deliverables to support the requested delivery date.</p>
+      <p style="font-size:13px;color:#444;margin-bottom:10px">Final timelines may vary based on project complexity, scope changes, production requirements, and client or broker responsiveness.</p>
+      <p style="font-size:13px"><button type="button" class="disclaimer-summary-link" onclick="switchTab('disclaimers')">See full Disclaimers &amp; Disclosures →</button></p>
     </div>
 
-    <div class="disclaimer-summary" id="disclaimer-summary">
-      <strong>Quick reference:</strong> Results are estimates based on standard scheduling. Calendar excludes weekends and observed 2026/27 federal holidays. Custom pieces cannot be rushed. Timing depends on content readiness and review responsiveness. <button type="button" class="disclaimer-summary-link" onclick="switchTab('disclaimers')">See full Disclaimers &amp; Disclosures →</button>
+    <div class="card">
+      <h3>Keeping Your Project on Schedule</h3>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">Project timelines are a shared responsibility between Flimp and the client. To help keep your project on track:</p>
+      <ul class="disclaimer-list">
+        <li>Provide complete project materials and finalized plan information as early as possible.</li>
+        <li>Submit timely, consolidated feedback during each review round.</li>
+        <li>Designate key decision-makers and approvers early in the process.</li>
+        <li>Communicate timeline changes or concerns promptly with your project manager.</li>
+      </ul>
     </div>
 
     <div class="important-planning-note important-planning-note-bottom">
       <div class="important-planning-note-title">Important Planning Note</div>
-      <div class="important-planning-note-body">The due date is NOT your open enrollment start date — that's typically later. Confirm with your account manager which date applies for scoping.</div>
+      <div class="important-planning-note-body">The due date entered should reflect the date materials must be delivered, distributed, or in employees' hands. This date is often earlier than the start of open enrollment. If you are unsure which date should be used for planning purposes, please consult your account manager.</div>
     </div>
 
     <div class="sticky-calc">
@@ -312,7 +325,7 @@
       <h3 style="margin-top:1.5rem">How a successful project looks</h3>
       <p style="margin-bottom:12px">A multi-deliverable Open Enrollment project with overlapping pieces: a Custom Benefits Guide (renewal, with print &amp; mail), a Benefits Showcase Microsite, and a Spanish Benefits Guide. The tool schedules them in parallel with one shared pre-production window. Each piece's services (print/mail, translation) are automatically scheduled to meet the same in-hand date.</p>
       <div class="bp-example"><strong>Custom Benefits Guide (Renewal)</strong> — Print &amp; mail required. The tool schedules print/mail production so the deliverable arrives in-hand on the project due date. The renewal designation reduces pre-production friction but uses the same catalog time as new.</div>
-      <div class="bp-example"><strong>Benefits Showcase Microsite</strong> — Digital only, runs in parallel with the guide. No print/mail offsets, so the timeline is driven entirely by Active production, Final Client QA &amp; QC, and Approval.</div>
+      <div class="bp-example"><strong>Benefits Showcase Microsite</strong> — Digital only, runs in parallel with the guide. No print/mail offsets, so the timeline is driven entirely by Active production, Final Client Review, and Approval.</div>
       <div class="bp-example"><strong>Spanish Benefits Guide</strong> — Separate deliverable with translation required. Translation begins after main content is finalized; approximately 5 business days for most deliverables.</div>
       <p style="margin-top:16px"><strong>Why this works:</strong> Deliverables run in parallel across the project. Print/mail and translation timing are scheduled to meet each deliverable's in-hand date. The headline Production Start Date reflects the earliest required production start across everything.</p>
       <p style="margin-top:16px"><strong>What breaks this:</strong> Late content delivery, missed review windows, scope changes mid-flight, or trying to compress timelines without acknowledging reduced flexibility.</p>
@@ -323,13 +336,15 @@
     <div class="card">
       <h3>Disclaimers &amp; Disclosures</h3>
       <ul class="disclaimer-list">
-        <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
-        <li><strong>Estimates represent typical maximums.</strong> Project completion may be faster with prepared content, responsive client/broker reviews, and minimal scope changes.</li>
-        <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates), and assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
-        <li>Custom pieces cannot be rushed; standard schedule applies regardless of urgency.</li>
-        <li><strong>Project closure:</strong> a project is considered closed when the final distribution email is sent. The final distribution email will not be sent until the client has delivered both final approval and final quality control. After closure, no further edits will be performed on the closed deliverable.</li>
-        <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work. Project managers cannot perform edits to a closed deliverable, and leftover edits cannot be applied to create an alternate without a new SOW.</li>
-        <li><strong>Tight timelines are possible</strong> when the client is ready to be highly responsive, has all required materials and final plan decisions in hand at kickoff, and accepts that not all revision rounds may be used. Coordinate with your account manager to confirm scope feasibility before committing to a compressed schedule.</li>
+        <li>This is a project scoping tool; results are estimates based on standard production assumptions. Actual timelines may vary based on project readiness, scope changes, production requirements, and client and/or broker responsiveness.</li>
+        <li>Active production begins after the project kickoff and receipt of all required materials.</li>
+        <li>Estimates are contingent on receiving complete materials, timely feedback, required approvals, and finalized plan decisions by the dates shown. Delays in any of these milestones will extend the project timeline.</li>
+        <li>Translation, print/mail, and alternate-version deliverables will extend the overall project timeline. These extensions must be accounted for in the project scope and timeline view.</li>
+        <li>Project schedules are based on business days only and exclude weekends and observed holidays. Timelines also assume review and approval turnaround times remain within standard project windows.</li>
+        <li><strong>Project closure:</strong> a project is considered closed once the final deliverable has been approved, finalized, and distributed. After project closure, additional edits, alternate versions, language versions, or new deliverables may require a new scope review and Change Order. Minor post-finalization updates may be accommodated when feasible.</li>
+        <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new Change Order.</li>
+        <li><strong>Compressed timelines</strong> may be possible when all required materials and final plan decisions are available at the start of active production and review feedback is provided promptly. Account managers will work with clients and project management to confirm feasibility and any additional requirements before committing to accelerated schedules.</li>
+        <li>While Flimp makes every effort to meet projected timelines, final delivery dates cannot be guaranteed due to project dependencies, third-party services, and evolving project requirements.</li>
       </ul>
     </div>
   </div>
@@ -338,13 +353,15 @@
   <div class="disclaimer-section full-print">
     <h3>Disclaimers &amp; Disclosures</h3>
     <ul class="disclaimer-list">
-      <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
-      <li><strong>Estimates represent typical maximums.</strong> Project completion may be faster with prepared content, responsive client/broker reviews, and minimal scope changes.</li>
-      <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates), and assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
-      <li>Custom pieces cannot be rushed; standard schedule applies regardless of urgency.</li>
-      <li><strong>Project closure:</strong> a project is considered closed when the final distribution email is sent. The final distribution email will not be sent until the client has delivered both final approval and final quality control. After closure, no further edits will be performed on the closed deliverable.</li>
-      <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work. Project managers cannot perform edits to a closed deliverable, and leftover edits cannot be applied to create an alternate without a new SOW.</li>
-      <li><strong>Tight timelines are possible</strong> when the client is ready to be highly responsive, has all required materials and final plan decisions in hand at kickoff, and accepts that not all revision rounds may be used. Coordinate with your account manager to confirm scope feasibility before committing to a compressed schedule.</li>
+      <li>This is a project scoping tool; results are estimates based on standard production assumptions. Actual timelines may vary based on project readiness, scope changes, production requirements, and client and/or broker responsiveness.</li>
+      <li>Active production begins after the project kickoff and receipt of all required materials.</li>
+      <li>Estimates are contingent on receiving complete materials, timely feedback, required approvals, and finalized plan decisions by the dates shown. Delays in any of these milestones will extend the project timeline.</li>
+      <li>Translation, print/mail, and alternate-version deliverables will extend the overall project timeline. These extensions must be accounted for in the project scope and timeline view.</li>
+      <li>Project schedules are based on business days only and exclude weekends and observed holidays. Timelines also assume review and approval turnaround times remain within standard project windows.</li>
+      <li><strong>Project closure:</strong> a project is considered closed once the final deliverable has been approved, finalized, and distributed. After project closure, additional edits, alternate versions, language versions, or new deliverables may require a new scope review and Change Order. Minor post-finalization updates may be accommodated when feasible.</li>
+      <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new Change Order.</li>
+      <li><strong>Compressed timelines</strong> may be possible when all required materials and final plan decisions are available at the start of active production and review feedback is provided promptly. Account managers will work with clients and project management to confirm feasibility and any additional requirements before committing to accelerated schedules.</li>
+      <li>While Flimp makes every effort to meet projected timelines, final delivery dates cannot be guaranteed due to project dependencies, third-party services, and evolving project requirements.</li>
     </ul>
   </div>
 </div>
@@ -581,7 +598,9 @@ function renderDeliverableCard(d, idx) {
     html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'renewal' ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;renewal&quot;)">Renewal</button>';
     html += '</div>';
     html += '<div class="small-hint">Renewal timelines apply when the deliverable is substantially similar to the prior year and does not require significant design or structural changes before first draft creation. Significant layout, style, navigation, or restructuring changes may require the deliverable to be treated as new.</div>';
-    html += '<div class="small-hint" style="margin-top:4px"><strong>Total business days to production:</strong> up to ' + pt.duration_new_bd + ' (active production, Final Client QA &amp; QC, and Approval). The 10-business-day Pre-Production Window happens before this and is shown separately on the timeline' + (pt.varies ? '. Timelines may vary — check with your product manager for estimates.' : '') + '.</div></div>';
+    // Phase 34b: toggle-aware New vs Renewal note
+    var isRenewal = d.newOrRenewal === 'renewal';
+    html += '<div class="small-hint" style="margin-top:4px"><strong>' + (isRenewal ? 'Renewals:' : 'New Deliverables:') + '</strong> ' + (isRenewal ? 'Clients can generally begin editing within 24–48 hours. Turnaround for Flimp revisions depends on clarity, scope, and number of edits submitted.' : 'Typically require ~5 business days from active project start date to the first draft. Complete starting materials improve the quality and speed of the first draft.') + (pt.varies ? ' Timelines may vary — check with your product manager for estimates.' : '') + '</div></div>';
 
     html += '<div style="margin-bottom:8px"><label class="checkbox-row"><input type="checkbox" ' + (d.hasCustomDueDate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasCustomDueDate&quot;, this.checked)"/>';
     html += '<span>This deliverable has a different due date</span></label>';
@@ -608,7 +627,7 @@ function renderDeliverableCard(d, idx) {
       html += '<div><label class="checkbox-row"><input type="checkbox" ' + (d.hasAlternate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasAlternate&quot;, this.checked)"/>';
       html += '<span>Includes an alternate version</span></label>';
       if (d.hasAlternate) {
-        html += '<div class="small-hint" style="margin-left:23px">Alternate versions generally begin after the primary deliverable is finalized to prevent duplicate revisions and version-control conflicts. Approximately ' + CONFIG.alternate_bd + ' business days of additional development. If alternate versions are needed on a compressed timeline, discuss workflow options with your account manager during scoping.</div>';
+        html += '<div class="small-hint" style="margin-left:23px">Alternate versions generally begin after the primary deliverable is finalized and typically require approximately ' + CONFIG.alternate_bd + ' business days of additional production time. If an alternate version is needed before the primary deliverable is finalized or on a compressed timeline, please discuss requirements with your account manager during project scoping.</div>';
         html += '<div class="alt-services">';
         html += '<div class="alt-services-label">Alternate version services</div>';
         if (pt.printable) {
@@ -715,7 +734,7 @@ function calcDeliverable(d, projectDue, isMulti) {
     }
     phases = [
       place('Active production', activeBD, 'production'),
-      place('Final Client QA & QC', finalQCBD, 'qc'),
+      place('Final Client Review', finalQCBD, 'qc'),
       place('Approval', finalApprovalBD, 'approval')
     ];
   } else {
@@ -807,7 +826,7 @@ function runCalculation() {
   html += '<div class="result-headline-eyebrow">Pre-Production Window</div>';
   html += '<div class="result-headline-date">' + fmt(projectWindowStart) + ' → ' + fmt(projectWindowEnd) + '</div>';
   html += '<div class="result-headline-subtle">At least ' + CONFIG.pre_production_window_bd + ' business days</div>';
-  html += '<div class="result-headline-body">Use this window for: initial project scoping with your account manager, finalizing deliverables, SOW signature, completing intake, providing required project materials (branding, logos, plan documents), and holding the kickoff call.</div>';
+  // Phase 34b: body removed to avoid duplication with input-side Pre-Production Window card
   html += '</div>';
   // Active Production deadline block
   html += '<div class="result-headline-section">';
@@ -850,9 +869,9 @@ function runCalculation() {
       html += '<div class="phase-label"><span>' + ph.label + '</span><span class="phase-bd">up to ' + ph.days + ' business days</span></div>';
       html += '<div class="phase-dates">' + fmtShort(ph.start) + ' → ' + fmtShort(ph.end) + '</div>';
       // Phase 32: inline definitions so clients understand the phases
-      if (ph.cls === 'qc') html += '<div class="small-hint">Final review of the deliverable for quality, correctness, accuracy, and alignment with project requirements before client approval.</div>';
+      if (ph.cls === 'qc') html += '<div class="small-hint">Final client review of the deliverable for quality, correctness, accuracy, and alignment with project requirements before final approval.</div>';
       if (ph.cls === 'approval') html += '<div class="small-hint">Client sign-off on the final deliverable.</div>';
-      if (ph.cls === 'production' && phasesToRender.length === 1) html += '<div class="small-hint">Deliverables under 10 business days combine active production, QA &amp; QC, and approval into a single phase for scoping simplicity. Quality and review steps still occur.</div>';
+      if (ph.cls === 'production' && phasesToRender.length === 1) html += '<div class="small-hint">Deliverables under 10 business days combine active production, Final Client Review, and approval into a single phase for scoping simplicity. Quality and review steps still occur.</div>';
       html += '</div>';
     });
     if (r.requiresTranslation && r.mainTransStart) {
