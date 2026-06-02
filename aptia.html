@@ -115,6 +115,14 @@
   .important-planning-note { border:1px solid #4a6b8a; background:#f5f8fb; padding:14px 16px; margin-bottom:1.5rem; }
   .important-planning-note-title { font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#2c4a6b; margin-bottom:6px; }
   .important-planning-note-body { font-size:13px; color:#333; line-height:1.55; }
+  /* Phase 33: bottom-of-Timeline disclaimer summary card + relocated planning note */
+  .disclaimer-summary { border:1px solid #ccc; padding:12px 14px; margin-top:1rem; background:#fafafa; font-size:12px; color:#444; line-height:1.6; }
+  .disclaimer-summary strong { color:#000; }
+  .disclaimer-summary-link { color:#185FA5; text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; font-family:inherit; font-size:inherit; }
+  .disclaimer-summary-link:hover { color:#000; }
+  .important-planning-note-bottom { margin-top:1rem; }
+  /* Phase 33: on-screen full disclaimer-section (the one outside tabs) is hidden — content lives in tab + summary */
+  .container > .disclaimer-section.full-print { display:none; }
   .result-headline-section { padding:14px 0; border-bottom:1px solid #ddd; }
   .result-headline-section:first-of-type { padding-top:0; }
   .result-headline-section:last-of-type { border-bottom:none; padding-bottom:8px; }
@@ -144,7 +152,11 @@
     .print-cover { display: block !important; page-break-after: always; padding: 0; }
     #results-container { display: block !important; }
     .print-only-planning { display: block !important; page-break-before: always; padding: 0; margin-top: 0; }
-    .disclaimer-section { display: block !important; border: 1px solid #999; padding: 14px 16px; margin-top: 14px; page-break-inside: avoid; }
+    /* Phase 33: full disclaimer always appears on its own dedicated final page in print */
+    .disclaimer-section.full-print { display: block !important; border: 1px solid #999; padding: 14px 16px; margin-top: 0; padding-top: 0; page-break-before: always; }
+    .disclaimer-summary { display: none !important; }
+    .important-planning-note-bottom { display: none !important; }
+    .print-only-planning { display: none !important; }
     /* Cover page typography */
     .print-cover-eyebrow { font-size: 9pt; letter-spacing: .18em; text-transform: uppercase; color: #555; padding-bottom: 10px; border-bottom: 2px solid #000; margin-bottom: 28px; }
     .print-cover-eyebrow-right { float: right; font-weight: 400; color: #777; letter-spacing: .08em; }
@@ -204,14 +216,10 @@
   <h1>Timeline Scoping Tool</h1>
   <p class="subtitle">This tool provides estimated project timelines based on deliverable type, production requirements, and standard review assumptions. Timelines reflect active production and business-day scheduling only. Actual timing may vary based on project readiness, scope, or review responsiveness.</p>
 
-  <div class="important-planning-note">
-    <div class="important-planning-note-title">Important Planning Note</div>
-    <div class="important-planning-note-body">The due date is NOT your open enrollment start date — that's typically later. Confirm with your account manager which date applies for scoping.</div>
-  </div>
-
   <div class="tabs">
     <button type="button" class="tab active" id="tab-timeline" onclick="switchTab('timeline')">Timeline</button>
     <button type="button" class="tab" id="tab-bp" onclick="switchTab('bp')">Best Practices</button>
+    <button type="button" class="tab" id="tab-disclaimers" onclick="switchTab('disclaimers')">Disclaimers</button>
   </div>
 
   <div id="view-timeline">
@@ -219,13 +227,14 @@
       <h3>Project Details</h3>
       <div class="row">
         <div class="field">
+          <label>Client name <span class="req">*</span></label>
+          <input type="text" id="project-name" placeholder="e.g., Acme Corp" />
+          <div class="small-hint">So account managers and clients know which project this timeline applies to. Appears on the printed/shared output.</div>
+        </div>
+        <div class="field">
           <label>Project due date <span class="req">*</span></label>
           <input type="date" id="project-due-date" />
           <div class="small-hint"><strong>This is the in-hand date</strong> — when deliverables must be in your office, in your employees' hands, or delivered to your client. <strong>This is NOT your open enrollment start date</strong>, which is typically later. Confirm with your account manager which date applies for scoping.</div>
-        </div>
-        <div class="field">
-          <label>Client name (optional)</label>
-          <input type="text" id="project-name" placeholder="e.g., Acme Corp" />
         </div>
       </div>
     </div>
@@ -269,6 +278,15 @@
       <p style="font-size:13px;color:#444">Final timelines may vary based on project complexity, scope changes, and turnaround times for feedback, approvals, and required materials.</p>
     </div>
 
+    <div class="disclaimer-summary" id="disclaimer-summary">
+      <strong>Quick reference:</strong> Results are estimates based on standard scheduling. Calendar excludes weekends and observed 2026/27 federal holidays. Custom pieces cannot be rushed. Timing depends on content readiness and review responsiveness. <button type="button" class="disclaimer-summary-link" onclick="switchTab('disclaimers')">See full Disclaimers &amp; Disclosures →</button>
+    </div>
+
+    <div class="important-planning-note important-planning-note-bottom">
+      <div class="important-planning-note-title">Important Planning Note</div>
+      <div class="important-planning-note-body">The due date is NOT your open enrollment start date — that's typically later. Confirm with your account manager which date applies for scoping.</div>
+    </div>
+
     <div class="sticky-calc">
       <button type="button" class="btn btn-primary" onclick="runCalculation()" style="padding:12px 28px;font-size:15px;font-weight:600">Calculate Timeline</button>
       <button type="button" class="btn" onclick="handlePrint()" style="padding:12px 20px;font-size:14px;margin-left:8px">Print / Save as PDF</button>
@@ -297,8 +315,23 @@
     </div>
   </div>
 
+  <div id="view-disclaimers" style="display:none">
+    <div class="card">
+      <h3>Disclaimers &amp; Disclosures</h3>
+      <ul class="disclaimer-list">
+        <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
+        <li><strong>Estimates represent typical maximums.</strong> Project completion may be faster with prepared content, responsive client/broker reviews, and minimal scope changes.</li>
+        <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates), and assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
+        <li>Custom pieces cannot be rushed; standard schedule applies regardless of urgency.</li>
+        <li><strong>Project closure:</strong> a project is considered closed when the final distribution email is sent. The final distribution email will not be sent until the client has delivered both final approval and final quality control. After closure, no further edits will be performed on the closed deliverable.</li>
+        <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work. Project managers cannot perform edits to a closed deliverable, and leftover edits cannot be applied to create an alternate without a new SOW.</li>
+        <li><strong>Tight timelines are possible</strong> when the client is ready to be highly responsive, has all required materials and final plan decisions in hand at kickoff, and accepts that not all revision rounds may be used. Coordinate with your account manager to confirm scope feasibility before committing to a compressed schedule.</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="print-only-planning" id="print-only-planning" aria-hidden="true"></div>
-  <div class="disclaimer-section">
+  <div class="disclaimer-section full-print">
     <h3>Disclaimers &amp; Disclosures</h3>
     <ul class="disclaimer-list">
       <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
@@ -406,8 +439,10 @@ function fmtShort(d) { return d.toLocaleDateString('en-US', { month:'short', day
 function switchTab(t) {
   document.getElementById('tab-timeline').classList.toggle('active', t==='timeline');
   document.getElementById('tab-bp').classList.toggle('active', t==='bp');
+  document.getElementById('tab-disclaimers').classList.toggle('active', t==='disclaimers');
   document.getElementById('view-timeline').style.display = t==='timeline' ? '' : 'none';
   document.getElementById('view-bp').style.display = t==='bp' ? '' : 'none';
+  document.getElementById('view-disclaimers').style.display = t==='disclaimers' ? '' : 'none';
 }
 
 // ============================================================
@@ -717,6 +752,7 @@ function runCalculation() {
   var projectName = document.getElementById('project-name').value;
   var container = document.getElementById('results-container');
 
+  if (!projectName.trim()) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Client name required</div><div class="warning-body">Enter a client name above so this timeline can be identified and shared.</div></div>'; return; }
   if (!dueDate) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Project due date required</div><div class="warning-body">Enter a project due date above to calculate.</div></div>'; return; }
   var validDeliverables = state.deliverables.filter(function(d){ return d.productTypeId && getProductType(d.productTypeId); });
   if (validDeliverables.length === 0) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Select a deliverable type</div><div class="warning-body">Choose a deliverable type for each item before calculating.</div></div>'; return; }
@@ -862,7 +898,7 @@ function runCalculation() {
       html += '<div class="phase-dates"><strong>' + fmt(r.statedDue) + '</strong></div>';
       html += '</div>';
     }
-    html += '<div class="inhand-block">In hand by: ' + fmt(r.statedDue) + (r.hasAlternate ? ' (main &amp; alternate)' : '') + '</div>';
+    html += '<div class="inhand-block">In hand by: ' + fmt(r.statedDue) + (r.hasAlternate ? ' (main &amp; alternate share this date)' : '') + '</div>';
     html += '</div>';
   });
   html += '</div>';
