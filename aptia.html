@@ -141,7 +141,7 @@
     .container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
     /* Hide screen-only UI — note: .container > h1 targets ONLY the on-screen
        title, leaving .print-cover-title (an h1 nested deeper) visible. */
-    .container > h1, .subtitle, .tabs, .sticky-calc, .input-card, .btn, button,
+    .container > h1, .subtitle, .about-section, .tabs, .sticky-calc, .input-card, .btn, button,
     .important-planning-note, .footer-note, header, #view-bp { display: none !important; }
     /* Hide the input cards inside #view-timeline (Project Details, Pre-Production Checklist,
        Deliverables, Timeline Assumptions, Important Notes) — but NOT .print-cover or
@@ -214,7 +214,11 @@
 <div class="container">
   <div class="aptia-eyebrow" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#555;font-weight:600;margin-bottom:6px;padding-bottom:6px;border-bottom:2px solid #000;display:flex;justify-content:space-between;align-items:baseline"><span>Flimp + Aptia</span><span style="font-weight:400;color:#777">2026 Product Details · Benefits Communications</span></div>
   <h1>Timeline Scoping Tool</h1>
-  <p class="subtitle">This tool provides estimated project timelines based on deliverable type, production requirements, and standard review assumptions. Timelines reflect active production and business-day scheduling only. Actual timing may vary based on project readiness, scope, or review responsiveness.</p>
+  <div class="about-section">
+    <h3>About This Tool</h3>
+    <p class="subtitle">This Timeline Scoping Tool provides estimated project timelines based on deliverable type, production requirements, project dependencies, and standard review assumptions. Timelines reflect estimated active production time and business-day scheduling and are intended to support project planning, coordination, and scheduling.</p>
+    <p class="subtitle">The tool is designed to provide a realistic planning framework, not a guarantee of delivery. Actual timelines may vary based on project scope, material readiness, feedback timing, approvals, production requirements, and other project-specific factors.</p>
+  </div>
 
   <div class="tabs">
     <button type="button" class="tab active" id="tab-timeline" onclick="switchTab('timeline')">Timeline</button>
