@@ -47,8 +47,8 @@
   .mode-toggle.required-unset { border-color:#b8860b; box-shadow: 0 0 0 1px #fff8e0; }
   .mode-toggle.required-unset .mode-btn { color:#6b4f00; background:#fffaf0; }
   .result-headline { border:2px solid #000; padding:18px; margin-bottom:1rem; }
-  .result-headline-eyebrow { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#333; margin-bottom:6px; }
-  .result-headline-title { font-size:30px; font-weight:700; margin-bottom:6px; line-height:1.2; }
+  .result-headline-eyebrow { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#3C3489; margin-bottom:6px; }
+  .result-headline-title { font-size:32px; font-weight:800; margin-bottom:6px; line-height:1.2; color:#3C3489; letter-spacing:-0.01em; }
   .result-headline-copy { font-size:13px; color:#333; margin-top:10px; padding:10px 12px; background:#f5f5f5; border-left:3px solid #000; }
   .result-headline-meta { font-size:12px; color:#555; margin-top:8px; }
   .warning-box { padding:12px 14px; margin-bottom:1rem; border:2px solid #a32d2d; background:#fceaea; }
@@ -75,7 +75,7 @@
   .phase-block.printmail { border-left-color:#000; background:#f5f5f5; }
   .phase-block.alternate { border-left-color:#0B6E4F; background:#f3faf6; }
   .phase-block.approval { border-left-color:#2a7f4e; background:#f0f8f3; }
-  .phase-block.delivery { border-left-color:#000; background:#fff; border-left-width:4px; }
+  .phase-block.delivery { border-left-color:#3C3489; background:#f5f4fb; border-left-width:4px; font-weight:600; }
   .alt-services { margin-left:23px; margin-top:6px; padding:8px 10px; border-left:2px solid #0B6E4F; background:#f3faf6; }
   .alt-services-label { font-size:11px; font-weight:600; color:#0B6E4F; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }
   .section-header { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#333; margin:10px 0 6px 0; padding-bottom:3px; border-bottom:1px solid #ddd; }
@@ -93,7 +93,7 @@
   .phase-label { font-size:12px; font-weight:600; display:flex; justify-content:space-between; gap:6px; }
   .phase-bd { font-size:11px; color:#555; }
   .phase-dates { font-size:11px; color:#555; margin-top:2px; }
-  .inhand-block { margin-top:10px; padding:8px 10px; border:2px solid #000; background:#fff; font-weight:700; font-size:13px; }
+  .inhand-block { margin-top:10px; padding:10px 12px; border:2px solid #3C3489; background:#f5f4fb; color:#3C3489; font-weight:700; font-size:14px; }
   .compressed-pill { display:inline-block; padding:2px 8px; font-size:11px; font-weight:700; background:#fff8e0; color:#6b4f00; border:1px solid #b8860b; }
   .infeasible-pill { display:inline-block; padding:2px 8px; font-size:11px; font-weight:700; background:#fceaea; color:#a32d2d; border:1px solid #a32d2d; }
   .disclaimer-section { border:1px solid #ccc; padding:1rem; margin-top:1rem; }
@@ -127,7 +127,7 @@
   .result-headline-section { padding:14px 0; border-bottom:1px solid #ddd; }
   .result-headline-section:first-of-type { padding-top:0; }
   .result-headline-section:last-of-type { border-bottom:none; padding-bottom:8px; }
-  .result-headline-date { font-size:20px; font-weight:600; margin-bottom:4px; line-height:1.25; }
+  .result-headline-date { font-size:22px; font-weight:700; margin-bottom:4px; line-height:1.25; color:#3C3489; }
   .result-headline-subtle { font-size:12px; color:#666; margin-bottom:10px; }
   .result-headline-body { font-size:13px; color:#333; line-height:1.55; }
   /* Phase 29: Print/PDF view — client-facing share-out */
@@ -235,26 +235,24 @@
         <div class="field">
           <label>Client name <span class="req">*</span></label>
           <input type="text" id="project-name" placeholder="e.g., Acme Corp" />
-          <div class="small-hint">So account managers and clients know which project this timeline applies to. Appears on the printed/shared output.</div>
         </div>
         <div class="field">
           <label>Project due date <span class="req">*</span></label>
           <input type="date" id="project-due-date" />
-          <div class="small-hint"><strong>This is the in-hand date</strong> — when deliverables must be in your office, in your employees' hands, or delivered to your client. <strong>This is NOT your open enrollment start date</strong>, which is typically later. Confirm with your account manager which date applies for scoping.</div>
+          <div class="small-hint"><strong>This is the in-hand date</strong> — when deliverables must be in your office, in your employees' hands, or available for digital distribution to employees.</div>
         </div>
       </div>
     </div>
 
     <div class="card pre-production-card">
       <h3 style="color:#3C3489">Pre-Production Window</h3>
-      <p style="font-size:13px;color:#333;margin-bottom:10px">The timeline reflects estimated active production time only. Active production begins after the project scope has been confirmed, the Change Order has been finalized, and all required project materials have been received. The Pre-Production Window is used for project alignment, scheduling, material collection, and readiness confirmation. Delays in completing pre-production requirements may impact project start dates and overall timeline estimates.</p>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">The timeline reflects estimated active production time only. Active production begins after the project scope has been confirmed, the SOW has been finalized, and all required project materials have been received. The Pre-Production Window is used for project alignment, scheduling, material collection, and readiness confirmation. Delays in completing pre-production requirements may impact project start dates and overall timeline estimates.</p>
       <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#3C3489;margin:14px 0 6px 0">Pre-Production Requirements</div>
       <p style="font-size:13px;color:#333;margin-bottom:8px">Before active production can begin, the following items should be completed and provided:</p>
       <ul class="pre-prod-list">
         <li>Required intake materials</li>
         <li>Branding guidelines</li>
         <li>Logos and other required assets</li>
-        <li>Finalized plan information</li>
         <li>Style selections and other project-specific creative decisions</li>
       </ul>
     </div>
@@ -272,21 +270,13 @@
 
     <div class="card">
       <h3>Timeline Assumptions</h3>
-      <p style="font-size:13px;color:#333;margin-bottom:8px">This timeline is based on:</p>
-      <ul class="disclaimer-list">
-        <li>Completion of the project kickoff</li>
-        <li>Receipt of all required materials and intake information</li>
-        <li>Finalized branding assets, logos, and plan details</li>
-        <li>Timely feedback, approvals, and decision-making throughout the project</li>
-      </ul>
-      <p style="font-size:13px;color:#333;margin-top:10px">Timeline estimates are based on standard production schedules and may vary depending on project complexity, scope changes, material readiness, and client and/or broker responsiveness. Delays in required materials, feedback, approvals, or final decisions may affect delivery timing.</p>
+      <p style="font-size:13px;color:#333">Timeline estimates are based on standard production schedules and may vary depending on project complexity, scope changes, material readiness, and client and/or broker responsiveness. Delays in required materials, feedback, approvals, or final decisions may affect delivery timing.</p>
     </div>
 
     <div class="card">
       <h3>Important Notes</h3>
       <p style="font-size:13px;color:#444;margin-bottom:10px">Results are estimates based on standard project timelines and business-day scheduling. Calendars exclude weekends and observed 2026/27 federal holidays. Custom pieces are not eligible for rush timelines.</p>
-      <p style="font-size:13px;color:#444;margin-bottom:10px">Timelines assume complete materials, timely feedback, required approvals, and finalized plan decisions by the dates shown. Delays in materials, feedback, approvals, or project start may require adjusted timelines, condensed review cycles, or reprioritization of deliverables to support the requested delivery date.</p>
-      <p style="font-size:13px;color:#444;margin-bottom:10px">Final timelines may vary based on project complexity, scope changes, production requirements, and client or broker responsiveness.</p>
+      <p style="font-size:13px;color:#444;margin-bottom:10px">Delays in materials, feedback, approvals, or project start may require adjusted timelines, condensed review cycles, or reprioritization of deliverables to support the requested delivery date.</p>
       <p style="font-size:13px"><button type="button" class="disclaimer-summary-link" onclick="switchTab('disclaimers')">See full Disclaimers &amp; Disclosures →</button></p>
     </div>
 
@@ -718,7 +708,8 @@ function renderDeliverableCard(d, idx) {
 
 // ============================================================
 // CALCULATION
-// Phase 35: multi-alternate support — each alternate is its own scheduling unit.
+// Phase 13: 4-phase model (Kickoff lead / Active production / Final QC / Final approval)
+// + sequential service blocking + variable kickoff by product class + renewal kickoff = 1 BD
 // ============================================================
 function calcDeliverable(d, projectDue, isMulti) {
   var pt = getProductType(d.productTypeId);
