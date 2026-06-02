@@ -202,7 +202,7 @@
 <div class="container">
   <div class="aptia-eyebrow" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#555;font-weight:600;margin-bottom:6px;padding-bottom:6px;border-bottom:2px solid #000;display:flex;justify-content:space-between;align-items:baseline"><span>Flimp + Aptia</span><span style="font-weight:400;color:#777">2026 Product Details · Benefits Communications</span></div>
   <h1>Timeline Scoping Tool</h1>
-  <p class="subtitle">This tool provides estimated project timelines based on deliverable type, production requirements, and standard review assumptions. Timelines represent estimated active production and business-day scheduling only and may vary based on project readiness, scope, and review responsiveness.</p>
+  <p class="subtitle">This tool provides estimated project timelines based on deliverable type, production requirements, and standard review assumptions. Timelines reflect active production and business-day scheduling only. Actual timing may vary based on project readiness, scope, or review responsiveness.</p>
 
   <div class="important-planning-note">
     <div class="important-planning-note-title">Important Planning Note</div>
@@ -221,7 +221,7 @@
         <div class="field">
           <label>Project due date <span class="req">*</span></label>
           <input type="date" id="project-due-date" />
-          <div class="small-hint">The date final deliverables must be in-hand, in-office, and/or in your employees' hands.</div>
+          <div class="small-hint"><strong>This is the in-hand date</strong> — when deliverables must be in your office, in your employees' hands, or delivered to your client. <strong>This is NOT your open enrollment start date</strong>, which is typically later. Confirm with your account manager which date applies for scoping.</div>
         </div>
         <div class="field">
           <label>Client name (optional)</label>
@@ -303,8 +303,7 @@
     <ul class="disclaimer-list">
       <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
       <li><strong>Estimates represent typical maximums.</strong> Project completion may be faster with prepared content, responsive client/broker reviews, and minimal scope changes.</li>
-      <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates).</li>
-      <li>Timeline assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
+      <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates), and assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
       <li>Custom pieces cannot be rushed; standard schedule applies regardless of urgency.</li>
       <li><strong>Project closure:</strong> a project is considered closed when the final distribution email is sent. The final distribution email will not be sent until the client has delivered both final approval and final quality control. After closure, no further edits will be performed on the closed deliverable.</li>
       <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work. Project managers cannot perform edits to a closed deliverable, and leftover edits cannot be applied to create an alternate without a new SOW.</li>
@@ -543,7 +542,7 @@ function renderDeliverableCard(d, idx) {
     html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'renewal' ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;renewal&quot;)">Renewal</button>';
     html += '</div>';
     html += '<div class="small-hint">Renewal timelines apply when the deliverable is substantially similar to the prior year and does not require significant design or structural changes before first draft creation. Significant layout, style, navigation, or restructuring changes may require the deliverable to be treated as new.</div>';
-    html += '<div class="small-hint" style="margin-top:4px">Up to ' + pt.duration_new_bd + ' business days total (kickoff lead, active production, final QC, and final approval included)' + (pt.varies ? '. Timelines may vary — check with your product manager for estimates.' : '') + '.</div></div>';
+    html += '<div class="small-hint" style="margin-top:4px"><strong>Total business days to production:</strong> up to ' + pt.duration_new_bd + ' (active production, Final Client QA &amp; QC, and Approval). The 10-business-day Pre-Production Window happens before this and is shown separately on the timeline' + (pt.varies ? '. Timelines may vary — check with your product manager for estimates.' : '') + '.</div></div>';
 
     html += '<div style="margin-bottom:8px"><label class="checkbox-row"><input type="checkbox" ' + (d.hasCustomDueDate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasCustomDueDate&quot;, this.checked)"/>';
     html += '<span>This deliverable has a different due date</span></label>';
@@ -810,6 +809,10 @@ function runCalculation() {
       html += '<div class="phase-block ' + ph.cls + '">';
       html += '<div class="phase-label"><span>' + ph.label + '</span><span class="phase-bd">up to ' + ph.days + ' business days</span></div>';
       html += '<div class="phase-dates">' + fmtShort(ph.start) + ' → ' + fmtShort(ph.end) + '</div>';
+      // Phase 32: inline definitions so clients understand the phases
+      if (ph.cls === 'qc') html += '<div class="small-hint">Final review of the deliverable for quality, correctness, accuracy, and alignment with project requirements before client approval.</div>';
+      if (ph.cls === 'approval') html += '<div class="small-hint">Client sign-off on the final deliverable.</div>';
+      if (ph.cls === 'production' && phasesToRender.length === 1) html += '<div class="small-hint">Deliverables under 10 business days combine active production, QA &amp; QC, and approval into a single phase for scoping simplicity. Quality and review steps still occur.</div>';
       html += '</div>';
     });
     if (r.requiresTranslation && r.mainTransStart) {
