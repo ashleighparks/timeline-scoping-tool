@@ -62,7 +62,6 @@
   .timeline-col.compressed { border-left:4px solid #b8860b; }
   .timeline-col.infeasible { border-left:4px solid #a32d2d; }
   .timeline-col.print { border-left:4px solid #000; background:#fafafa; }
-  .timeline-col.alt-col { border-left:4px solid #0B6E4F; background:#f3faf6; }
   .timeline-col-header { padding-bottom:10px; border-bottom:1px solid #ddd; margin-bottom:10px; }
   .timeline-col-title { font-size:14px; font-weight:700; margin-bottom:4px; word-break:break-word; line-height:1.3; }
   .timeline-col-meta { font-size:12px; color:#555; }
@@ -250,7 +249,9 @@
 
     <div class="card pre-production-card">
       <h3 style="color:#3C3489">Pre-Production</h3>
-      <p style="font-size:13px;color:#333;margin-bottom:10px">The timeline reflects estimated active production time only. Active production begins after the project scope has been confirmed, the SOW has been finalized, and all required project materials have been received. The Pre-Production Window is used for project alignment, scheduling, material collection, and readiness confirmation. Delays in completing pre-production requirements may impact project start dates and overall timeline estimates.</p>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">The Pre-Production Window represents approximately 10 business days of preparation between project kickoff and the start of active production. This time is used for material readiness, asset gathering, style alignment, and project setup.</p>
+      <p style="font-size:13px;color:#333;margin-bottom:10px"><strong>The SOW must be finalized and the project approved before this window begins.</strong> The Pre-Production Window is dedicated production prep — it is not part of the contracting or scoping process and should not be used to extend the sales timeline.</p>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">Active production cannot begin until all required project materials have been received and pre-production requirements are complete. Delays in completing these items may impact production start dates and overall timeline estimates.</p>
       <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#3C3489;margin:14px 0 6px 0">Pre-Production Requirements</div>
       <p style="font-size:13px;color:#333;margin-bottom:8px">Before active production can begin, the following items should be completed and provided:</p>
       <ul class="pre-prod-list">
@@ -363,19 +364,20 @@
 // User cannot override these in the UI.
 // ============================================================
 const CONFIG = {
-  print_mail_lead_bd: 10,
-  translation_new_bd: 5,
-  translation_renewal_bd: 5,
-  final_qc_bd: 1,
-  final_approval_bd: 1,
-  short_product_threshold_bd: 10,
-  alternate_bd: 10,
-  compressed_threshold_bd: 10,
-  varies_default_bd: 15,
-  pre_production_window_bd: 10,
+  print_mail_lead_bd: 10,             // print/mail rollback from in-hand
+  translation_new_bd: 5,              // translation lead — 5 BD universal
+  translation_renewal_bd: 5,          // same as new (no renewal benefit on translation)
+  final_qc_bd: 1,                     // Final QC (internal review)
+  final_approval_bd: 1,               // Final approval (client sign-off)
+  short_product_threshold_bd: 10,     // catalog BD < this = single 'Production' phase
+  alternate_bd: 10,                   // alternate development, sequential after main production
+  compressed_threshold_bd: 10,        // compressed warning threshold
+  varies_default_bd: 15,              // default for 'Varies' products
+  pre_production_window_bd: 10,       // UNIVERSAL 10-BD pre-production window (sales/scoping/SOW/intake/materials/kickoff scheduling)
   catalog_version: '2026-05-26'
 };
 
+// 2026/27 holidays
 const FLIMP_HOLIDAYS = new Set([
   '2026-01-01','2026-01-19','2026-02-16','2026-05-25','2026-06-19','2026-07-03',
   '2026-09-07','2026-10-12','2026-11-11','2026-11-26','2026-11-27','2026-12-24','2026-12-25',
@@ -383,13 +385,27 @@ const FLIMP_HOLIDAYS = new Set([
   '2027-09-06','2027-10-11','2027-11-11','2027-11-25','2027-11-26','2027-12-24'
 ]);
 
+// PRODUCT CATALOG — source of truth for deliverable types and durations.
+// Each deliverable uses duration_new_bd (max BD per Gage's conservative scoping).
+// Renewal currently uses the same total BD; only translation lead differs by new/renewal.
 const PRODUCT_TYPES = [
+  // === APTIA 2026 PRODUCT CATALOG ===
+  // Source: Aptia_Flimp2026_Product Details Slides_v4.pptx
+  // Categories: Benefits Guide | Companion Piece | Microsite & Digital Postcard | Customized Explainer Video
+  // Note: "Alternate Version of Benefits Guides or COBRA Notices" and "Foreign-Language Version of Guides"
+  // are listed on the PPT but handled in this tool via the per-product alternate / translation service toggles.
+
+  // Print and Mail Communication Products — Benefits Guides
   { id:'aptia-premium-bg', category:'Benefits Guide', name:'Premium Benefits Guide', duration_new_bd:30, printable:true, hasAlternateAvailable:true },
   { id:'aptia-custom-bg', category:'Benefits Guide', name:'Custom Benefits Guide', duration_new_bd:40, custom:true, printable:true, hasAlternateAvailable:true },
   { id:'aptia-topical-mini', category:'Benefits Guide', name:'Topical Mini Guide (8-Page)', duration_new_bd:25, printable:true, hasAlternateAvailable:true },
+
+  // Print and Mail Communication Products — Companion Pieces
   { id:'aptia-baag', category:'Companion Piece', name:'Benefits-at-a-Glance Brochure (4-Page)', duration_new_bd:15, printable:true, hasAlternateAvailable:true },
   { id:'aptia-postcard-flyer-poster', category:'Companion Piece', name:'Postcard, Flyer, or Poster', duration_new_bd:10, printable:true, hasAlternateAvailable:true },
   { id:'aptia-ppt-presentation', category:'Companion Piece', name:'PPT Benefits Presentation', duration_new_bd:20, printable:true, hasAlternateAvailable:true },
+
+  // Digital Communications Products — Microsites and Digital Postcards
   { id:'aptia-dp-oe', category:'Microsite & Digital Postcard', name:'Digital Postcards for OE Communication', duration_new_bd:5, printable:false, hasAlternateAvailable:true },
   { id:'aptia-email-campaign', category:'Microsite & Digital Postcard', name:'Flimp-Managed OE Email Campaign', duration_new_bd:15, varies:true, printable:false, hasAlternateAvailable:false },
   { id:'aptia-texting-campaign', category:'Microsite & Digital Postcard', name:'Flimp-Managed OE Texting Campaign', duration_new_bd:15, varies:true, printable:false, hasAlternateAvailable:false },
@@ -397,6 +413,8 @@ const PRODUCT_TYPES = [
   { id:'aptia-benefits-showcase', category:'Microsite & Digital Postcard', name:'Benefits Showcase or New Hire Onboarding Hub (multi-page)', duration_new_bd:30, custom:true, printable:false, hasAlternateAvailable:true },
   { id:'aptia-virtual-fair', category:'Microsite & Digital Postcard', name:'Virtual Benefits Fair or Tiled Microsite (multi-page)', duration_new_bd:30, custom:true, printable:false, hasAlternateAvailable:true },
   { id:'aptia-microsite-ai-agent', category:'Microsite & Digital Postcard', name:'Benefits AI Agent for Microsites', duration_new_bd:10, printable:false, hasAlternateAvailable:true },
+
+  // Digital Communications Products — Customized Explainer Videos
   { id:'aptia-semi-custom-teaser', category:'Customized Explainer Video', name:'OE and New-Hire Semi-Custom Teaser', duration_new_bd:5, printable:false, hasAlternateAvailable:false },
   { id:'aptia-customized-hr-video', category:'Customized Explainer Video', name:'Customized HR Explainer Video', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
   { id:'aptia-branded-presentation-video', category:'Customized Explainer Video', name:'OE or New Hire Branded Presentation Video', duration_new_bd:25, printable:false, hasAlternateAvailable:false },
@@ -405,9 +423,21 @@ const PRODUCT_TYPES = [
 
 function getProductType(id) { return PRODUCT_TYPES.find(p => p.id === id); }
 
+// ============================================================
+// STATE
+// ============================================================
 let state = { deliverables: [] };
 let nextInstanceId = 1;
 
+// Per-deliverable state shape:
+// { instanceId, productTypeId, newOrRenewal: null|'new'|'renewal',
+//   hasCustomDueDate: false, customDueDate: null,
+//   requiresPrintMail: false, requiresTranslation: false }
+
+
+// ============================================================
+// DATE HELPERS
+// ============================================================
 function isoStr(d) { var y=d.getFullYear(); var m=String(d.getMonth()+1).padStart(2,'0'); var day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; }
 function isWorkingDay(d) { var dow=d.getDay(); if(dow===0||dow===6) return false; return !FLIMP_HOLIDAYS.has(isoStr(d)); }
 function subBDays(date, bd) { var d=new Date(date); var c=0; while(c<bd){ d.setDate(d.getDate()-1); if(isWorkingDay(d)) c++; } return d; }
@@ -416,6 +446,9 @@ function bDaysBetween(start, end) { var s=new Date(start); s.setHours(0,0,0,0); 
 function fmt(d) { return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' }); }
 function fmtShort(d) { return d.toLocaleDateString('en-US', { month:'short', day:'numeric' }); }
 
+// ============================================================
+// TAB SWITCHING
+// ============================================================
 function switchTab(t) {
   document.getElementById('tab-timeline').classList.toggle('active', t==='timeline');
   document.getElementById('tab-bp').classList.toggle('active', t==='bp');
@@ -425,10 +458,14 @@ function switchTab(t) {
   document.getElementById('view-disclaimers').style.display = t==='disclaimers' ? '' : 'none';
 }
 
+// ============================================================
+// STATE MANAGEMENT
+// ============================================================
 function newDeliverable() {
   return { instanceId: nextInstanceId++, productTypeId:'', newOrRenewal:null, hasCustomDueDate:false, customDueDate:null, requiresPrintMail:false, requiresTranslation:false, alternates: [] };
 }
 
+// Phase 35: migrate legacy single-alternate state shape into the new alternates[] array.
 function migrateDeliverable(d) {
   if (!Array.isArray(d.alternates)) d.alternates = [];
   if (d.hasAlternate) {
@@ -446,6 +483,7 @@ function migrateDeliverable(d) {
   return d;
 }
 
+// Phase 35: add/remove/update alternates within a deliverable
 function addAlternate(deliverableInstanceId) {
   var d = state.deliverables.find(function(x){ return x.instanceId === deliverableInstanceId; });
   if (!d) return;
@@ -510,6 +548,9 @@ function updateDeliverableField(id, field, value) {
   renderDeliverables();
 }
 
+// ============================================================
+// localStorage PERSISTENCE
+// ============================================================
 var STORAGE_KEY = 'flimp_timeline_v1';
 function saveState() {
   try {
@@ -536,19 +577,26 @@ function loadState() {
   return false;
 }
 
+// Phase 23: explicit reset action — clear all state without a page reload.
 function resetProject() {
   if (!confirm('Reset all fields and start a fresh project? This will clear all deliverables, the due date, and the client name.')) return;
   state.deliverables = [newDeliverable()];
   var dueInput = document.getElementById('project-due-date');
   var nameInput = document.getElementById('project-name');
   var results = document.getElementById('results-container');
-  if (dueInput) { dueInput.value = ''; }
+  if (dueInput) {
+    // Phase 27: reset clears the date entirely (no pre-populated default)
+    dueInput.value = '';
+  }
   if (nameInput) nameInput.value = '';
   if (results) results.innerHTML = '';
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   renderDeliverables();
 }
 
+// ============================================================
+// RENDER DELIVERABLES
+// ============================================================
 function renderDeliverables() {
   var container = document.getElementById('deliverables-list');
   if (!container) return;
@@ -619,6 +667,7 @@ function renderDeliverableCard(d, idx) {
     html += '</div>';
 
     if (pt.hasAlternateAvailable) {
+      // Phase 35: multi-alternate support — each alternate has its own due date + services
       var alts = Array.isArray(d.alternates) ? d.alternates : [];
       html += '<div style="margin-top:10px;border-top:1px solid #ddd;padding-top:10px">';
       html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
@@ -655,6 +704,11 @@ function renderDeliverableCard(d, idx) {
   return html;
 }
 
+// ============================================================
+// CALCULATION
+// Phase 13: 4-phase model (Kickoff lead / Active production / Final QC / Final approval)
+// + sequential service blocking + variable kickoff by product class + renewal kickoff = 1 BD
+// ============================================================
 function calcDeliverable(d, projectDue, isMulti) {
   var pt = getProductType(d.productTypeId);
   var mainBD = pt.duration_new_bd;
@@ -666,10 +720,12 @@ function calcDeliverable(d, projectDue, isMulti) {
     : new Date(projectDue);
   var inHand = new Date(statedDue);
 
+  // Phase 35: each alternate rolls back independently from its own in-hand date.
+  // Within one alternate, single-resource constraint: alt translation completes before alt print/mail.
   var altResults = alts.map(function(alt, altIdx) {
     var altStated = (alt.hasCustomDueDate && alt.customDueDate)
       ? new Date(alt.customDueDate + 'T12:00:00')
-      : new Date(statedDue);
+      : new Date(statedDue); // default to parent deliverable's due
     var altInHand = new Date(altStated);
     var aPrintStart = null, aPrintEnd = null;
     if (alt.requiresPrintMail && pt.printable) {
@@ -695,6 +751,7 @@ function calcDeliverable(d, projectDue, isMulti) {
     };
   });
 
+  // Main schedule: roll back from main in-hand. Main must finish before earliest alt dev start.
   var mainPrintStart = null, mainPrintEnd = null;
   if (effRequiresPrintMail) {
     mainPrintEnd = new Date(inHand);
@@ -711,6 +768,7 @@ function calcDeliverable(d, projectDue, isMulti) {
     if (ar.altDevStart < effectiveMainEnd) effectiveMainEnd = new Date(ar.altDevStart);
   });
 
+  // Phase model: long products get Active/Final Client Review/Approval; short products get one Production phase.
   var phases;
   var mainStart;
   var finalQCBD = CONFIG.final_qc_bd;
@@ -745,6 +803,7 @@ function calcDeliverable(d, projectDue, isMulti) {
   if (mainStart < today) feasibility = 'infeasible';
   else if (mainStart < compressedThreshold) feasibility = 'compressed';
 
+  // Per-alternate feasibility (based on its altDevStart vs today)
   altResults.forEach(function(ar) {
     ar.feasibility = 'feasible';
     if (ar.altDevStart < today) ar.feasibility = 'infeasible';
@@ -764,6 +823,9 @@ function calcDeliverable(d, projectDue, isMulti) {
   };
 }
 
+// ============================================================
+// MAIN CALCULATION & RENDER
+// ============================================================
 function runCalculation() {
   var dueDate = document.getElementById('project-due-date').value;
   var projectName = document.getElementById('project-name').value;
@@ -785,6 +847,8 @@ function runCalculation() {
   var isMultiProject = validDeliverables.length > 1;
   var results = validDeliverables.map(function(d){ return calcDeliverable(d, projectDue, isMultiProject); });
 
+  // Phase 36: project start considers BOTH mains and alternates (each is its own scheduling unit)
+  // We collect a flattened list of (entry, type, start) for all rendering and headline-driver calculation.
   var flatEntries = [];
   results.forEach(function(r) {
     flatEntries.push({ kind: 'main', result: r, start: r.mainStart, displayName: r.productType.name, statedDue: r.statedDue, feasibility: r.feasibility });
@@ -796,6 +860,8 @@ function runCalculation() {
   results.sort(function(a, b){ return a.mainStart - b.mainStart; });
 
   var projectStart = flatEntries.length ? flatEntries[0].start : results[0].mainStart;
+  // Universal 10-BD pre-production window BEFORE catalog timeline starts (= X to Y)
+  // Same for solo and multi-deliverable, no per-product variation
   var projectWindowStart = subBDays(projectStart, CONFIG.pre_production_window_bd);
   var projectWindowEnd = new Date(projectStart);
   var driverNames = flatEntries.filter(function(e){ return e.start.getTime() === projectStart.getTime(); }).map(function(e){ return e.displayName; });
@@ -803,6 +869,7 @@ function runCalculation() {
                  : driverNames.length === 2 ? (driverNames[0] + ' and ' + driverNames[1])
                  : (driverNames.slice(0,-1).join(', ') + ', and ' + driverNames[driverNames.length-1]);
 
+  // Phase 36: isMulti counts ALL entries (mains + alternates) so headline phase-block filtering is consistent
   var isMulti = flatEntries.length > 1;
 
   var anyInfeasible = flatEntries.some(function(e){ return e.feasibility === 'infeasible'; });
@@ -821,19 +888,27 @@ function runCalculation() {
   }
 
   html += '<div class="result-headline">';
+  // Pre-Production Window block — date range + activity list
   html += '<div class="result-headline-section">';
   html += '<div class="result-headline-eyebrow">Pre-Production</div>';
   html += '<div class="result-headline-date">' + fmt(projectWindowStart) + ' → ' + fmt(projectWindowEnd) + '</div>';
   html += '<div class="result-headline-subtle">Please allow at least ' + CONFIG.pre_production_window_bd + ' business days.</div>';
+  // Phase 34b: body removed to avoid duplication with input-side Pre-Production Window card
   html += '</div>';
+  // Active Production deadline block
   html += '<div class="result-headline-section">';
   html += '<div class="result-headline-eyebrow">Production Start Date</div>';
   html += '<div class="result-headline-title">' + fmt(projectWindowEnd) + '</div>';
   html += '</div>';
+  // Meta line
   html += '<div class="result-headline-meta">Driven by: <strong>' + drivenBy + '</strong> &middot; In-hand date: ' + fmt(projectDue) + (projectName ? ' &middot; ' + projectName : '') + ' &middot; ' + results.length + ' deliverable' + (results.length===1?'':'s') + '</div>';
   html += '</div>';
 
+  // Phase 18: shared kickoff card removed — universal pre-production window in headline covers it.
+
   html += '<div class="timeline-grid">';
+  // Phase 36: render each main + each alternate as its own column.
+  // Use flatEntries (already sorted by start date).
   flatEntries.forEach(function(entry){
     var r = entry.result;
     var isAlt = entry.kind === 'alternate';
@@ -855,6 +930,7 @@ function runCalculation() {
     else if (feasibility === 'compressed') html += '<div style="margin-top:6px"><span class="compressed-pill">Tight</span></div>';
 
     if (!isAlt) {
+      // MAIN COLUMN
       html += '<div class="timeline-col-total">Up to ' + r.elapsedBD + ' business days from kickoff to in-hand</div>';
       html += '</div>';
       html += '<div class="section-header">Main Piece</div>';
@@ -892,6 +968,7 @@ function runCalculation() {
         html += '</div>';
       }
     } else {
+      // ALTERNATE COLUMN
       var ar = entry.alt;
       var altElapsed = bDaysBetween(ar.altDevStart, ar.inHand);
       html += '<div class="timeline-col-total">Up to ' + altElapsed + ' business days from alternate start to in-hand</div>';
@@ -932,6 +1009,7 @@ function runCalculation() {
     var r = entry.result;
     var isAlt = entry.kind === 'alternate';
     var drives = entry.start.getTime() === projectStart.getTime();
+    // Build the notes line — small/italic considerations under the row
     var notes = [];
     if (isAlt) {
       notes.push('Alternate version');
@@ -960,6 +1038,7 @@ function runCalculation() {
   html += '<div class="footer-note">Calendar excludes weekends and observed federal holidays. Within a deliverable, main translation completes before alt translation, and main print/mail before alt print/mail (single-resource). All scheduling parameters are system-controlled.</div>';
 
   container.innerHTML = html;
+  // Phase 29: populate print-only cover from current calc state
   buildPrintCover({
     projectName: projectName,
     projectDue: projectDue,
@@ -971,12 +1050,16 @@ function runCalculation() {
   });
 }
 
+// ============================================================
+// PRINT / PDF VIEW (Phase 29)
+// ============================================================
 function buildPrintCover(ctx) {
   var cover = document.getElementById('print-cover');
   if (!cover) return;
   var projectName = (ctx.projectName || '').trim();
   var titleText = projectName ? projectName : 'Project Timeline';
   var subtitleText = 'Estimated production schedule and key dates';
+  // Phase 36: count of all rendered entries (mains + alternates)
   var allEntries = [];
   ctx.results.forEach(function(r){
     allEntries.push({ kind:'main', result:r, name:r.productType.name, statedDue:r.statedDue, start:r.mainStart, alt:null });
@@ -1044,17 +1127,24 @@ function handlePrint() {
     alert('Please click "Calculate Timeline" before printing — the PDF needs a calculated schedule to render.');
     return;
   }
+  // Ensure print-only planning note is populated (idempotent)
   buildPrintPlanningNote();
   window.print();
 }
 
+// ============================================================
+// INIT
+// ============================================================
 function initialize() {
   var today = new Date();
   var defaultDue = new Date(today); defaultDue.setDate(defaultDue.getDate() + 90);
   var dueInput = document.getElementById('project-due-date');
+  // Phase 23: every page open starts fresh — no carryover from prior sessions or prior users on shared browsers.
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  // Phase 29: populate the print-only planning note clone once on load
   buildPrintPlanningNote();
   if (dueInput) {
+    // Phase 27: due date starts empty — no default pre-population
     dueInput.min = today.toISOString().split('T')[0];
     dueInput.addEventListener('change', saveState);
   }
