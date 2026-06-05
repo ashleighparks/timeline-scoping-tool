@@ -374,6 +374,7 @@ const CONFIG = {
   compressed_threshold_bd: 10,        // compressed warning threshold
   varies_default_bd: 15,              // default for 'Varies' products
   pre_production_window_bd: 10,       // UNIVERSAL 10-BD pre-production window (sales/scoping/SOW/intake/materials/kickoff scheduling)
+  recommended_start_buffer_bd: 5,     // Phase 38: Wayne's ask — push the headline recommended start 5 BD earlier than the math-calculated absolute-latest start (Ashleigh greenlight 2026-06-05)
   catalog_version: '2026-05-26'
 };
 
@@ -860,10 +861,15 @@ function runCalculation() {
   results.sort(function(a, b){ return a.mainStart - b.mainStart; });
 
   var projectStart = flatEntries.length ? flatEntries[0].start : results[0].mainStart;
-  // Universal 10-BD pre-production window BEFORE catalog timeline starts (= X to Y)
+  // Phase 38: 5-BD contingency buffer applied to the HEADLINE recommendation.
+  // projectStart (math) = absolute-latest start; recommendedStart = 5 BD earlier.
+  // Per-deliverable columns continue to show projectStart (math) as the per-entry start.
+  var bufferBD = CONFIG.recommended_start_buffer_bd || 0;
+  var recommendedStart = bufferBD > 0 ? subBDays(projectStart, bufferBD) : new Date(projectStart);
+  // Universal 10-BD pre-production window BEFORE the recommended start
   // Same for solo and multi-deliverable, no per-product variation
-  var projectWindowStart = subBDays(projectStart, CONFIG.pre_production_window_bd);
-  var projectWindowEnd = new Date(projectStart);
+  var projectWindowStart = subBDays(recommendedStart, CONFIG.pre_production_window_bd);
+  var projectWindowEnd = new Date(recommendedStart);
   var driverNames = flatEntries.filter(function(e){ return e.start.getTime() === projectStart.getTime(); }).map(function(e){ return e.displayName; });
   var drivenBy = driverNames.length === 1 ? driverNames[0]
                  : driverNames.length === 2 ? (driverNames[0] + ' and ' + driverNames[1])
@@ -899,6 +905,9 @@ function runCalculation() {
   html += '<div class="result-headline-section">';
   html += '<div class="result-headline-eyebrow">Production Start Date</div>';
   html += '<div class="result-headline-title">' + fmt(projectWindowEnd) + '</div>';
+  if (CONFIG.recommended_start_buffer_bd && CONFIG.recommended_start_buffer_bd > 0) {
+    html += '<div class="result-headline-subtle">Includes a ' + CONFIG.recommended_start_buffer_bd + ' business day contingency buffer before the absolute-latest start.</div>';
+  }
   html += '</div>';
   // Meta line
   html += '<div class="result-headline-meta">Driven by: <strong>' + drivenBy + '</strong> &middot; In-hand date: ' + fmt(projectDue) + (projectName ? ' &middot; ' + projectName : '') + ' &middot; ' + results.length + ' deliverable' + (results.length===1?'':'s') + '</div>';
