@@ -965,7 +965,7 @@ function runCalculation() {
       html += '<div class="section-header">Main Piece</div>';
       var phasesToRender = isMulti ? r.phases.filter(function(ph){ return ph.cls !== 'kickoff'; }) : r.phases;
       if (isMulti && phasesToRender.length > 0) {
-        html += '<div class="production-start-banner">Production begins: <strong>' + fmt(phasesToRender[0].start) + '</strong></div>';
+        html += '<div class="production-start-banner">Production begins: <strong>' + fmt(subBDays(phasesToRender[0].start, bufferBD)) + '</strong></div>';
       }
       phasesToRender.forEach(function(ph){
         html += '<div class="phase-block ' + ph.cls + '">';
@@ -1003,7 +1003,7 @@ function runCalculation() {
       html += '<div class="timeline-col-total">Up to ' + altElapsed + ' business days from alternate start to in-hand</div>';
       html += '</div>';
       html += '<div class="section-header alternate">Alternate Production</div>';
-      html += '<div class="production-start-banner">Alternate production begins: <strong>' + fmt(ar.altDevStart) + '</strong></div>';
+      html += '<div class="production-start-banner">Alternate production begins: <strong>' + fmt(subBDays(ar.altDevStart, bufferBD)) + '</strong></div>';
       html += '<div class="phase-block alternate">';
       html += '<div class="phase-label"><span>Alternate Development</span><span class="phase-bd">up to ' + CONFIG.alternate_bd + ' business days</span></div>';
       html += '<div class="phase-dates">' + fmtShort(ar.altDevStart) + ' → ' + fmtShort(ar.altDevEnd) + '</div>';
@@ -1058,7 +1058,7 @@ function runCalculation() {
     html += '<div class="latest-start-row">';
     html += '<div class="latest-start-row-top">';
     html += '<span class="latest-start-product">' + entry.displayName + '</span>';
-    html += '<span class="latest-start-date">' + fmt(entry.start) + '</span>';
+    html += '<span class="latest-start-date">' + fmt(subBDays(entry.start, bufferBD)) + '</span>';
     html += '</div>';
     if (notes.length) html += '<div class="latest-start-notes">' + notes.join(' &middot; ') + '</div>';
     html += '</div>';
@@ -1112,7 +1112,7 @@ function buildPrintCover(ctx) {
     }
     return '<li>' +
       '<div class="print-cover-deliverable-name">' + e.name + '</div>' +
-      '<div class="print-cover-deliverable-meta">' + tags.join(' &middot; ') + ' &middot; Project due date ' + fmt(e.statedDue) + ' &middot; Recommended start ' + fmt(e.start) + '</div>' +
+      '<div class="print-cover-deliverable-meta">' + tags.join(' &middot; ') + ' &middot; Project due date ' + fmt(e.statedDue) + ' &middot; Recommended start ' + fmt(subBDays(e.start, (CONFIG.recommended_start_buffer_bd||0))) + '</div>' +
       '</li>';
   }).join('');
   var today = new Date();
