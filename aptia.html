@@ -829,7 +829,18 @@ function calcDeliverable(d, projectDue, isMulti) {
     ar.feasibility = 'feasible';
     if (ar.altDevStart < today) ar.feasibility = 'infeasible';
     else if (ar.altDevStart < compressedThreshold) ar.feasibility = 'compressed';
+    ar.prodSpanBD = bDaysBetween(ar.altDevStart, ar.altDevEnd);
+    ar.availProdBD = bDaysBetween(today, ar.altDevEnd);
+    ar.shortfallBD = Math.max(0, ar.prodSpanBD - ar.availProdBD);
+    ar.displayStart = (ar.altDevStart < today) ? new Date(today) : new Date(ar.altDevStart);
   });
+
+  // Phase 44: when the latest production start is already in the past, clamp the DISPLAYED start to today
+  // and quantify how much production time is lost. Production span = mainStart..effectiveMainEnd (business days).
+  var prodSpanBD = bDaysBetween(mainStart, effectiveMainEnd);
+  var availProdBD = bDaysBetween(today, effectiveMainEnd);
+  var shortfallBD = Math.max(0, prodSpanBD - availProdBD);
+  var displayStart = (mainStart < today) ? new Date(today) : new Date(mainStart);
 
   var kickoffWindowStart = subBDays(mainStart, CONFIG.pre_production_window_bd);
   return {
@@ -840,7 +851,8 @@ function calcDeliverable(d, projectDue, isMulti) {
     requiresPrintMail: effRequiresPrintMail, mainPrintStart: mainPrintStart, mainPrintEnd: mainPrintEnd,
     requiresTranslation: d.requiresTranslation, mainTransStart: mainTransStart, mainTransEnd: mainTransEnd, mainTransBD: mainTransBD,
     alternates: altResults,
-    feasibility: feasibility
+    feasibility: feasibility,
+    prodSpanBD: prodSpanBD, availProdBD: availProdBD, shortfallBD: shortfallBD, displayStart: displayStart
   };
 }
 
@@ -890,6 +902,11 @@ function runCalculation() {
   // Same for solo and multi-deliverable, no per-product variation
   var projectWindowStart = subBDays(recommendedStart, CONFIG.pre_production_window_bd);
   var projectWindowEnd = new Date(recommendedStart);
+  // Phase 44: never display a start date in the past — clamp displayed starts to today.
+  var todayHL = new Date(); todayHL.setHours(0,0,0,0);
+  var clampToday = function(dt){ return dt < todayHL ? new Date(todayHL) : new Date(dt); };
+  var dispWindowStart = clampToday(projectWindowStart);
+  var dispWindowEnd = clampToday(projectWindowEnd);
   var driverNames = flatEntries.filter(function(e){ return e.start.getTime() === projectStart.getTime(); }).map(function(e){ return e.displayName; });
   var drivenBy = driverNames.length === 1 ? driverNames[0]
                  : driverNames.length === 2 ? (driverNames[0] + ' and ' + driverNames[1])
@@ -906,7 +923,7 @@ function runCalculation() {
   if (anyInfeasible) {
     var infeasList = results.filter(function(r){ return r.feasibility === 'infeasible'; });
     html += '<div class="warning-box"><div class="warning-title">Very tight timeline — coordinate immediately with your account manager</div><div class="warning-body">The following deliverables require immediate action to meet the in-hand date. Work should be starting now or already underway:<ul style="margin-top:6px;margin-left:18px">';
-    infeasList.forEach(function(r){ html += '<li>' + r.productType.name + ' (work would need to begin by ' + fmt(r.mainStart) + ')</li>'; });
+    infeasList.forEach(function(r){ html += '<li><strong>' + r.productType.name + '</strong> — latest start was ' + fmt(r.mainStart) + '. Starting today leaves about ' + r.availProdBD + ' of ' + r.prodSpanBD + ' production business days' + (r.shortfallBD > 0 ? ' (~' + r.shortfallBD + ' business day' + (r.shortfallBD === 1 ? '' : 's') + ' short)' : '') + '.</li>'; });
     html += '</ul>This is achievable with full client readiness — required materials in hand, all plan decisions finalized, and accepting that revision rounds may be condensed. If the schedule cannot accommodate immediate kickoff, discuss adjusting the in-hand date or scope with your account manager.</div></div>';
   }
   if (anyCompressed && !anyInfeasible) {
@@ -917,14 +934,14 @@ function runCalculation() {
   // Pre-Production Window block — date range + activity list
   html += '<div class="result-headline-section">';
   html += '<div class="result-headline-eyebrow">Pre-Production</div>';
-  html += '<div class="result-headline-date">' + fmt(projectWindowStart) + ' → ' + fmt(projectWindowEnd) + '</div>';
+  html += '<div class="result-headline-date">' + fmt(dispWindowStart) + ' → ' + fmt(dispWindowEnd) + '</div>';
   html += '<div class="result-headline-subtle">Please allow at least ' + CONFIG.pre_production_window_bd + ' business days.</div>';
   // Phase 34b: body removed to avoid duplication with input-side Pre-Production Window card
   html += '</div>';
   // Active Production deadline block
   html += '<div class="result-headline-section">';
   html += '<div class="result-headline-eyebrow">Production Start Date</div>';
-  html += '<div class="result-headline-title">' + fmt(projectWindowEnd) + '</div>';
+  html += '<div class="result-headline-title">' + fmt(dispWindowEnd) + '</div>';
   if (CONFIG.recommended_start_buffer_bd && CONFIG.recommended_start_buffer_bd > 0) {
     html += '<div class="result-headline-subtle">Includes a ' + CONFIG.recommended_start_buffer_bd + ' business day contingency buffer before the absolute-latest start.</div>';
   }
@@ -965,7 +982,7 @@ function runCalculation() {
       html += '<div class="section-header">Main Piece</div>';
       var phasesToRender = isMulti ? r.phases.filter(function(ph){ return ph.cls !== 'kickoff'; }) : r.phases;
       if (isMulti && phasesToRender.length > 0) {
-        html += '<div class="production-start-banner">Production begins: <strong>' + fmt(subBDays(phasesToRender[0].start, bufferBD)) + '</strong></div>';
+        html += '<div class="production-start-banner">Production begins: <strong>' + fmt(clampToday(subBDays(phasesToRender[0].start, bufferBD))) + '</strong></div>';
       }
       phasesToRender.forEach(function(ph){
         html += '<div class="phase-block ' + ph.cls + '">';
@@ -1003,7 +1020,7 @@ function runCalculation() {
       html += '<div class="timeline-col-total">Up to ' + altElapsed + ' business days from alternate start to in-hand</div>';
       html += '</div>';
       html += '<div class="section-header alternate">Alternate Production</div>';
-      html += '<div class="production-start-banner">Alternate production begins: <strong>' + fmt(subBDays(ar.altDevStart, bufferBD)) + '</strong></div>';
+      html += '<div class="production-start-banner">Alternate production begins: <strong>' + fmt(clampToday(subBDays(ar.altDevStart, bufferBD))) + '</strong></div>';
       html += '<div class="phase-block alternate">';
       html += '<div class="phase-label"><span>Alternate Development</span><span class="phase-bd">up to ' + CONFIG.alternate_bd + ' business days</span></div>';
       html += '<div class="phase-dates">' + fmtShort(ar.altDevStart) + ' → ' + fmtShort(ar.altDevEnd) + '</div>';
@@ -1054,11 +1071,11 @@ function runCalculation() {
     }
     if (drives) notes.push('Drives project start date');
     if (entry.feasibility === 'compressed') notes.push('Tight timeline');
-    if (entry.feasibility === 'infeasible') notes.push('Very tight — coordinate immediately');
+    if (entry.feasibility === 'infeasible') { var _sf = (entry.kind === 'alternate' ? entry.alt.shortfallBD : entry.result.shortfallBD); notes.push('Very tight — starting today is about ' + _sf + ' business day' + (_sf === 1 ? '' : 's') + ' short; coordinate immediately'); }
     html += '<div class="latest-start-row">';
     html += '<div class="latest-start-row-top">';
     html += '<span class="latest-start-product">' + entry.displayName + '</span>';
-    html += '<span class="latest-start-date">' + fmt(subBDays(entry.start, bufferBD)) + '</span>';
+    html += '<span class="latest-start-date">' + fmt(clampToday(subBDays(entry.start, bufferBD))) + '</span>';
     html += '</div>';
     if (notes.length) html += '<div class="latest-start-notes">' + notes.join(' &middot; ') + '</div>';
     html += '</div>';
