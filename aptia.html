@@ -205,6 +205,12 @@
       @bottom-right { content: "Page " counter(page) " of " counter(pages); font-size: 8.5pt; color: #888; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     }
   }
+  /* Phase 39 M0: read-only shared view (?share=) */
+  .share-banner { display:none; }
+  body.share-view .share-banner { display:block; border:1px solid #3C3489; background:#f5f4fb; padding:12px 16px; margin-bottom:1rem; border-radius:4px; }
+  body.share-view .share-banner-title { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:#3C3489; margin-bottom:4px; }
+  body.share-view .share-banner-sub { font-size:13px; color:#333; }
+  body.share-view .tabs, body.share-view .about-section, body.share-view .sticky-calc, body.share-view #view-timeline > .card { display:none !important; }
   @media (max-width: 700px) {
     .timeline-grid { grid-template-columns: minmax(0, 1fr); }
     .sticky-calc { padding:8px 12px; }
@@ -229,6 +235,7 @@
   </div>
 
   <div id="view-timeline">
+    <div class="share-banner"><div class="share-banner-title">Shared Read-Only Timeline</div><div class="share-banner-sub" id="share-banner-sub"></div></div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
         <h3 style="margin:0">Project Details</h3>
@@ -319,6 +326,7 @@
     <div class="sticky-calc">
       <button type="button" class="btn btn-primary" onclick="runCalculation()" style="padding:12px 28px;font-size:15px;font-weight:600">Calculate Timeline</button>
       <button type="button" class="btn" onclick="handlePrint()" style="padding:12px 20px;font-size:14px;margin-left:8px">Print / Save as PDF</button>
+      <button type="button" class="btn" onclick="copyShareLink()" style="padding:12px 20px;font-size:14px;margin-left:8px">Copy Share Link</button>
       <button type="button" class="btn" onclick="resetProject()" style="padding:12px 20px;font-size:14px;margin-left:8px">Reset / Start Over</button>
     </div>
   </div>
@@ -1179,9 +1187,47 @@ function handlePrint() {
 }
 
 // ============================================================
+// Phase 39 M0: read-only URL-encoded share link
+// ============================================================
+function copyShareLink() {
+  var due = document.getElementById('project-due-date').value;
+  var hasDeliv = state.deliverables.filter(function(d){ return d.productTypeId; }).length > 0;
+  if (!due || !hasDeliv) { alert('Add a project due date and at least one deliverable before creating a share link.'); return; }
+  var payload = { n: document.getElementById('project-name').value, d: due, dl: state.deliverables };
+  var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  var url = location.origin + location.pathname + '?share=' + encodeURIComponent(b64);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(function(){ alert('Read-only share link copied. Anyone with this link can view this timeline (view-only — they cannot edit it).'); }, function(){ window.prompt('Copy this read-only share link:', url); });
+  } else { window.prompt('Copy this read-only share link:', url); }
+}
+
+function loadSharedView(param) {
+  try {
+    var payload = JSON.parse(decodeURIComponent(escape(atob(param))));
+    var nameEl = document.getElementById('project-name'); if (nameEl) nameEl.value = payload.n || '';
+    var dueEl = document.getElementById('project-due-date'); if (dueEl) dueEl.value = payload.d || '';
+    state.deliverables = (payload.dl || []).map(migrateDeliverable);
+    var maxId = 0; state.deliverables.forEach(function(d){ if (d.instanceId > maxId) maxId = d.instanceId; });
+    nextInstanceId = maxId + 1;
+    document.body.classList.add('share-view');
+    var sub = document.getElementById('share-banner-sub');
+    if (sub) sub.textContent = (payload.n ? payload.n + ' · ' : '') + 'Estimated production timeline — view only.';
+    buildPrintPlanningNote();
+    renderDeliverables();
+    runCalculation();
+  } catch (e) {
+    var rc = document.getElementById('results-container');
+    if (rc) rc.innerHTML = '<div class="warning-box"><div class="warning-title">Could not open shared timeline</div><div class="warning-body">This share link appears to be invalid or incomplete. Ask the sender to generate a new one.</div></div>';
+    document.body.classList.add('share-view');
+  }
+}
+
+// ============================================================
 // INIT
 // ============================================================
 function initialize() {
+  var shareParam = new URLSearchParams(location.search).get('share');
+  if (shareParam) { loadSharedView(shareParam); return; }
   var today = new Date();
   var defaultDue = new Date(today); defaultDue.setDate(defaultDue.getDate() + 90);
   var dueInput = document.getElementById('project-due-date');
