@@ -47,8 +47,8 @@
   .mode-toggle.required-unset { border-color:#b8860b; box-shadow: 0 0 0 1px #fff8e0; }
   .mode-toggle.required-unset .mode-btn { color:#6b4f00; background:#fffaf0; }
   .result-headline { border:2px solid #000; padding:18px; margin-bottom:1rem; }
-  .result-headline-eyebrow { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:#333; margin-bottom:6px; }
-  .result-headline-title { font-size:30px; font-weight:700; margin-bottom:6px; line-height:1.2; }
+  .result-headline-eyebrow { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#3C3489; margin-bottom:6px; }
+  .result-headline-title { font-size:32px; font-weight:800; margin-bottom:6px; line-height:1.2; color:#3C3489; letter-spacing:-0.01em; }
   .result-headline-copy { font-size:13px; color:#333; margin-top:10px; padding:10px 12px; background:#f5f5f5; border-left:3px solid #000; }
   .result-headline-meta { font-size:12px; color:#555; margin-top:8px; }
   .warning-box { padding:12px 14px; margin-bottom:1rem; border:2px solid #a32d2d; background:#fceaea; }
@@ -74,7 +74,7 @@
   .phase-block.printmail { border-left-color:#000; background:#f5f5f5; }
   .phase-block.alternate { border-left-color:#0B6E4F; background:#f3faf6; }
   .phase-block.approval { border-left-color:#2a7f4e; background:#f0f8f3; }
-  .phase-block.delivery { border-left-color:#000; background:#fff; border-left-width:4px; }
+  .phase-block.delivery { border-left-color:#3C3489; background:#f5f4fb; border-left-width:4px; font-weight:600; }
   .alt-services { margin-left:23px; margin-top:6px; padding:8px 10px; border-left:2px solid #0B6E4F; background:#f3faf6; }
   .alt-services-label { font-size:11px; font-weight:600; color:#0B6E4F; text-transform:uppercase; letter-spacing:.05em; margin-bottom:4px; }
   .section-header { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#333; margin:10px 0 6px 0; padding-bottom:3px; border-bottom:1px solid #ddd; }
@@ -92,7 +92,7 @@
   .phase-label { font-size:12px; font-weight:600; display:flex; justify-content:space-between; gap:6px; }
   .phase-bd { font-size:11px; color:#555; }
   .phase-dates { font-size:11px; color:#555; margin-top:2px; }
-  .inhand-block { margin-top:10px; padding:8px 10px; border:2px solid #000; background:#fff; font-weight:700; font-size:13px; }
+  .inhand-block { margin-top:10px; padding:10px 12px; border:2px solid #3C3489; background:#f5f4fb; color:#3C3489; font-weight:700; font-size:14px; }
   .compressed-pill { display:inline-block; padding:2px 8px; font-size:11px; font-weight:700; background:#fff8e0; color:#6b4f00; border:1px solid #b8860b; }
   .infeasible-pill { display:inline-block; padding:2px 8px; font-size:11px; font-weight:700; background:#fceaea; color:#a32d2d; border:1px solid #a32d2d; }
   .disclaimer-section { border:1px solid #ccc; padding:1rem; margin-top:1rem; }
@@ -105,20 +105,30 @@
   .bp-note-body { font-size:13px; color:#6b4f00; }
   .footer-note { font-size:11px; color:#666; margin-top:16px; }
   .latest-start-section { border:1px solid #ccc; padding:12px 14px; margin-top:1rem; background:#fafafa; }
-  .latest-start-row { display:flex; justify-content:space-between; padding:6px 0; font-size:13px; border-bottom:1px dotted #ddd; gap:8px; flex-wrap:wrap; }
+  .latest-start-row { padding:8px 0; font-size:13px; border-bottom:1px dotted #ddd; }
   .latest-start-row:last-child { border-bottom:none; }
-  .latest-start-product { font-weight:500; }
-  .latest-start-date { font-weight:600; }
+  .latest-start-row-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  .latest-start-product { font-weight:600; color:#000; }
+  .latest-start-date { font-weight:700; color:#3C3489; white-space:nowrap; }
+  .latest-start-notes { font-size:11px; color:#888; font-style:italic; margin-top:3px; line-height:1.4; }
   .latest-start-note { font-size:11px; color:#555; margin-left:8px; font-weight:normal; }
   .sticky-calc { position:sticky; bottom:0; background:#fff; border-top:1px solid #ccc; padding:10px 16px; margin:1rem -1rem 0 -1rem; text-align:center; z-index:10; }
   optgroup { font-weight:600; }
   .important-planning-note { border:1px solid #4a6b8a; background:#f5f8fb; padding:14px 16px; margin-bottom:1.5rem; }
   .important-planning-note-title { font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#2c4a6b; margin-bottom:6px; }
   .important-planning-note-body { font-size:13px; color:#333; line-height:1.55; }
+  /* Phase 33: bottom-of-Timeline disclaimer summary card + relocated planning note */
+  .disclaimer-summary { border:1px solid #ccc; padding:12px 14px; margin-top:1rem; background:#fafafa; font-size:12px; color:#444; line-height:1.6; }
+  .disclaimer-summary strong { color:#000; }
+  .disclaimer-summary-link { color:#185FA5; text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; font-family:inherit; font-size:inherit; }
+  .disclaimer-summary-link:hover { color:#000; }
+  .important-planning-note-bottom { margin-top:1rem; }
+  /* Phase 33: on-screen full disclaimer-section (the one outside tabs) is hidden — content lives in tab + summary */
+  .container > .disclaimer-section.full-print { display:none; }
   .result-headline-section { padding:14px 0; border-bottom:1px solid #ddd; }
   .result-headline-section:first-of-type { padding-top:0; }
   .result-headline-section:last-of-type { border-bottom:none; padding-bottom:8px; }
-  .result-headline-date { font-size:20px; font-weight:600; margin-bottom:4px; line-height:1.25; }
+  .result-headline-date { font-size:22px; font-weight:700; margin-bottom:4px; line-height:1.25; color:#3C3489; }
   .result-headline-subtle { font-size:12px; color:#666; margin-bottom:10px; }
   .result-headline-body { font-size:13px; color:#333; line-height:1.55; }
   /* Phase 29: Print/PDF view — client-facing share-out */
@@ -133,9 +143,9 @@
     .container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
     /* Hide screen-only UI — note: .container > h1 targets ONLY the on-screen
        title, leaving .print-cover-title (an h1 nested deeper) visible. */
-    .container > h1, .subtitle, .tabs, .sticky-calc, .input-card, .btn, button,
+    .container > h1, .subtitle, .about-section, .tabs, .sticky-calc, .input-card, .btn, button,
     .important-planning-note, .footer-note, header, #view-bp { display: none !important; }
-    /* Hide the input cards inside #view-timeline (Project Details, Pre-Production Checklist,
+    /* Hide the input cards inside #view-timeline (Project Details, Pre-Production Window,
        Deliverables, Timeline Assumptions, Important Notes) — but NOT .print-cover or
        #results-container which also live in this container. */
     #view-timeline > .card { display: none !important; }
@@ -144,7 +154,11 @@
     .print-cover { display: block !important; page-break-after: always; padding: 0; }
     #results-container { display: block !important; }
     .print-only-planning { display: block !important; page-break-before: always; padding: 0; margin-top: 0; }
-    .disclaimer-section { display: block !important; border: 1px solid #999; padding: 14px 16px; margin-top: 14px; page-break-inside: avoid; }
+    /* Phase 33: full disclaimer always appears on its own dedicated final page in print */
+    .disclaimer-section.full-print { display: block !important; border: 1px solid #999; padding: 14px 16px; margin-top: 0; padding-top: 0; page-break-before: always; }
+    .disclaimer-summary { display: none !important; }
+    .important-planning-note-bottom { display: none !important; }
+    .print-only-planning { display: none !important; }
     /* Cover page typography */
     .print-cover-eyebrow { font-size: 9pt; letter-spacing: .18em; text-transform: uppercase; color: #555; padding-bottom: 10px; border-bottom: 2px solid #000; margin-bottom: 28px; }
     .print-cover-eyebrow-right { float: right; font-weight: 400; color: #777; letter-spacing: .08em; }
@@ -201,43 +215,69 @@
 <body>
 <div class="container">
   <h1>Timeline Scoping Tool</h1>
-  <p class="subtitle">This tool provides estimated project timelines based on deliverable type, production requirements, and standard review assumptions. Timelines represent estimated active production and business-day scheduling only and may vary based on project readiness, scope, and review responsiveness.</p>
-
-  <div class="important-planning-note">
-    <div class="important-planning-note-title">Important Planning Note</div>
-    <div class="important-planning-note-body">The due date is NOT your open enrollment start date — that's typically later. Confirm with your account manager which date applies for scoping.</div>
+  <div class="about-section">
+    <h3>About This Tool</h3>
+    <p class="subtitle">This Timeline Scoping Tool provides estimated project timelines based on deliverable type, production requirements, project variables, and standard review assumptions. Timelines reflect estimated active production time and business-day scheduling and are intended to support project planning, coordination, and scheduling.</p>
+    <p class="subtitle">The tool is designed to provide a realistic planning framework, not a guarantee of delivery. Actual deliverable timelines may vary based on project scope, material readiness, feedback timing, approvals, production requirements, and other specific project factors.</p>
   </div>
 
   <div class="tabs">
     <button type="button" class="tab active" id="tab-timeline" onclick="switchTab('timeline')">Timeline</button>
     <button type="button" class="tab" id="tab-bp" onclick="switchTab('bp')">Best Practices</button>
+    <button type="button" class="tab" id="tab-disclaimers" onclick="switchTab('disclaimers')">Disclaimers</button>
   </div>
 
   <div id="view-timeline">
     <div class="card">
-      <h3>Project Details</h3>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+        <h3 style="margin:0">Project Details</h3>
+        <span style="font-size:11px;color:#666;font-style:italic">* indicates a required field</span>
+      </div>
       <div class="row">
+        <div class="field">
+          <label>Client name <span class="req">*</span></label>
+          <input type="text" id="project-name" placeholder="e.g., Acme Corp" />
+        </div>
         <div class="field">
           <label>Project due date <span class="req">*</span></label>
           <input type="date" id="project-due-date" />
-          <div class="small-hint">The date final deliverables must be in-hand, in-office, and/or in your employees' hands.</div>
-        </div>
-        <div class="field">
-          <label>Client name (optional)</label>
-          <input type="text" id="project-name" placeholder="e.g., Acme Corp" />
+          <div class="small-hint"><strong>This is the in-hand date</strong> — when deliverables must be in your office, in your employees' hands, or available for digital distribution to employees.</div>
         </div>
       </div>
     </div>
 
+    <div class="card planning-note-top" style="border-left:4px solid #3C3489;background:#f7f6fc">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#3C3489;margin-bottom:8px">Planning Note</div>
+      <p style="font-size:13px;color:#333;line-height:1.55;margin:0">The timeline below covers <strong>active production only</strong>. It does not include the time needed to complete your SOW or pre-production requirements &mdash; both must be finished before the project start date shown below. We recommend starting them as soon as possible; the earlier a project gets moving, the more time it has to stay on track.</p>
+    </div>
+
+    <div class="card" style="background:#fff;padding:12px 16px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center">
+        <span style="background:#ece9f6;color:#3C3489;font-weight:700;font-size:12px;padding:6px 14px;border-radius:16px">SOW Signed</span>
+        <span style="color:#3C3489;font-weight:700;font-size:15px">&rarr;</span>
+        <span style="background:#ece9f6;color:#3C3489;font-weight:700;font-size:12px;padding:6px 14px;border-radius:16px">Pre-Production</span>
+        <span style="color:#3C3489;font-weight:700;font-size:15px">&rarr;</span>
+        <span style="background:#ece9f6;color:#3C3489;font-weight:700;font-size:12px;padding:6px 14px;border-radius:16px">Active Production</span>
+      </div>
+    </div>
+
+    <div class="card sow-card" style="border:1px solid #3C3489;background:#fafaff">
+      <h3 style="color:#3C3489">Statement of Work (SOW)</h3>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">Completing your SOW is the first step toward moving your project into production. <strong>The SOW must be finalized and the project approved before the Pre-Production Window begins.</strong></p>
+      <p style="font-size:13px;color:#333;margin-bottom:0">The SOW is not part of pre-production or active production time and should not be used to extend the sales timeline. We recommend finalizing your SOW as early as possible.</p>
+    </div>
+
     <div class="card pre-production-card">
-      <h3 style="color:#3C3489">Pre-Production Checklist</h3>
-      <div style="font-size:13px;color:#333;margin-bottom:10px">The Pre-Production Window covers project alignment, scheduling, final material collection, and readiness confirmation prior to active production beginning. All required materials, branding, logos, plan information, and finalized decisions should be provided by the end of this window to avoid timeline delays.</div>
+      <h3 style="color:#3C3489">Pre-Production</h3>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">The Pre-Production Window represents a recommended window of at least 10 business days prior to the project start date. This time is used for material gathering, asset gathering, style alignment, project setup, and the kickoff call.</p>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">Active production cannot begin until all required project materials have been received and pre-production requirements are complete. Delays in completing these items may impact production start dates and overall timeline estimates.</p>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#3C3489;margin:14px 0 6px 0">Pre-Production Requirements</div>
+      <p style="font-size:13px;color:#333;margin-bottom:8px">Before active production can begin, the following items should be completed and provided:</p>
       <ul class="pre-prod-list">
-        <li>Finalized SOW</li>
         <li>Required intake materials</li>
         <li>Branding guidelines</li>
-        <li>Logos and/or other required assets</li>
-        <li>Style and/or other project-specific creative decisions</li>
+        <li>Logos and other required assets</li>
+        <li>Style selections and other project-specific creative decisions</li>
       </ul>
       <div style="font-size:13px;color:#0B4F2A;margin-top:10px;padding:10px 12px;background:#eaf6ef;border-left:3px solid #0B6E4F"><strong>Tip:</strong> Start the conversation with your account manager as soon as you know a project is coming. You don't need every detail finalized to begin — earlier engagement helps lock in production capacity and gives more flexibility on scope, revisions, and timing.</div>
     </div>
@@ -255,18 +295,25 @@
 
     <div class="card">
       <h3>Timeline Assumptions</h3>
-      <ul class="disclaimer-list">
-        <li>Kickoff meeting completed</li>
-        <li>Required intake materials received</li>
-        <li>Branding assets and logos finalized</li>
-        <li>Timely review feedback and approvals provided throughout the project</li>
-      </ul>
+      <p style="font-size:13px;color:#333">Timeline estimates are based on standard production schedules and may vary depending on project complexity, scope changes, material readiness, and client and/or broker responsiveness. Delays in required materials, feedback, approvals, or final decisions may affect delivery timing.</p>
     </div>
 
     <div class="card">
       <h3>Important Notes</h3>
-      <p style="font-size:13px;color:#444;margin-bottom:10px">Projects beginning after the target start date may require adjusted timelines, condensed review cycles, or prioritization of deliverables in order to support the requested delivery timeframe.</p>
-      <p style="font-size:13px;color:#444">Final timelines may vary based on project complexity, scope changes, and turnaround times for feedback, approvals, and required materials.</p>
+      <p style="font-size:13px;color:#444;margin-bottom:10px">Results are estimates based on standard project timelines and business-day scheduling. Calendars exclude weekends and observed 2026/27 federal holidays. Custom pieces are not eligible for rush timelines.</p>
+      <p style="font-size:13px;color:#444;margin-bottom:10px">Delays in materials, feedback, approvals, or project start may require adjusted timelines, condensed review cycles, or reprioritization of deliverables to support the requested delivery date.</p>
+      <p style="font-size:13px"><button type="button" class="disclaimer-summary-link" onclick="switchTab('disclaimers')">See full Disclaimers &amp; Disclosures →</button></p>
+    </div>
+
+    <div class="card">
+      <h3>Keeping Your Project on Schedule</h3>
+      <p style="font-size:13px;color:#333;margin-bottom:10px">Project timelines are a shared responsibility between Flimp and the client. To help keep your project on track:</p>
+      <ul class="disclaimer-list">
+        <li>Provide complete project materials and finalized plan information as early as possible.</li>
+        <li>Submit timely, consolidated feedback during each review round.</li>
+        <li>Designate key decision-makers and approvers early in the process.</li>
+        <li>Communicate timeline changes or concerns promptly with your project manager.</li>
+      </ul>
     </div>
 
     <div class="sticky-calc">
@@ -290,26 +337,43 @@
       <h3 style="margin-top:1.5rem">How a successful project looks</h3>
       <p style="margin-bottom:12px">A multi-deliverable Open Enrollment project with overlapping pieces: a Custom Benefits Guide (renewal, with print &amp; mail), a Benefits Showcase Microsite, and a Spanish Benefits Guide. The tool schedules them in parallel with one shared pre-production window. Each piece's services (print/mail, translation) are automatically scheduled to meet the same in-hand date.</p>
       <div class="bp-example"><strong>Custom Benefits Guide (Renewal)</strong> — Print &amp; mail required. The tool schedules print/mail production so the deliverable arrives in-hand on the project due date. The renewal designation reduces pre-production friction but uses the same catalog time as new.</div>
-      <div class="bp-example"><strong>Benefits Showcase Microsite</strong> — Digital only, runs in parallel with the guide. No print/mail offsets, so the timeline is driven entirely by Active production, Final Client QA &amp; QC, and Approval.</div>
+      <div class="bp-example"><strong>Benefits Showcase Microsite</strong> — Digital only, runs in parallel with the guide. No print/mail offsets, so the timeline is driven entirely by Active production, Final Client Review, and Approval.</div>
       <div class="bp-example"><strong>Spanish Benefits Guide</strong> — Separate deliverable with translation required. Translation begins after main content is finalized; approximately 5 business days for most deliverables.</div>
       <p style="margin-top:16px"><strong>Why this works:</strong> Deliverables run in parallel across the project. Print/mail and translation timing are scheduled to meet each deliverable's in-hand date. The headline Production Start Date reflects the earliest required production start across everything.</p>
       <p style="margin-top:16px"><strong>What breaks this:</strong> Late content delivery, missed review windows, scope changes mid-flight, or trying to compress timelines without acknowledging reduced flexibility.</p>
     </div>
   </div>
 
+  <div id="view-disclaimers" style="display:none">
+    <div class="card">
+      <h3>Disclaimers &amp; Disclosures</h3>
+      <ul class="disclaimer-list">
+        <li>This is a project scoping tool; results are estimates based on standard production assumptions. Actual timelines may vary based on project readiness, scope changes, production requirements, and client and/or broker responsiveness.</li>
+        <li>Active production begins after the project kickoff and receipt of all required materials.</li>
+        <li>Estimates are contingent on receiving complete materials, timely feedback, required approvals, and finalized plan decisions by the dates shown. Delays in any of these milestones will extend the project timeline.</li>
+        <li>Translation, print/mail, and alternate-version deliverables will extend the overall project timeline. These extensions must be accounted for in the project scope and timeline view.</li>
+        <li>Project schedules are based on business days only and exclude weekends and observed holidays. Timelines also assume review and approval turnaround times remain within standard project windows.</li>
+        <li><strong>Project closure:</strong> a project is considered closed once the final deliverable has been approved, finalized, and distributed. After project closure, additional edits, alternate versions, language versions, or new deliverables may require a new scope review and statement of work. Minor post-finalization updates may be accommodated when feasible.</li>
+        <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work.</li>
+        <li><strong>Compressed timelines</strong> may be possible when all required materials and final plan decisions are available at the start of active production and review feedback is provided promptly. Account managers will work with clients and project management to confirm feasibility and any additional requirements before committing to accelerated schedules.</li>
+        <li>While Flimp makes every effort to meet projected timelines, final delivery dates cannot be guaranteed due to project dependencies, third-party services, and evolving project requirements.</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="print-only-planning" id="print-only-planning" aria-hidden="true"></div>
-  <div class="disclaimer-section">
+  <div class="disclaimer-section full-print">
     <h3>Disclaimers &amp; Disclosures</h3>
     <ul class="disclaimer-list">
-      <li><strong>This is a scoping tool.</strong> Results are estimates. Actual timing depends on scope finalization, content readiness, and client/broker responsiveness.</li>
-      <li><strong>Estimates represent typical maximums.</strong> Project completion may be faster with prepared content, responsive client/broker reviews, and minimal scope changes.</li>
-      <li>Calendar <strong>excludes weekends and observed 2026/27 federal holidays</strong> (both Flimp-observed and broker/client-observed dates).</li>
-      <li>Timeline assumes client/broker review turnarounds within standard windows. <strong>One additional business day is added to the project for every business day a milestone is missed.</strong></li>
-      <li>Custom pieces cannot be rushed; standard schedule applies regardless of urgency.</li>
-      <li><strong>Rounds of revisions have no carry-forward value.</strong> Unused rounds cannot be banked for future projects or used for additional edits after a project closes. If a project finishes ahead of schedule, that does not create a credit toward later work.</li>
-      <li><strong>Project closure:</strong> a project is considered closed when the final distribution email is sent. The final distribution email will not be sent until the client has delivered both final approval and final quality control. After closure, no further edits will be performed on the closed deliverable.</li>
-      <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work. Project managers cannot perform edits to a closed deliverable, and leftover edits cannot be applied to create an alternate without a new SOW.</li>
-      <li><strong>Tight timelines are possible</strong> when the client is ready to be highly responsive, has all required materials and final plan decisions in hand at kickoff, and accepts that not all revision rounds may be used. Coordinate with your account manager to confirm scope feasibility before committing to a compressed schedule.</li>
+      <li>This is a project scoping tool; results are estimates based on standard production assumptions. Actual timelines may vary based on project readiness, scope changes, production requirements, and client and/or broker responsiveness.</li>
+      <li>Active production begins after the project kickoff and receipt of all required materials.</li>
+      <li>Estimates are contingent on receiving complete materials, timely feedback, required approvals, and finalized plan decisions by the dates shown. Delays in any of these milestones will extend the project timeline.</li>
+      <li>Translation, print/mail, and alternate-version deliverables will extend the overall project timeline. These extensions must be accounted for in the project scope and timeline view.</li>
+      <li>Project schedules are based on business days only and exclude weekends and observed holidays. Timelines also assume review and approval turnaround times remain within standard project windows.</li>
+      <li><strong>Project closure:</strong> a project is considered closed once the final deliverable has been approved, finalized, and distributed. After project closure, additional edits, alternate versions, language versions, or new deliverables may require a new scope review and statement of work. Minor post-finalization updates may be accommodated when feasible.</li>
+      <li><strong>New hire versions and alternates after closure:</strong> any attempt to convert a closed main deliverable into an alternate (such as a new hire version) requires the account manager to re-scope the work and execute a new statement of work.</li>
+      <li><strong>Compressed timelines</strong> may be possible when all required materials and final plan decisions are available at the start of active production and review feedback is provided promptly. Account managers will work with clients and project management to confirm feasibility and any additional requirements before committing to accelerated schedules.</li>
+      <li>While Flimp makes every effort to meet projected timelines, final delivery dates cannot be guaranteed due to project dependencies, third-party services, and evolving project requirements.</li>
     </ul>
   </div>
 </div>
@@ -330,6 +394,7 @@ const CONFIG = {
   compressed_threshold_bd: 10,        // compressed warning threshold
   varies_default_bd: 15,              // default for 'Varies' products
   pre_production_window_bd: 10,       // UNIVERSAL 10-BD pre-production window (sales/scoping/SOW/intake/materials/kickoff scheduling)
+  recommended_start_buffer_bd: 5,     // Phase 38: Wayne's ask — push the headline recommended start 5 BD earlier than the math-calculated absolute-latest start (Ashleigh greenlight 2026-06-05)
   catalog_version: '2026-05-26'
 };
 
@@ -422,15 +487,69 @@ function fmtShort(d) { return d.toLocaleDateString('en-US', { month:'short', day
 function switchTab(t) {
   document.getElementById('tab-timeline').classList.toggle('active', t==='timeline');
   document.getElementById('tab-bp').classList.toggle('active', t==='bp');
+  document.getElementById('tab-disclaimers').classList.toggle('active', t==='disclaimers');
   document.getElementById('view-timeline').style.display = t==='timeline' ? '' : 'none';
   document.getElementById('view-bp').style.display = t==='bp' ? '' : 'none';
+  document.getElementById('view-disclaimers').style.display = t==='disclaimers' ? '' : 'none';
 }
 
 // ============================================================
 // STATE MANAGEMENT
 // ============================================================
 function newDeliverable() {
-  return { instanceId: nextInstanceId++, productTypeId:'', newOrRenewal:null, hasCustomDueDate:false, customDueDate:null, requiresPrintMail:false, requiresTranslation:false, hasAlternate:false, alternateRequiresPrintMail:false, alternateRequiresTranslation:false };
+  return { instanceId: nextInstanceId++, productTypeId:'', newOrRenewal:null, hasCustomDueDate:false, customDueDate:null, requiresPrintMail:false, requiresTranslation:false, alternates: [] };
+}
+
+// Phase 35: migrate legacy single-alternate state shape into the new alternates[] array.
+function migrateDeliverable(d) {
+  if (!Array.isArray(d.alternates)) d.alternates = [];
+  if (d.hasAlternate) {
+    d.alternates.push({
+      altInstanceId: nextInstanceId++,
+      hasCustomDueDate: false,
+      customDueDate: null,
+      requiresPrintMail: !!d.alternateRequiresPrintMail,
+      requiresTranslation: !!d.alternateRequiresTranslation
+    });
+  }
+  delete d.hasAlternate;
+  delete d.alternateRequiresPrintMail;
+  delete d.alternateRequiresTranslation;
+  return d;
+}
+
+// Phase 35: add/remove/update alternates within a deliverable
+function addAlternate(deliverableInstanceId) {
+  var d = state.deliverables.find(function(x){ return x.instanceId === deliverableInstanceId; });
+  if (!d) return;
+  if (!Array.isArray(d.alternates)) d.alternates = [];
+  d.alternates.push({
+    altInstanceId: nextInstanceId++,
+    hasCustomDueDate: false,
+    customDueDate: null,
+    requiresPrintMail: false,
+    requiresTranslation: false
+  });
+  saveState();
+  renderDeliverables();
+}
+
+function removeAlternate(deliverableInstanceId, altInstanceId) {
+  var d = state.deliverables.find(function(x){ return x.instanceId === deliverableInstanceId; });
+  if (!d || !Array.isArray(d.alternates)) return;
+  d.alternates = d.alternates.filter(function(a){ return a.altInstanceId !== altInstanceId; });
+  saveState();
+  renderDeliverables();
+}
+
+function updateAlternateField(deliverableInstanceId, altInstanceId, field, value) {
+  var d = state.deliverables.find(function(x){ return x.instanceId === deliverableInstanceId; });
+  if (!d || !Array.isArray(d.alternates)) return;
+  var a = d.alternates.find(function(x){ return x.altInstanceId === altInstanceId; });
+  if (!a) return;
+  a[field] = value;
+  saveState();
+  renderDeliverables();
 }
 
 function addDeliverable() {
@@ -485,7 +604,7 @@ function loadState() {
     if (!raw) return false;
     var snap = JSON.parse(raw);
     if (snap && Array.isArray(snap.deliverables) && snap.deliverables.length > 0) {
-      state.deliverables = snap.deliverables;
+      state.deliverables = snap.deliverables.map(migrateDeliverable);
       nextInstanceId = snap.nextInstanceId || (Math.max.apply(null, snap.deliverables.map(function(d){return d.instanceId;})) + 1);
       return { dueDate: snap.projectDueDate, projectName: snap.projectName };
     }
@@ -557,8 +676,9 @@ function renderDeliverableCard(d, idx) {
     html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'new' || !nrSet ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;new&quot;)">New</button>';
     html += '<button type="button" class="mode-btn' + (d.newOrRenewal === 'renewal' ? ' active' : '') + '" onclick="updateDeliverableField(' + d.instanceId + ', &quot;newOrRenewal&quot;, &quot;renewal&quot;)">Renewal</button>';
     html += '</div>';
-    html += '<div class="small-hint">Renewal timelines apply when the deliverable is substantially similar to the prior year and does not require significant design or structural changes before first draft creation. Significant layout, style, navigation, or restructuring changes may require the deliverable to be treated as new.</div>';
-    html += '<div class="small-hint" style="margin-top:4px">Up to ' + pt.duration_new_bd + ' business days total (kickoff lead, active production, final QC, and final approval included)' + (pt.varies ? '. Timelines may vary — check with your product manager for estimates.' : '') + '.</div></div>';
+    // Phase 34b: toggle-aware New vs Renewal note
+    var isRenewal = d.newOrRenewal === 'renewal';
+    html += '<div class="small-hint" style="margin-top:4px"><strong>' + (isRenewal ? 'Renewals:' : 'New Deliverables:') + '</strong> ' + (isRenewal ? 'Clients can generally begin editing within 24–48 hours. Turnaround for Flimp revisions depends on clarity, scope, and number of edits submitted.' : 'Typically require ~5 business days from active project start date to the first draft. Complete starting materials improve the quality and speed of the first draft.') + (pt.varies ? ' Timelines may vary — check with your product manager for estimates.' : '') + '</div></div>';
 
     html += '<div style="margin-bottom:8px"><label class="checkbox-row"><input type="checkbox" ' + (d.hasCustomDueDate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasCustomDueDate&quot;, this.checked)"/>';
     html += '<span>This deliverable has a different due date</span></label>';
@@ -582,24 +702,34 @@ function renderDeliverableCard(d, idx) {
     html += '</div>';
 
     if (pt.hasAlternateAvailable) {
-      html += '<div><label class="checkbox-row"><input type="checkbox" ' + (d.hasAlternate ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;hasAlternate&quot;, this.checked)"/>';
-      html += '<span>Includes an alternate version</span></label>';
-      if (d.hasAlternate) {
-        html += '<div class="small-hint" style="margin-left:23px">Alternate versions generally begin after the primary deliverable is finalized to prevent duplicate revisions and version-control conflicts. Approximately ' + CONFIG.alternate_bd + ' business days of additional development. If alternate versions are needed on a compressed timeline, discuss workflow options with your account manager during scoping.</div>';
-        html += '<div class="alt-services">';
-        html += '<div class="alt-services-label">Alternate version services</div>';
-        if (pt.printable) {
-          html += '<label class="checkbox-row" style="padding:2px 0"><input type="checkbox" ' + (d.alternateRequiresPrintMail ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;alternateRequiresPrintMail&quot;, this.checked)"/>';
-          html += '<span>Alternate requires print &amp; mail</span></label>';
-          if (d.alternateRequiresPrintMail) html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + CONFIG.print_mail_lead_bd + ' business days rollback for the alternate version. Main print/mail completes before alt print/mail starts (single-resource).</div>';
-        }
-        html += '<label class="checkbox-row" style="padding:2px 0"><input type="checkbox" ' + (d.alternateRequiresTranslation ? 'checked' : '') + ' onchange="updateDeliverableField(' + d.instanceId + ', &quot;alternateRequiresTranslation&quot;, this.checked)"/>';
-        html += '<span>Alternate requires translation</span></label>';
-        if (d.alternateRequiresTranslation) {
-          var aTBD = CONFIG.translation_new_bd;
-          html += '<div class="small-hint" style="margin-left:23px">Adds up to ' + aTBD + ' business days for the alternate translation. Main translation completes before alt translation starts (single-resource).</div>';
-        }
-        html += '</div>';
+      // Phase 35: multi-alternate support — each alternate has its own due date + services
+      var alts = Array.isArray(d.alternates) ? d.alternates : [];
+      html += '<div style="margin-top:10px;border-top:1px solid #ddd;padding-top:10px">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+      html += '<span style="font-size:12px;font-weight:600;color:#0B6E4F;text-transform:uppercase;letter-spacing:.05em">Alternate Versions (' + alts.length + ')</span>';
+      html += '<button type="button" class="btn btn-sm" style="border-color:#0B6E4F;color:#0B6E4F" onclick="addAlternate(' + d.instanceId + ')">+ Add Alternate</button>';
+      html += '</div>';
+      if (alts.length > 0) {
+        html += '<div class="small-hint" style="margin-bottom:8px">Each alternate is treated as its own deliverable with optional due date and services. Alternates begin after the primary deliverable is finalized; each adds approximately ' + CONFIG.alternate_bd + ' business days of production time.</div>';
+        alts.forEach(function(alt, altIdx) {
+          html += '<div class="alt-services" style="margin-left:0;margin-bottom:6px">';
+          html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">';
+          html += '<span class="alt-services-label">Alternate ' + (altIdx + 1) + '</span>';
+          html += '<button type="button" class="btn btn-sm btn-danger" style="padding:2px 8px;font-size:11px" onclick="removeAlternate(' + d.instanceId + ', ' + alt.altInstanceId + ')">Remove</button>';
+          html += '</div>';
+          html += '<label class="checkbox-row" style="padding:2px 0"><input type="checkbox" ' + (alt.hasCustomDueDate ? 'checked' : '') + ' onchange="updateAlternateField(' + d.instanceId + ', ' + alt.altInstanceId + ', &quot;hasCustomDueDate&quot;, this.checked)"/>';
+          html += '<span>This alternate has a different due date</span></label>';
+          if (alt.hasCustomDueDate) {
+            html += '<div style="margin-left:23px;margin-top:4px"><input type="date" value="' + (alt.customDueDate || '') + '" onchange="updateAlternateField(' + d.instanceId + ', ' + alt.altInstanceId + ', &quot;customDueDate&quot;, this.value)" style="max-width:200px"/></div>';
+          }
+          if (pt.printable) {
+            html += '<label class="checkbox-row" style="padding:2px 0"><input type="checkbox" ' + (alt.requiresPrintMail ? 'checked' : '') + ' onchange="updateAlternateField(' + d.instanceId + ', ' + alt.altInstanceId + ', &quot;requiresPrintMail&quot;, this.checked)"/>';
+            html += '<span>Requires print &amp; mail</span></label>';
+          }
+          html += '<label class="checkbox-row" style="padding:2px 0"><input type="checkbox" ' + (alt.requiresTranslation ? 'checked' : '') + ' onchange="updateAlternateField(' + d.instanceId + ', ' + alt.altInstanceId + ', &quot;requiresTranslation&quot;, this.checked)"/>';
+          html += '<span>Requires translation</span></label>';
+          html += '</div>';
+        });
       }
       html += '</div>';
     }
@@ -617,63 +747,63 @@ function renderDeliverableCard(d, idx) {
 function calcDeliverable(d, projectDue, isMulti) {
   var pt = getProductType(d.productTypeId);
   var mainBD = pt.duration_new_bd;
-  // Filter legacy state: clear flags if the product no longer supports them
   var effRequiresPrintMail = !!(d.requiresPrintMail && pt.printable);
-  var effHasAlternate = !!(d.hasAlternate && pt.hasAlternateAvailable);
-  var effAltRequiresPrintMail = !!(d.alternateRequiresPrintMail && pt.printable && effHasAlternate);
-  var effAltRequiresTranslation = !!(d.alternateRequiresTranslation && effHasAlternate);
+  var alts = Array.isArray(d.alternates) ? d.alternates : [];
+
   var statedDue = (d.hasCustomDueDate && d.customDueDate)
     ? new Date(d.customDueDate + 'T12:00:00')
     : new Date(projectDue);
-  // In-hand = stated due date (no end cushion). 5-BD window sits at the START of project.
   var inHand = new Date(statedDue);
 
-  // ---- SERVICES with resource-blocking constraints ----
-  // Translator and printer are single-resource within a deliverable.
-  var altPrintStart = null, altPrintEnd = null;
+  // Phase 35: each alternate rolls back independently from its own in-hand date.
+  // Within one alternate, single-resource constraint: alt translation completes before alt print/mail.
+  var altResults = alts.map(function(alt, altIdx) {
+    var altStated = (alt.hasCustomDueDate && alt.customDueDate)
+      ? new Date(alt.customDueDate + 'T12:00:00')
+      : new Date(statedDue); // default to parent deliverable's due
+    var altInHand = new Date(altStated);
+    var aPrintStart = null, aPrintEnd = null;
+    if (alt.requiresPrintMail && pt.printable) {
+      aPrintEnd = new Date(altInHand);
+      aPrintStart = subBDays(aPrintEnd, CONFIG.print_mail_lead_bd);
+    }
+    var aTransStart = null, aTransEnd = null, aTransBD = 0;
+    if (alt.requiresTranslation) {
+      aTransBD = d.newOrRenewal === 'renewal' ? CONFIG.translation_renewal_bd : CONFIG.translation_new_bd;
+      aTransEnd = aPrintStart ? new Date(aPrintStart) : new Date(altInHand);
+      aTransStart = subBDays(aTransEnd, aTransBD);
+    }
+    var aDevEnd = aTransStart ? new Date(aTransStart) : (aPrintStart ? new Date(aPrintStart) : new Date(altInHand));
+    var aDevStart = subBDays(aDevEnd, CONFIG.alternate_bd);
+    return {
+      altInstance: alt, altIdx: altIdx + 1,
+      statedDue: altStated, inHand: altInHand,
+      requiresPrintMail: !!(alt.requiresPrintMail && pt.printable),
+      requiresTranslation: !!alt.requiresTranslation,
+      altPrintStart: aPrintStart, altPrintEnd: aPrintEnd,
+      altTransStart: aTransStart, altTransEnd: aTransEnd, altTransBD: aTransBD,
+      altDevStart: aDevStart, altDevEnd: aDevEnd
+    };
+  });
+
+  // Main schedule: roll back from main in-hand. Main must finish before earliest alt dev start.
   var mainPrintStart = null, mainPrintEnd = null;
-  if (effAltRequiresPrintMail) {
-    altPrintEnd = new Date(inHand);
-    altPrintStart = subBDays(altPrintEnd, CONFIG.print_mail_lead_bd);
-  }
   if (effRequiresPrintMail) {
-    mainPrintEnd = altPrintStart ? new Date(altPrintStart) : new Date(inHand);
+    mainPrintEnd = new Date(inHand);
     mainPrintStart = subBDays(mainPrintEnd, CONFIG.print_mail_lead_bd);
   }
-
-  var altTransStart = null, altTransEnd = null, altTransBD = 0;
   var mainTransStart = null, mainTransEnd = null, mainTransBD = 0;
-  if (effAltRequiresTranslation) {
-    altTransBD = d.newOrRenewal === 'renewal' ? CONFIG.translation_renewal_bd : CONFIG.translation_new_bd;
-    altTransEnd = altPrintStart ? new Date(altPrintStart) : new Date(inHand);
-    altTransStart = subBDays(altTransEnd, altTransBD);
-  }
   if (d.requiresTranslation) {
     mainTransBD = d.newOrRenewal === 'renewal' ? CONFIG.translation_renewal_bd : CONFIG.translation_new_bd;
-    var mainTransLatest = new Date(inHand);
-    if (mainPrintStart && mainPrintStart < mainTransLatest) mainTransLatest = new Date(mainPrintStart);
-    if (altTransStart && altTransStart < mainTransLatest) mainTransLatest = new Date(altTransStart);
-    mainTransEnd = mainTransLatest;
+    mainTransEnd = mainPrintStart ? new Date(mainPrintStart) : new Date(inHand);
     mainTransStart = subBDays(mainTransEnd, mainTransBD);
   }
+  var effectiveMainEnd = mainTransStart ? new Date(mainTransStart) : (mainPrintStart ? new Date(mainPrintStart) : new Date(inHand));
+  altResults.forEach(function(ar) {
+    if (ar.altDevStart < effectiveMainEnd) effectiveMainEnd = new Date(ar.altDevStart);
+  });
 
-  var altDevStart = null, altDevEnd = null;
-  if (effHasAlternate) {
-    if (altTransStart) altDevEnd = new Date(altTransStart);
-    else if (altPrintStart) altDevEnd = new Date(altPrintStart);
-    else altDevEnd = new Date(inHand);
-    altDevStart = subBDays(altDevEnd, CONFIG.alternate_bd);
-  }
-
-  var effectiveMainEnd = new Date(inHand);
-  if (mainTransStart) effectiveMainEnd = new Date(mainTransStart);
-  else if (mainPrintStart) effectiveMainEnd = new Date(mainPrintStart);
-  if (altDevStart && altDevStart < effectiveMainEnd) effectiveMainEnd = new Date(altDevStart);
-
-  // ---- Phase model (Phase 18 — simplified) ----
-  // Long products (catalog >= 10 BD): Active production + Final QC + Final approval = catalog BD
-  // Short products (catalog < 10 BD): single 'Production' phase = catalog BD
-  // No kickoff phase inside catalog. Pre-production lives in universal 5-BD window BEFORE catalog.
+  // Phase model: long products get Active/Final Client Review/Approval; short products get one Production phase.
   var phases;
   var mainStart;
   var finalQCBD = CONFIG.final_qc_bd;
@@ -692,7 +822,7 @@ function calcDeliverable(d, projectDue, isMulti) {
     }
     phases = [
       place('Active production', activeBD, 'production'),
-      place('Final Client QA & QC', finalQCBD, 'qc'),
+      place('Final Client Review', finalQCBD, 'qc'),
       place('Approval', finalApprovalBD, 'approval')
     ];
   } else {
@@ -702,14 +832,30 @@ function calcDeliverable(d, projectDue, isMulti) {
   }
 
   var elapsedBD = bDaysBetween(mainStart, inHand);
-
   var today = new Date(); today.setHours(0,0,0,0);
   var compressedThreshold = addBDays(today, CONFIG.compressed_threshold_bd);
   var feasibility = 'feasible';
   if (mainStart < today) feasibility = 'infeasible';
   else if (mainStart < compressedThreshold) feasibility = 'compressed';
 
-  // Kickoff window start = 5 BD before mainStart (the latest kickoff date)
+  // Per-alternate feasibility (based on its altDevStart vs today)
+  altResults.forEach(function(ar) {
+    ar.feasibility = 'feasible';
+    if (ar.altDevStart < today) ar.feasibility = 'infeasible';
+    else if (ar.altDevStart < compressedThreshold) ar.feasibility = 'compressed';
+    ar.prodSpanBD = bDaysBetween(ar.altDevStart, ar.altDevEnd);
+    ar.availProdBD = bDaysBetween(today, ar.altDevEnd);
+    ar.shortfallBD = Math.max(0, ar.prodSpanBD - ar.availProdBD);
+    ar.displayStart = (ar.altDevStart < today) ? new Date(today) : new Date(ar.altDevStart);
+  });
+
+  // Phase 44: when the latest production start is already in the past, clamp the DISPLAYED start to today
+  // and quantify how much production time is lost. Production span = mainStart..effectiveMainEnd (business days).
+  var prodSpanBD = bDaysBetween(mainStart, effectiveMainEnd);
+  var availProdBD = bDaysBetween(today, effectiveMainEnd);
+  var shortfallBD = Math.max(0, prodSpanBD - availProdBD);
+  var displayStart = (mainStart < today) ? new Date(today) : new Date(mainStart);
+
   var kickoffWindowStart = subBDays(mainStart, CONFIG.pre_production_window_bd);
   return {
     instance: d, productType: pt,
@@ -718,10 +864,9 @@ function calcDeliverable(d, projectDue, isMulti) {
     phases: phases,
     requiresPrintMail: effRequiresPrintMail, mainPrintStart: mainPrintStart, mainPrintEnd: mainPrintEnd,
     requiresTranslation: d.requiresTranslation, mainTransStart: mainTransStart, mainTransEnd: mainTransEnd, mainTransBD: mainTransBD,
-    hasAlternate: effHasAlternate, altDevStart: altDevStart, altDevEnd: altDevEnd,
-    alternateRequiresPrintMail: effAltRequiresPrintMail, altPrintStart: altPrintStart, altPrintEnd: altPrintEnd,
-    alternateRequiresTranslation: effAltRequiresTranslation, altTransStart: altTransStart, altTransEnd: altTransEnd, altTransBD: altTransBD,
-    feasibility: feasibility
+    alternates: altResults,
+    feasibility: feasibility,
+    prodSpanBD: prodSpanBD, availProdBD: availProdBD, shortfallBD: shortfallBD, displayStart: displayStart
   };
 }
 
@@ -733,6 +878,7 @@ function runCalculation() {
   var projectName = document.getElementById('project-name').value;
   var container = document.getElementById('results-container');
 
+  if (!projectName.trim()) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Client name required</div><div class="warning-body">Enter a client name above so this timeline can be identified and shared.</div></div>'; return; }
   if (!dueDate) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Project due date required</div><div class="warning-body">Enter a project due date above to calculate.</div></div>'; return; }
   var validDeliverables = state.deliverables.filter(function(d){ return d.productTypeId && getProductType(d.productTypeId); });
   if (validDeliverables.length === 0) { container.innerHTML = '<div class="warning-box"><div class="warning-title">Select a deliverable type</div><div class="warning-body">Choose a deliverable type for each item before calculating.</div></div>'; return; }
@@ -748,29 +894,50 @@ function runCalculation() {
   var isMultiProject = validDeliverables.length > 1;
   var results = validDeliverables.map(function(d){ return calcDeliverable(d, projectDue, isMultiProject); });
 
+  // Phase 36: project start considers BOTH mains and alternates (each is its own scheduling unit)
+  // We collect a flattened list of (entry, type, start) for all rendering and headline-driver calculation.
+  var flatEntries = [];
+  results.forEach(function(r) {
+    flatEntries.push({ kind: 'main', result: r, start: r.mainStart, displayName: r.productType.name, statedDue: r.statedDue, feasibility: r.feasibility });
+    (r.alternates || []).forEach(function(ar) {
+      flatEntries.push({ kind: 'alternate', result: r, alt: ar, start: ar.altDevStart, displayName: r.productType.name + ' — Alternate ' + ar.altIdx, statedDue: ar.statedDue, feasibility: ar.feasibility });
+    });
+  });
+  flatEntries.sort(function(a, b){ return a.start - b.start; });
   results.sort(function(a, b){ return a.mainStart - b.mainStart; });
 
-  var projectStart = results[0].mainStart;
-  // Universal 10-BD pre-production window BEFORE catalog timeline starts (= X to Y)
+  var projectStart = flatEntries.length ? flatEntries[0].start : results[0].mainStart;
+  // Phase 38: 5-BD contingency buffer applied to the HEADLINE recommendation.
+  // projectStart (math) = absolute-latest start; recommendedStart = 5 BD earlier.
+  // Per-deliverable columns continue to show projectStart (math) as the per-entry start.
+  var bufferBD = CONFIG.recommended_start_buffer_bd || 0;
+  var recommendedStart = bufferBD > 0 ? subBDays(projectStart, bufferBD) : new Date(projectStart);
+  // Universal 10-BD pre-production window BEFORE the recommended start
   // Same for solo and multi-deliverable, no per-product variation
-  var projectWindowStart = subBDays(projectStart, CONFIG.pre_production_window_bd);
-  var projectWindowEnd = new Date(projectStart);
-  var driverNames = results.filter(function(r){ return r.mainStart.getTime() === projectStart.getTime(); }).map(function(r){ return r.productType.name; });
+  var projectWindowStart = subBDays(recommendedStart, CONFIG.pre_production_window_bd);
+  var projectWindowEnd = new Date(recommendedStart);
+  // Phase 44: never display a start date in the past — clamp displayed starts to today.
+  var todayHL = new Date(); todayHL.setHours(0,0,0,0);
+  var clampToday = function(dt){ return dt < todayHL ? new Date(todayHL) : new Date(dt); };
+  var dispWindowStart = clampToday(projectWindowStart);
+  var dispWindowEnd = clampToday(projectWindowEnd);
+  var driverNames = flatEntries.filter(function(e){ return e.start.getTime() === projectStart.getTime(); }).map(function(e){ return e.displayName; });
   var drivenBy = driverNames.length === 1 ? driverNames[0]
                  : driverNames.length === 2 ? (driverNames[0] + ' and ' + driverNames[1])
                  : (driverNames.slice(0,-1).join(', ') + ', and ' + driverNames[driverNames.length-1]);
 
-  var isMulti = results.length > 1;
+  // Phase 36: isMulti counts ALL entries (mains + alternates) so headline phase-block filtering is consistent
+  var isMulti = flatEntries.length > 1;
 
-  var anyInfeasible = results.some(function(r){ return r.feasibility === 'infeasible'; });
-  var anyCompressed = results.some(function(r){ return r.feasibility === 'compressed'; });
+  var anyInfeasible = flatEntries.some(function(e){ return e.feasibility === 'infeasible'; });
+  var anyCompressed = flatEntries.some(function(e){ return e.feasibility === 'compressed'; });
 
   var html = '';
 
   if (anyInfeasible) {
     var infeasList = results.filter(function(r){ return r.feasibility === 'infeasible'; });
     html += '<div class="warning-box"><div class="warning-title">Very tight timeline — coordinate immediately with your account manager</div><div class="warning-body">The following deliverables require immediate action to meet the in-hand date. Work should be starting now or already underway:<ul style="margin-top:6px;margin-left:18px">';
-    infeasList.forEach(function(r){ html += '<li>' + r.productType.name + ' (work would need to begin by ' + fmt(r.mainStart) + ')</li>'; });
+    infeasList.forEach(function(r){ html += '<li><strong>' + r.productType.name + '</strong> — latest start was ' + fmt(r.mainStart) + '. Starting today leaves about ' + r.availProdBD + ' of ' + r.prodSpanBD + ' production business days' + (r.shortfallBD > 0 ? ' (~' + r.shortfallBD + ' business day' + (r.shortfallBD === 1 ? '' : 's') + ' short)' : '') + '.</li>'; });
     html += '</ul>This is achievable with full client readiness — required materials in hand, all plan decisions finalized, and accepting that revision rounds may be condensed. If the schedule cannot accommodate immediate kickoff, discuss adjusting the in-hand date or scope with your account manager.</div></div>';
   }
   if (anyCompressed && !anyInfeasible) {
@@ -780,15 +947,18 @@ function runCalculation() {
   html += '<div class="result-headline">';
   // Pre-Production Window block — date range + activity list
   html += '<div class="result-headline-section">';
-  html += '<div class="result-headline-eyebrow">Pre-Production Window</div>';
-  html += '<div class="result-headline-date">' + fmt(projectWindowStart) + ' → ' + fmt(projectWindowEnd) + '</div>';
-  html += '<div class="result-headline-subtle">At least ' + CONFIG.pre_production_window_bd + ' business days</div>';
-  html += '<div class="result-headline-body">Use this window for: initial project scoping with your account manager, finalizing deliverables, SOW signature, completing intake, providing required project materials (branding, logos, plan documents), and holding the kickoff call.</div>';
+  html += '<div class="result-headline-eyebrow">Pre-Production</div>';
+  html += '<div class="result-headline-date">' + fmt(dispWindowStart) + ' → ' + fmt(dispWindowEnd) + '</div>';
+  html += '<div class="result-headline-subtle">Please allow at least ' + CONFIG.pre_production_window_bd + ' business days.</div>';
+  // Phase 34b: body removed to avoid duplication with input-side Pre-Production Window card
   html += '</div>';
   // Active Production deadline block
   html += '<div class="result-headline-section">';
-  html += '<div class="result-headline-eyebrow">Active Production Must Start No Later Than</div>';
-  html += '<div class="result-headline-title">' + fmt(projectWindowEnd) + '</div>';
+  html += '<div class="result-headline-eyebrow">Production Start Date</div>';
+  html += '<div class="result-headline-title">' + fmt(dispWindowEnd) + '</div>';
+  if (CONFIG.recommended_start_buffer_bd && CONFIG.recommended_start_buffer_bd > 0) {
+    html += '<div class="result-headline-subtle">Includes a ' + CONFIG.recommended_start_buffer_bd + ' business day contingency buffer before the absolute-latest start.</div>';
+  }
   html += '</div>';
   // Meta line
   html += '<div class="result-headline-meta">Driven by: <strong>' + drivenBy + '</strong> &middot; In-hand date: ' + fmt(projectDue) + (projectName ? ' &middot; ' + projectName : '') + ' &middot; ' + results.length + ' deliverable' + (results.length===1?'':'s') + '</div>';
@@ -797,115 +967,132 @@ function runCalculation() {
   // Phase 18: shared kickoff card removed — universal pre-production window in headline covers it.
 
   html += '<div class="timeline-grid">';
-  results.forEach(function(r){
-    var hasAnyPrint = r.requiresPrintMail || r.alternateRequiresPrintMail;
-    var colCls = r.feasibility === 'infeasible' ? 'infeasible' : (r.feasibility === 'compressed' ? 'compressed' : (hasAnyPrint ? 'print' : ''));
+  // Phase 36: render each main + each alternate as its own column.
+  // Use flatEntries (already sorted by start date).
+  flatEntries.forEach(function(entry){
+    var r = entry.result;
+    var isAlt = entry.kind === 'alternate';
+    var hasAnyPrint = isAlt ? entry.alt.requiresPrintMail : r.requiresPrintMail;
+    var feasibility = entry.feasibility;
+    var colCls = feasibility === 'infeasible' ? 'infeasible' : (feasibility === 'compressed' ? 'compressed' : (hasAnyPrint ? 'print' : ''));
+    if (isAlt) colCls += ' alt-col';
     html += '<div class="timeline-col ' + colCls + '">';
     html += '<div class="timeline-col-header">';
-    html += '<div class="timeline-col-title">' + r.productType.name + '</div>';
+    html += '<div class="timeline-col-title">' + entry.displayName + '</div>';
     html += '<div class="timeline-col-meta">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New');
-    if (r.productType.custom) html += ' &middot; Custom — cannot be rushed';
-    if (r.instance.hasCustomDueDate) html += ' &middot; Custom due date';
-    if (r.hasAlternate) html += ' &middot; Includes alternate';
-    if (r.productType.varies) html += ' &middot; <span class="varies-pill">Varies</span>';
+    if (r.productType.custom && !isAlt) html += ' &middot; Custom — cannot be rushed';
+    if (isAlt && entry.alt.altInstance && entry.alt.altInstance.hasCustomDueDate) html += ' &middot; Custom due date';
+    if (!isAlt && r.instance.hasCustomDueDate) html += ' &middot; Custom due date';
+    if (r.productType.varies && !isAlt) html += ' &middot; <span class="varies-pill">Varies</span>';
     html += '</div>';
-    if (r.productType.varies) html += '<div class="varies-hint">Timelines may vary — check with your product manager for estimates.</div>';
-    if (r.feasibility === 'infeasible') html += '<div style="margin-top:6px"><span class="infeasible-pill">Very tight</span></div>';
-    else if (r.feasibility === 'compressed') html += '<div style="margin-top:6px"><span class="compressed-pill">Tight</span></div>';
-    html += '<div class="timeline-col-total">Up to ' + r.elapsedBD + ' business days from kickoff to in-hand</div>';
-    html += '</div>';
+    if (r.productType.varies && !isAlt) html += '<div class="varies-hint">Timelines may vary — check with your product manager for estimates.</div>';
+    if (feasibility === 'infeasible') html += '<div style="margin-top:6px"><span class="infeasible-pill">Very tight</span></div>';
+    else if (feasibility === 'compressed') html += '<div style="margin-top:6px"><span class="compressed-pill">Tight</span></div>';
 
-    html += '<div class="section-header">Main Piece</div>';
-    var phasesToRender = isMulti ? r.phases.filter(function(ph){ return ph.cls !== 'kickoff'; }) : r.phases;
-    if (isMulti && phasesToRender.length > 0) {
-      var firstProdPhase = phasesToRender[0];
-      html += '<div class="production-start-banner">Production begins: <strong>' + fmt(firstProdPhase.start) + '</strong></div>';
-    }
-    phasesToRender.forEach(function(ph){
-      html += '<div class="phase-block ' + ph.cls + '">';
-      html += '<div class="phase-label"><span>' + ph.label + '</span><span class="phase-bd">up to ' + ph.days + ' business days</span></div>';
-      html += '<div class="phase-dates">' + fmtShort(ph.start) + ' → ' + fmtShort(ph.end) + '</div>';
+    if (!isAlt) {
+      // MAIN COLUMN
+      html += '<div class="timeline-col-total">Up to ' + r.elapsedBD + ' business days from kickoff to in-hand</div>';
       html += '</div>';
-    });
-    if (r.requiresTranslation && r.mainTransStart) {
-      html += '<div class="phase-block translation">';
-      html += '<div class="phase-label"><span>Translation</span><span class="phase-bd">up to ' + r.mainTransBD + ' business days</span></div>';
-      html += '<div class="phase-dates">' + fmtShort(r.mainTransStart) + ' → ' + fmtShort(r.mainTransEnd) + '</div>';
-      html += '<div class="small-hint">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New') + ' translation lead, rolled back from in-hand.</div>';
+      html += '<div class="section-header">Main Piece</div>';
+      var phasesToRender = isMulti ? r.phases.filter(function(ph){ return ph.cls !== 'kickoff'; }) : r.phases;
+      if (isMulti && phasesToRender.length > 0) {
+        html += '<div class="production-start-banner">Production begins: <strong>' + fmt(clampToday(subBDays(phasesToRender[0].start, bufferBD))) + '</strong></div>';
+      }
+      phasesToRender.forEach(function(ph){
+        html += '<div class="phase-block ' + ph.cls + '">';
+        html += '<div class="phase-label"><span>' + ph.label + '</span><span class="phase-bd">up to ' + ph.days + ' business days</span></div>';
+        html += '<div class="phase-dates">' + fmtShort(ph.start) + ' → ' + fmtShort(ph.end) + '</div>';
+        if (ph.cls === 'qc') html += '<div class="small-hint">Final client review of the deliverable for quality, correctness, accuracy, and alignment with project requirements before final approval.</div>';
+        if (ph.cls === 'approval') html += '<div class="small-hint">Client sign-off on the final deliverable.</div>';
+        if (ph.cls === 'production' && phasesToRender.length === 1) html += '<div class="small-hint">Deliverables under 10 business days combine active production, Final Client Review, and approval into a single phase for scoping simplicity. Quality and review steps still occur.</div>';
+        html += '</div>';
+      });
+      if (r.requiresTranslation && r.mainTransStart) {
+        html += '<div class="phase-block translation">';
+        html += '<div class="phase-label"><span>Translation</span><span class="phase-bd">up to ' + r.mainTransBD + ' business days</span></div>';
+        html += '<div class="phase-dates">' + fmtShort(r.mainTransStart) + ' → ' + fmtShort(r.mainTransEnd) + '</div>';
+        html += '<div class="small-hint">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New') + ' translation lead, rolled back from in-hand.</div>';
+        html += '</div>';
+      }
+      if (r.requiresPrintMail && r.mainPrintStart) {
+        html += '<div class="phase-block printmail">';
+        html += '<div class="phase-label"><span>Print &amp; Mail</span><span class="phase-bd">up to ' + CONFIG.print_mail_lead_bd + ' business days</span></div>';
+        html += '<div class="phase-dates">' + fmtShort(r.mainPrintStart) + ' → ' + fmtShort(r.mainPrintEnd) + '</div>';
+        html += '<div class="small-hint">' + CONFIG.print_mail_lead_bd + ' business days rollback from in-hand date.</div>';
+        html += '</div>';
+      }
+      if (r.mainBD >= CONFIG.short_product_threshold_bd) {
+        html += '<div class="phase-block delivery">';
+        html += '<div class="phase-label"><span>Project Due Date</span><span class="phase-bd"></span></div>';
+        html += '<div class="phase-dates"><strong>' + fmt(r.statedDue) + '</strong></div>';
+        html += '</div>';
+      }
+    } else {
+      // ALTERNATE COLUMN
+      var ar = entry.alt;
+      var altElapsed = bDaysBetween(ar.altDevStart, ar.inHand);
+      html += '<div class="timeline-col-total">Up to ' + altElapsed + ' business days from alternate start to in-hand</div>';
       html += '</div>';
-    }
-    if (r.requiresPrintMail && r.mainPrintStart) {
-      html += '<div class="phase-block printmail">';
-      html += '<div class="phase-label"><span>Print &amp; Mail</span><span class="phase-bd">up to ' + CONFIG.print_mail_lead_bd + ' business days</span></div>';
-      html += '<div class="phase-dates">' + fmtShort(r.mainPrintStart) + ' → ' + fmtShort(r.mainPrintEnd) + '</div>';
-      html += '<div class="small-hint">' + CONFIG.print_mail_lead_bd + ' business days rollback from in-hand date.</div>';
-      html += '</div>';
-    }
-
-    if (r.hasAlternate && r.altDevStart) {
-      html += '<div class="section-header alternate">Alternate Version</div>';
+      html += '<div class="section-header alternate">Alternate Production</div>';
+      html += '<div class="production-start-banner">Alternate production begins: <strong>' + fmt(clampToday(subBDays(ar.altDevStart, bufferBD))) + '</strong></div>';
       html += '<div class="phase-block alternate">';
       html += '<div class="phase-label"><span>Alternate Development</span><span class="phase-bd">up to ' + CONFIG.alternate_bd + ' business days</span></div>';
-      html += '<div class="phase-dates">' + fmtShort(r.altDevStart) + ' → ' + fmtShort(r.altDevEnd) + '</div>';
-      html += '<div class="small-hint">Begins after main production is complete.</div>';
+      html += '<div class="phase-dates">' + fmtShort(ar.altDevStart) + ' → ' + fmtShort(ar.altDevEnd) + '</div>';
+      html += '<div class="small-hint">Begins after the primary deliverable is finalized.</div>';
       html += '</div>';
-      if (r.alternateRequiresTranslation && r.altTransStart) {
+      if (ar.requiresTranslation && ar.altTransStart) {
         html += '<div class="phase-block translation">';
-        html += '<div class="phase-label"><span>Alternate Translation</span><span class="phase-bd">up to ' + r.altTransBD + ' business days</span></div>';
-        html += '<div class="phase-dates">' + fmtShort(r.altTransStart) + ' → ' + fmtShort(r.altTransEnd) + '</div>';
-        html += '<div class="small-hint">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New') + ' translation lead for the alternate. Runs after main translation.</div>';
+        html += '<div class="phase-label"><span>Translation</span><span class="phase-bd">up to ' + ar.altTransBD + ' business days</span></div>';
+        html += '<div class="phase-dates">' + fmtShort(ar.altTransStart) + ' → ' + fmtShort(ar.altTransEnd) + '</div>';
+        html += '<div class="small-hint">' + (r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New') + ' translation lead for this alternate.</div>';
         html += '</div>';
       }
-      if (r.alternateRequiresPrintMail && r.altPrintStart) {
+      if (ar.requiresPrintMail && ar.altPrintStart) {
         html += '<div class="phase-block printmail">';
-        html += '<div class="phase-label"><span>Alternate Print &amp; Mail</span><span class="phase-bd">up to ' + CONFIG.print_mail_lead_bd + ' business days</span></div>';
-        html += '<div class="phase-dates">' + fmtShort(r.altPrintStart) + ' → ' + fmtShort(r.altPrintEnd) + '</div>';
-        html += '<div class="small-hint">' + CONFIG.print_mail_lead_bd + ' business days rollback for the alternate version. Runs after main print/mail.</div>';
+        html += '<div class="phase-label"><span>Print &amp; Mail</span><span class="phase-bd">up to ' + CONFIG.print_mail_lead_bd + ' business days</span></div>';
+        html += '<div class="phase-dates">' + fmtShort(ar.altPrintStart) + ' → ' + fmtShort(ar.altPrintEnd) + '</div>';
+        html += '<div class="small-hint">' + CONFIG.print_mail_lead_bd + ' business days rollback for this alternate.</div>';
         html += '</div>';
       }
-    }
-
-    // Delivery phase block (long products only) — sits after services, before In-hand capstone
-    if (r.mainBD >= CONFIG.short_product_threshold_bd) {
-      var hasAnyService = r.requiresPrintMail || r.requiresTranslation || (r.hasAlternate && (r.alternateRequiresPrintMail || r.alternateRequiresTranslation));
-      var deliveryLabel = hasAnyService ? 'Estimated Delivery' : 'Delivery';
       html += '<div class="phase-block delivery">';
-      html += '<div class="phase-label"><span>' + deliveryLabel + '</span><span class="phase-bd"></span></div>';
-      html += '<div class="phase-dates"><strong>' + fmt(r.statedDue) + '</strong></div>';
+      html += '<div class="phase-label"><span>Project Due Date</span><span class="phase-bd"></span></div>';
+      html += '<div class="phase-dates"><strong>' + fmt(ar.statedDue) + '</strong></div>';
       html += '</div>';
     }
-    html += '<div class="inhand-block">In hand by: ' + fmt(r.statedDue) + (r.hasAlternate ? ' (main &amp; alternate)' : '') + '</div>';
     html += '</div>';
   });
   html += '</div>';
 
   html += '<div class="latest-start-section">';
-  html += '<h3 style="margin-top:0">Recommended Start Dates</h3>';
-  results.forEach(function(r){
-    var drives = r.mainStart.getTime() === projectStart.getTime();
-    var tags = [];
-    if (r.requiresPrintMail) tags.push('print & mail');
-    if (r.requiresTranslation) tags.push('translation');
-    if (r.hasAlternate) {
-      var altTags = ['alternate'];
-      if (r.alternateRequiresTranslation) altTags.push('alt translation');
-      if (r.alternateRequiresPrintMail) altTags.push('alt print & mail');
-      tags.push(altTags.join(' + '));
+  html += '<h3 style="margin-top:0">Project Deliverables Summary &amp; Start Dates</h3>';
+  flatEntries.forEach(function(entry){
+    var r = entry.result;
+    var isAlt = entry.kind === 'alternate';
+    var drives = entry.start.getTime() === projectStart.getTime();
+    // Build the notes line — small/italic considerations under the row
+    var notes = [];
+    if (isAlt) {
+      notes.push('Alternate version');
+      if (entry.alt.requiresTranslation) notes.push('Translation');
+      if (entry.alt.requiresPrintMail) notes.push('Print &amp; mail');
+      if (entry.alt.altInstance && entry.alt.altInstance.hasCustomDueDate) notes.push('Custom due date');
+    } else {
+      if (r.requiresPrintMail) notes.push('Print &amp; mail');
+      if (r.requiresTranslation) notes.push('Translation');
+      if (r.instance.hasCustomDueDate) notes.push('Custom due date');
+      if (r.productType.custom) notes.push('Custom — cannot be rushed');
+      if (r.productType.varies) notes.push('Timelines may vary');
     }
-    var tagStr = tags.length ? ' (' + tags.join('; ') + ')' : '';
-    var rowDate = r.mainStart;
-    if (isMulti) {
-      var firstProd = r.phases.filter(function(p){ return p.cls !== 'kickoff'; })[0];
-      if (firstProd) rowDate = firstProd.start;
-    }
+    if (drives) notes.push('Drives project start date');
+    if (entry.feasibility === 'compressed') notes.push('Tight timeline');
+    if (entry.feasibility === 'infeasible') { var _sf = (entry.kind === 'alternate' ? entry.alt.shortfallBD : entry.result.shortfallBD); notes.push('Very tight — starting today is about ' + _sf + ' business day' + (_sf === 1 ? '' : 's') + ' short; coordinate immediately'); }
     html += '<div class="latest-start-row">';
-    html += '<span class="latest-start-product">' + r.productType.name + tagStr + '</span>';
-    html += '<span class="latest-start-date">We recommend starting no later than ' + fmt(rowDate);
-    if (drives && !isMulti) html += ' <span class="latest-start-note">(drives Project Start Date)</span>';
-    if (drives && isMulti) html += ' <span class="latest-start-note">(longest deliverable — drives shared kickoff)</span>';
-    if (r.feasibility === 'compressed') html += ' <span class="compressed-pill" style="margin-left:6px">Tight</span>';
-    if (r.feasibility === 'infeasible') html += ' <span class="infeasible-pill" style="margin-left:6px">Very tight</span>';
-    html += '</span></div>';
+    html += '<div class="latest-start-row-top">';
+    html += '<span class="latest-start-product">' + entry.displayName + '</span>';
+    html += '<span class="latest-start-date">' + fmt(clampToday(subBDays(entry.start, bufferBD))) + '</span>';
+    html += '</div>';
+    if (notes.length) html += '<div class="latest-start-notes">' + notes.join(' &middot; ') + '</div>';
+    html += '</div>';
   });
   html += '</div>';
   html += '<div class="footer-note">Calendar excludes weekends and observed federal holidays. Within a deliverable, main translation completes before alt translation, and main print/mail before alt print/mail (single-resource). All scheduling parameters are system-controlled.</div>';
@@ -932,21 +1119,31 @@ function buildPrintCover(ctx) {
   var projectName = (ctx.projectName || '').trim();
   var titleText = projectName ? projectName : 'Project Timeline';
   var subtitleText = 'Estimated production schedule and key dates';
-  var deliverableCount = ctx.results.length;
-  var deliverablesHtml = ctx.results.map(function(r){
+  // Phase 36: count of all rendered entries (mains + alternates)
+  var allEntries = [];
+  ctx.results.forEach(function(r){
+    allEntries.push({ kind:'main', result:r, name:r.productType.name, statedDue:r.statedDue, start:r.mainStart, alt:null });
+    (r.alternates || []).forEach(function(ar){
+      allEntries.push({ kind:'alternate', result:r, name:r.productType.name + ' — Alternate ' + ar.altIdx, statedDue:ar.statedDue, start:ar.altDevStart, alt:ar });
+    });
+  });
+  var deliverableCount = allEntries.length;
+  var deliverablesHtml = allEntries.map(function(e){
+    var r = e.result;
+    var isAlt = e.kind === 'alternate';
     var tags = [];
     tags.push(r.instance.newOrRenewal === 'renewal' ? 'Renewal' : 'New');
-    if (r.requiresPrintMail) tags.push('print & mail');
-    if (r.requiresTranslation) tags.push('translation');
-    if (r.hasAlternate) tags.push('alternate');
-    var startDate = r.mainStart;
-    if (ctx.isMulti) {
-      var firstProd = r.phases.filter(function(p){ return p.cls !== 'kickoff'; })[0];
-      if (firstProd) startDate = firstProd.start;
+    if (isAlt) {
+      tags.push('alternate');
+      if (e.alt.requiresPrintMail) tags.push('print & mail');
+      if (e.alt.requiresTranslation) tags.push('translation');
+    } else {
+      if (r.requiresPrintMail) tags.push('print & mail');
+      if (r.requiresTranslation) tags.push('translation');
     }
     return '<li>' +
-      '<div class="print-cover-deliverable-name">' + r.productType.name + '</div>' +
-      '<div class="print-cover-deliverable-meta">' + tags.join(' &middot; ') + ' &middot; In hand by ' + fmt(r.statedDue) + ' &middot; Recommended start ' + fmt(startDate) + '</div>' +
+      '<div class="print-cover-deliverable-name">' + e.name + '</div>' +
+      '<div class="print-cover-deliverable-meta">' + tags.join(' &middot; ') + ' &middot; Project due date ' + fmt(e.statedDue) + ' &middot; Recommended start ' + fmt(subBDays(e.start, (CONFIG.recommended_start_buffer_bd||0))) + '</div>' +
       '</li>';
   }).join('');
   var today = new Date();
@@ -1013,6 +1210,7 @@ function initialize() {
   }
   var nameInput2 = document.getElementById('project-name');
   if (nameInput2) nameInput2.addEventListener('input', saveState);
+  state.deliverables = state.deliverables.map(migrateDeliverable);
   if (state.deliverables.length === 0) state.deliverables.push(newDeliverable());
   renderDeliverables();
 }
