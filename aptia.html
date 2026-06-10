@@ -287,8 +287,10 @@
 </div></div>
 <div class="auth-acctbar">
   <span class="who" id="auth-who"></span>
+  <span class="who" id="auth-current" style="color:#3C3489;font-weight:600;"></span>
   <button type="button" id="auth-projects">My projects</button>
   <button type="button" class="save" id="auth-save">Save</button>
+  <button type="button" id="auth-savenew">Save as new</button>
   <button type="button" id="auth-signout">Sign out</button>
 </div>
 <div id="proj-panel"><div class="proj-card">
@@ -1457,6 +1459,7 @@ if (document.readyState === 'loading') {
   { var _q=new URLSearchParams(location.search); if(_q.get('share')||_q.get('p')) return; } // shared/token view: no auth UI
   var ALLOWED = "flimp.net";
   var emailUsed = "";
+  var currentProjectId = null, currentProjectName = "";
   function db(){ return window.TimelineDB; }
   function client(){ var d=db(); return (d && d.ready()) ? d.client() : null; }
   function $(id){ return document.getElementById(id); }
@@ -1467,6 +1470,7 @@ if (document.readyState === 'loading') {
     document.body.classList.remove("gated");
     document.body.classList.add("authed");
     var who=$("auth-who"); if(who) who.textContent = (user && user.email) ? user.email : "Signed in";
+    updateCurrentLabel();
   }
   function toast(t){
     var el=document.createElement("div"); el.textContent=t;
@@ -1474,6 +1478,8 @@ if (document.readyState === 'loading') {
     document.body.appendChild(el);
     setTimeout(function(){ el.style.transition="opacity .4s"; el.style.opacity="0"; setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 420); }, 2600);
   }
+  function updateCurrentLabel(){ var el=$("auth-current"); if(el) el.textContent = currentProjectId ? ("Editing: "+(currentProjectName||"Untitled")) : "New project"; }
+  function setCurrent(id, name){ currentProjectId = id || null; currentProjectName = name || ""; updateCurrentLabel(); }
   function fmtDate(s){ if(!s) return ""; try{ return new Date(s).toLocaleDateString(); }catch(e){ return s; } }
 
   function renderList(rows){
@@ -1491,7 +1497,7 @@ if (document.readyState === 'loading') {
       var acts=document.createElement("div"); acts.className="acts";
       var open=document.createElement("button"); open.textContent="Open";
       open.addEventListener("click", function(){
-        db().loadProject(r.id).then(function(){ document.body.classList.remove("panel-open"); toast("Opened: "+title); })
+        db().loadProject(r.id).then(function(){ setCurrent(r.id, title); document.body.classList.remove("panel-open"); toast("Opened: "+title); })
           .catch(function(err){ toast("Could not open: "+((err&&err.message)||"")); });
       });
       var del=document.createElement("button"); del.className="del"; del.textContent="Delete";
@@ -1529,6 +1535,11 @@ if (document.readyState === 'loading') {
       if(session && session.user && isFlimp(session.user.email)) showAuthed(session.user); else gate();
     });
 
+    try { var _origReset = (typeof window.resetProject==="function") ? window.resetProject : null;
+      window.resetProject = function(){ setCurrent(null, ""); return _origReset ? _origReset.apply(this, arguments) : undefined; };
+    } catch(e){}
+    updateCurrentLabel();
+
     var sendBtn=$("auth-send");
     if(sendBtn) sendBtn.addEventListener("click", function(){
       var email=$("auth-email").value;
@@ -1563,22 +1574,46 @@ if (document.readyState === 'loading') {
     var outBtn=$("auth-signout");
     if(outBtn) outBtn.addEventListener("click", function(){
       var c2=client(); if(c2) c2.auth.signOut();
+      setCurrent(null, "");
       $("auth-step1").style.display="block"; $("auth-step2").style.display="none";
       var em=$("auth-email"); if(em) em.value=""; msg("", "");
     });
 
+    function doInsert(name, btn){
+      btn.disabled=true;
+      db().saveProject(name).then(function(res){
+        btn.disabled=false;
+        if(res && res.error){ toast("Save failed: "+(res.error.message||"")); return; }
+        if(res && res.data){ setCurrent(res.data.id, name); }
+        toast("Saved to your projects.");
+      }).catch(function(err){ btn.disabled=false; toast("Save failed: "+((err&&err.message)||"")); });
+    }
     var saveBtn=$("auth-save");
     if(saveBtn) saveBtn.addEventListener("click", function(){
       var d=db(); if(!d){ toast("Save unavailable."); return; }
+      if(currentProjectId){
+        saveBtn.disabled=true;
+        var nm=currentProjectName || ((document.getElementById("project-name")||{}).value) || "Untitled project";
+        d.updateProject(currentProjectId, nm).then(function(res){
+          saveBtn.disabled=false;
+          if(res && res.error){ toast("Update failed: "+(res.error.message||"")); return; }
+          currentProjectName=nm; updateCurrentLabel();
+          toast("Updated "+nm+" - same share link.");
+        }).catch(function(err){ saveBtn.disabled=false; toast("Update failed: "+((err&&err.message)||"")); });
+      } else {
+        var defName=((document.getElementById("project-name")||{}).value)||"";
+        var name=window.prompt("Save this timeline to your projects as:", defName || "Untitled project");
+        if(name===null) return;
+        doInsert(name, saveBtn);
+      }
+    });
+    var saveNewBtn=$("auth-savenew");
+    if(saveNewBtn) saveNewBtn.addEventListener("click", function(){
+      var d=db(); if(!d){ toast("Save unavailable."); return; }
       var defName=((document.getElementById("project-name")||{}).value)||"";
-      var name=window.prompt("Save this timeline to your projects as:", defName || "Untitled project");
+      var name=window.prompt("Save as a NEW project named:", defName || "Untitled project");
       if(name===null) return;
-      saveBtn.disabled=true;
-      d.saveProject(name).then(function(res){
-        saveBtn.disabled=false;
-        if(res && res.error){ toast("Save failed: "+(res.error.message||"")); return; }
-        toast("Saved to your projects.");
-      }).catch(function(err){ saveBtn.disabled=false; toast("Save failed: "+((err&&err.message)||"")); });
+      doInsert(name, saveNewBtn);
     });
 
     var projBtn=$("auth-projects");
