@@ -216,9 +216,86 @@
     .sticky-calc { padding:8px 12px; }
     .result-headline-title { font-size:22px; }
   }
+
+  /* Phase 39 M2: editable-view auth gate + dashboard */
+  #auth-gate{ display:none; }
+  body.gated #auth-gate{ display:flex; position:fixed; inset:0; z-index:10000; background:#f7f6fb; align-items:center; justify-content:center; padding:20px; }
+  body.gated > .container{ display:none !important; }
+  body.gated .print-cover, body.gated .print-only-planning{ display:none !important; }
+  .auth-card{ width:100%; max-width:400px; background:#fff; border:1px solid #e3e0f0; border-radius:12px; padding:34px 30px; box-shadow:0 10px 40px rgba(60,52,137,.12); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+  .auth-eyebrow{ font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#3C3489; font-weight:700; margin-bottom:6px; }
+  .auth-card h2{ font-size:20px; margin:0 0 6px; color:#1a1a2e; }
+  .auth-sub{ font-size:13px; color:#555; margin:0 0 18px; line-height:1.5; }
+  .auth-card label{ font-size:12px; font-weight:600; color:#333; display:block; margin-bottom:5px; }
+  .auth-card input{ width:100%; box-sizing:border-box; padding:11px 12px; font-size:15px; border:1px solid #cdc8e0; border-radius:7px; margin-bottom:14px; }
+  .auth-card input:focus{ outline:none; border-color:#3C3489; box-shadow:0 0 0 3px rgba(60,52,137,.12); }
+  .auth-btn{ width:100%; padding:12px; font-size:15px; font-weight:600; color:#fff; background:#3C3489; border:none; border-radius:7px; cursor:pointer; }
+  .auth-btn:disabled{ opacity:.55; cursor:default; }
+  .auth-link{ background:none; border:none; color:#3C3489; font-size:13px; cursor:pointer; padding:0; margin-top:12px; text-decoration:underline; }
+  .auth-msg{ font-size:13px; margin-bottom:12px; padding:9px 11px; border-radius:6px; display:none; }
+  .auth-msg.err{ display:block; background:#fdecea; color:#a3261b; border:1px solid #f3c5bf; }
+  .auth-msg.ok{ display:block; background:#eaf6ec; color:#1d6a2b; border:1px solid #bfe3c6; }
+  #auth-step2{ display:none; }
+  .auth-acctbar{ display:none; }
+  body.authed .auth-acctbar{ display:flex; position:fixed; top:0; right:0; z-index:9000; align-items:center; gap:8px; background:#fff; border:1px solid #e3e0f0; border-top:none; border-right:none; border-radius:0 0 0 10px; padding:7px 12px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:12px; box-shadow:0 4px 14px rgba(0,0,0,.06); }
+  .auth-acctbar .who{ color:#444; max-width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .auth-acctbar button{ font-size:12px; font-weight:600; border:1px solid #cdc8e0; background:#fff; color:#3C3489; border-radius:6px; padding:5px 10px; cursor:pointer; }
+  .auth-acctbar button.save{ background:#3C3489; color:#fff; border-color:#3C3489; }
+  #proj-panel{ display:none; }
+  body.panel-open #proj-panel{ display:flex; position:fixed; inset:0; z-index:10500; background:rgba(26,26,46,.35); align-items:flex-start; justify-content:center; padding-top:60px; }
+  .proj-card{ width:92%; max-width:560px; background:#fff; border-radius:12px; box-shadow:0 12px 44px rgba(0,0,0,.22); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; max-height:74vh; display:flex; flex-direction:column; }
+  .proj-head{ display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border-bottom:1px solid #ece9f6; font-weight:700; color:#1a1a2e; }
+  .proj-list{ overflow:auto; padding:6px 0; }
+  .proj-row{ display:flex; align-items:center; justify-content:space-between; padding:11px 20px; border-bottom:1px solid #f2f0f9; }
+  .proj-row:hover{ background:#faf9fe; }
+  .proj-row .meta{ font-size:13px; color:#222; }
+  .proj-row .meta small{ display:block; color:#888; font-size:11px; margin-top:2px; }
+  .proj-row .acts button{ font-size:12px; font-weight:600; border:1px solid #cdc8e0; background:#fff; color:#3C3489; border-radius:6px; padding:5px 10px; cursor:pointer; margin-left:6px; }
+  .proj-row .acts button.del{ color:#a3261b; border-color:#eccfca; }
+  .proj-empty{ padding:24px 20px; color:#777; font-size:13px; text-align:center; }
+  body.share-view .auth-acctbar, body.share-view #auth-gate, body.share-view #proj-panel{ display:none !important; }
+  @media print{ .auth-acctbar, #auth-gate, #proj-panel{ display:none !important; } }
 </style>
 </head>
 <body>
+
+<script>
+/* Phase 39 M2: synchronous anti-flash gate. Shared (?share=) views are never gated. */
+(function(){ try{
+  var p=new URLSearchParams(location.search);
+  if(p.get('share')) return;
+  var tok=false;
+  for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k && k.indexOf('sb-')===0 && k.indexOf('-auth-token')>0){ tok=true; break; } }
+  if(!tok) document.body.classList.add('gated');
+}catch(e){} })();
+</script>
+<div id="auth-gate"><div class="auth-card">
+  <div class="auth-eyebrow">Flimp Communications</div>
+  <h2>Timeline Scoping Tool</h2>
+  <p class="auth-sub">Sign in with your Flimp email to build and save project timelines. Client share links are view-only and do not require sign-in.</p>
+  <div id="auth-msg" class="auth-msg"></div>
+  <div id="auth-step1">
+    <label for="auth-email">Work email</label>
+    <input id="auth-email" type="email" autocomplete="email" placeholder="you@flimp.net" />
+    <button id="auth-send" class="auth-btn" type="button">Send my code</button>
+  </div>
+  <div id="auth-step2">
+    <label for="auth-code">6-digit code</label>
+    <input id="auth-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter the code from your email" />
+    <button id="auth-verify" class="auth-btn" type="button">Verify and sign in</button>
+    <button id="auth-back" class="auth-link" type="button">Use a different email</button>
+  </div>
+</div></div>
+<div class="auth-acctbar">
+  <span class="who" id="auth-who"></span>
+  <button type="button" id="auth-projects">My projects</button>
+  <button type="button" class="save" id="auth-save">Save</button>
+  <button type="button" id="auth-signout">Sign out</button>
+</div>
+<div id="proj-panel"><div class="proj-card">
+  <div class="proj-head"><span>My saved projects</span><button id="proj-close" class="auth-link">Close</button></div>
+  <div id="proj-list" class="proj-list"></div>
+</div></div>
 <div class="container">
   <h1>Timeline Scoping Tool</h1>
   <div class="about-section">
@@ -1387,5 +1464,146 @@ if (document.readyState === 'loading') {
   console.log("[TimelineDB] ready=" + ready() + " variant=" + VARIANT + " (M1 foundation; UI in M2/M3)");
 })();
 </script>
+
+<!-- Phase 39 M2: auth gate + OTP login + My Projects dashboard -->
+<script>
+(function(){
+  "use strict";
+  if (new URLSearchParams(location.search).get('share')) return; // shared view: no auth UI at all
+  var ALLOWED = "flimp.net";
+  var emailUsed = "";
+  function db(){ return window.TimelineDB; }
+  function client(){ var d=db(); return (d && d.ready()) ? d.client() : null; }
+  function $(id){ return document.getElementById(id); }
+  function msg(t, kind){ var m=$("auth-msg"); if(!m) return; m.textContent = t || ""; m.className = "auth-msg" + (t ? (" " + kind) : ""); }
+  function isFlimp(e){ e=(e||"").trim().toLowerCase(); return e.indexOf("@")>-1 && e.split("@").pop()===ALLOWED; }
+  function gate(){ document.body.classList.add("gated"); document.body.classList.remove("authed"); document.body.classList.remove("panel-open"); }
+  function showAuthed(user){
+    document.body.classList.remove("gated");
+    document.body.classList.add("authed");
+    var who=$("auth-who"); if(who) who.textContent = (user && user.email) ? user.email : "Signed in";
+  }
+  function toast(t){
+    var el=document.createElement("div"); el.textContent=t;
+    el.style.cssText="position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#1a1a2e;color:#fff;padding:11px 18px;border-radius:8px;font-family:-apple-system,sans-serif;font-size:13px;z-index:11000;box-shadow:0 6px 20px rgba(0,0,0,.25);";
+    document.body.appendChild(el);
+    setTimeout(function(){ el.style.transition="opacity .4s"; el.style.opacity="0"; setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 420); }, 2600);
+  }
+  function fmtDate(s){ if(!s) return ""; try{ return new Date(s).toLocaleDateString(); }catch(e){ return s; } }
+
+  function renderList(rows){
+    var box=$("proj-list"); if(!box) return;
+    var d=db(); var mine = (rows||[]).filter(function(r){ return r.variant === (d ? d.VARIANT : r.variant); });
+    if(!mine.length){ box.innerHTML='<div class="proj-empty">No saved projects yet. Build a timeline and click Save.</div>'; return; }
+    box.innerHTML="";
+    mine.forEach(function(r){
+      var row=document.createElement("div"); row.className="proj-row";
+      var meta=document.createElement("div"); meta.className="meta";
+      var title=(r.client_name && r.client_name.trim()) ? r.client_name : "Untitled project";
+      meta.innerHTML = "<span></span><small></small>";
+      meta.firstChild.textContent = title;
+      meta.lastChild.textContent = (r.due_date ? ("Due "+fmtDate(r.due_date)+"  -  ") : "") + "updated " + fmtDate(r.updated_at);
+      var acts=document.createElement("div"); acts.className="acts";
+      var open=document.createElement("button"); open.textContent="Open";
+      open.addEventListener("click", function(){
+        db().loadProject(r.id).then(function(){ document.body.classList.remove("panel-open"); toast("Opened: "+title); })
+          .catch(function(err){ toast("Could not open: "+((err&&err.message)||"")); });
+      });
+      var del=document.createElement("button"); del.className="del"; del.textContent="Delete";
+      del.addEventListener("click", function(){
+        if(!window.confirm('Delete "'+title+'"? This cannot be undone.')) return;
+        db().deleteProject(r.id).then(function(res){
+          if(res && res.error){ toast("Delete failed: "+(res.error.message||"")); return; }
+          loadList();
+        }).catch(function(err){ toast("Delete failed: "+((err&&err.message)||"")); });
+      });
+      acts.appendChild(open); acts.appendChild(del);
+      row.appendChild(meta); row.appendChild(acts); box.appendChild(row);
+    });
+  }
+  function loadList(){
+    var box=$("proj-list"); if(box) box.innerHTML='<div class="proj-empty">Loading...</div>';
+    db().listProjects().then(function(res){
+      if(res && res.error){ if(box) box.innerHTML='<div class="proj-empty">Could not load projects.</div>'; return; }
+      renderList(res ? res.data : []);
+    }).catch(function(){ if(box) box.innerHTML='<div class="proj-empty">Could not load projects.</div>'; });
+  }
+
+  function init(){
+    var c=client();
+    if(!c){ gate(); msg("Sign-in is temporarily unavailable. Please refresh.", "err"); return; }
+
+    c.auth.getSession().then(function(r){
+      var s = r && r.data ? r.data.session : null;
+      if(s && s.user && isFlimp(s.user.email)) showAuthed(s.user); else gate();
+    }).catch(function(){ gate(); });
+
+    c.auth.onAuthStateChange(function(_e, session){
+      if(session && session.user && isFlimp(session.user.email)) showAuthed(session.user); else gate();
+    });
+
+    var sendBtn=$("auth-send");
+    if(sendBtn) sendBtn.addEventListener("click", function(){
+      var email=$("auth-email").value;
+      if(!isFlimp(email)){ msg("Please use your @"+ALLOWED+" email address.", "err"); return; }
+      sendBtn.disabled=true; msg("Sending your code...", "ok");
+      c.auth.signInWithOtp({ email: email.trim().toLowerCase(), options:{ shouldCreateUser:true } }).then(function(res){
+        sendBtn.disabled=false;
+        if(res.error){ msg(res.error.message || "Could not send code.", "err"); return; }
+        emailUsed=email.trim().toLowerCase();
+        $("auth-step1").style.display="none"; $("auth-step2").style.display="block";
+        msg("We emailed a 6-digit code to "+emailUsed+". Enter it below.", "ok");
+        var ci=$("auth-code"); if(ci) ci.focus();
+      }).catch(function(err){ sendBtn.disabled=false; msg((err&&err.message)||"Could not send code.", "err"); });
+    });
+
+    var verifyBtn=$("auth-verify");
+    if(verifyBtn) verifyBtn.addEventListener("click", function(){
+      var token=($("auth-code").value||"").trim();
+      if(token.length<6){ msg("Enter the 6-digit code from your email.", "err"); return; }
+      verifyBtn.disabled=true; msg("Verifying...", "ok");
+      c.auth.verifyOtp({ email: emailUsed, token: token, type: "email" }).then(function(res){
+        verifyBtn.disabled=false;
+        if(res.error){ msg(res.error.message || "That code did not work. Request a new one.", "err"); return; }
+        msg("", ""); // onAuthStateChange reveals the tool
+      }).catch(function(err){ verifyBtn.disabled=false; msg((err&&err.message)||"Verification failed.", "err"); });
+    });
+
+    var backBtn=$("auth-back");
+    if(backBtn) backBtn.addEventListener("click", function(){
+      $("auth-step2").style.display="none"; $("auth-step1").style.display="block"; msg("", ""); emailUsed="";
+    });
+
+    var outBtn=$("auth-signout");
+    if(outBtn) outBtn.addEventListener("click", function(){
+      var c2=client(); if(c2) c2.auth.signOut();
+      $("auth-step1").style.display="block"; $("auth-step2").style.display="none";
+      var em=$("auth-email"); if(em) em.value=""; msg("", "");
+    });
+
+    var saveBtn=$("auth-save");
+    if(saveBtn) saveBtn.addEventListener("click", function(){
+      var d=db(); if(!d){ toast("Save unavailable."); return; }
+      var defName=((document.getElementById("project-name")||{}).value)||"";
+      var name=window.prompt("Save this timeline to your projects as:", defName || "Untitled project");
+      if(name===null) return;
+      saveBtn.disabled=true;
+      d.saveProject(name).then(function(res){
+        saveBtn.disabled=false;
+        if(res && res.error){ toast("Save failed: "+(res.error.message||"")); return; }
+        toast("Saved to your projects.");
+      }).catch(function(err){ saveBtn.disabled=false; toast("Save failed: "+((err&&err.message)||"")); });
+    });
+
+    var projBtn=$("auth-projects");
+    if(projBtn) projBtn.addEventListener("click", function(){ document.body.classList.add("panel-open"); loadList(); });
+    var closeBtn=$("proj-close");
+    if(closeBtn) closeBtn.addEventListener("click", function(){ document.body.classList.remove("panel-open"); });
+  }
+
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init); else init();
+})();
+</script>
+
 </body>
 </html>
