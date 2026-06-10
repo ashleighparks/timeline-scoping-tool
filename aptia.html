@@ -1355,7 +1355,7 @@ if (document.readyState === 'loading') {
   function collectState(){
     var nameEl = document.getElementById("project-name");
     var dueEl = document.getElementById("project-due-date");
-    var dl = (window.state && Array.isArray(window.state.deliverables)) ? window.state.deliverables : [];
+    var dl = (state && Array.isArray(state.deliverables)) ? state.deliverables : [];
     return { n: nameEl ? nameEl.value : "", d: dueEl ? dueEl.value : "", dl: dl };
   }
 
@@ -1366,10 +1366,10 @@ if (document.readyState === 'loading') {
     var dueEl = document.getElementById("project-due-date");
     if (dueEl) dueEl.value = payload.due_date || payload.d || "";
     var dl = payload.deliverables || payload.dl || [];
-    if (window.state) {
-      window.state.deliverables = (typeof migrateDeliverable === "function") ? dl.map(migrateDeliverable) : dl;
+    if (state) {
+      state.deliverables = (typeof migrateDeliverable === "function") ? dl.map(migrateDeliverable) : dl;
       var maxId = 0;
-      window.state.deliverables.forEach(function(d){ if (d && d.instanceId > maxId) maxId = d.instanceId; });
+      state.deliverables.forEach(function(d){ if (d && d.instanceId > maxId) maxId = d.instanceId; });
       if (typeof nextInstanceId !== "undefined") nextInstanceId = maxId + 1;
     }
     if (opts.readOnly) document.body.classList.add("share-view");
