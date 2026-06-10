@@ -277,12 +277,10 @@
   <div id="auth-step1">
     <label for="auth-email">Work email</label>
     <input id="auth-email" type="email" autocomplete="email" placeholder="you@flimp.net" />
-    <button id="auth-send" class="auth-btn" type="button">Send my code</button>
+    <button id="auth-send" class="auth-btn" type="button">Send sign-in link</button>
   </div>
   <div id="auth-step2">
-    <label for="auth-code">6-digit code</label>
-    <input id="auth-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter the code from your email" />
-    <button id="auth-verify" class="auth-btn" type="button">Verify and sign in</button>
+    <p class="auth-sub" style="margin-top:2px">Check your email and click the sign-in link to finish. You can close this tab once you are signed in.</p>
     <button id="auth-back" class="auth-link" type="button">Use a different email</button>
   </div>
 </div></div>
@@ -1532,15 +1530,14 @@ if (document.readyState === 'loading') {
     if(sendBtn) sendBtn.addEventListener("click", function(){
       var email=$("auth-email").value;
       if(!isFlimp(email)){ msg("Please use your @"+ALLOWED+" email address.", "err"); return; }
-      sendBtn.disabled=true; msg("Sending your code...", "ok");
-      c.auth.signInWithOtp({ email: email.trim().toLowerCase(), options:{ shouldCreateUser:true } }).then(function(res){
+      sendBtn.disabled=true; msg("Sending your sign-in link...", "ok");
+      c.auth.signInWithOtp({ email: email.trim().toLowerCase(), options:{ shouldCreateUser:true, emailRedirectTo: location.origin + location.pathname } }).then(function(res){
         sendBtn.disabled=false;
-        if(res.error){ msg(res.error.message || "Could not send code.", "err"); return; }
+        if(res.error){ msg(res.error.message || "Could not send link.", "err"); return; }
         emailUsed=email.trim().toLowerCase();
         $("auth-step1").style.display="none"; $("auth-step2").style.display="block";
-        msg("We emailed a 6-digit code to "+emailUsed+". Enter it below.", "ok");
-        var ci=$("auth-code"); if(ci) ci.focus();
-      }).catch(function(err){ sendBtn.disabled=false; msg((err&&err.message)||"Could not send code.", "err"); });
+        msg("We emailed a sign-in link to "+emailUsed+". Click it to finish signing in.", "ok");
+      }).catch(function(err){ sendBtn.disabled=false; msg((err&&err.message)||"Could not send link.", "err"); });
     });
 
     var verifyBtn=$("auth-verify");
