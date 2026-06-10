@@ -1267,5 +1267,125 @@ if (document.readyState === 'loading') {
   initialize();
 }
 </script>
+
+<!-- Phase 39 M1: Supabase foundation (client + TimelineDB save/load API; no UI yet) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  "use strict";
+  var SUPABASE_URL = "https://wljhfozbtjoxgaeymwjf.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_undlmUFvuObRG30Svjx0Fw_ZKshe7mV";
+  var VARIANT = "generic";        // 'aptia' | 'generic'
+  var ALLOWED_DOMAIN = "flimp.net";
+  var client = null;
+  try {
+    if (window.supabase && typeof window.supabase.createClient === "function") {
+      client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      });
+    } else {
+      console.warn("[TimelineDB] supabase-js not loaded; persistence disabled this load.");
+    }
+  } catch (e) { console.warn("[TimelineDB] init failed:", e); client = null; }
+
+  function ready(){ return !!client; }
+
+  // Reuses the M0 share state shape: { n: name, d: due, dl: deliverables[] }
+  function collectState(){
+    var nameEl = document.getElementById("project-name");
+    var dueEl = document.getElementById("project-due-date");
+    var dl = (window.state && Array.isArray(window.state.deliverables)) ? window.state.deliverables : [];
+    return { n: nameEl ? nameEl.value : "", d: dueEl ? dueEl.value : "", dl: dl };
+  }
+
+  function applyState(payload, opts){
+    opts = opts || {};
+    var nameEl = document.getElementById("project-name");
+    if (nameEl) nameEl.value = payload.client_name || payload.n || "";
+    var dueEl = document.getElementById("project-due-date");
+    if (dueEl) dueEl.value = payload.due_date || payload.d || "";
+    var dl = payload.deliverables || payload.dl || [];
+    if (window.state) {
+      window.state.deliverables = (typeof migrateDeliverable === "function") ? dl.map(migrateDeliverable) : dl;
+      var maxId = 0;
+      window.state.deliverables.forEach(function(d){ if (d && d.instanceId > maxId) maxId = d.instanceId; });
+      if (typeof nextInstanceId !== "undefined") nextInstanceId = maxId + 1;
+    }
+    if (opts.readOnly) document.body.classList.add("share-view");
+    if (typeof buildPrintPlanningNote === "function") buildPrintPlanningNote();
+    if (typeof renderDeliverables === "function") renderDeliverables();
+    if (typeof runCalculation === "function") runCalculation();
+  }
+
+  async function getUser(){
+    if (!client) return null;
+    try { var r = await client.auth.getUser(); return (r && r.data) ? r.data.user : null; }
+    catch (e) { return null; }
+  }
+
+  async function sendMagicLink(email){
+    if (!client) throw new Error("Persistence unavailable.");
+    email = (email || "").trim().toLowerCase();
+    if (email.indexOf("@") === -1 || email.split("@").pop() !== ALLOWED_DOMAIN)
+      throw new Error("Sign-in is restricted to @" + ALLOWED_DOMAIN + " email addresses.");
+    return client.auth.signInWithOtp({ email: email, options: { emailRedirectTo: location.origin + location.pathname } });
+  }
+
+  async function signOut(){ if (client) { try { await client.auth.signOut(); } catch (e) {} } }
+
+  async function saveProject(name){
+    if (!client) throw new Error("Persistence unavailable.");
+    var u = await getUser(); if (!u) throw new Error("Sign in to save projects.");
+    var s = collectState();
+    var row = { owner: u.id, client_name: name || s.n || null, due_date: s.d || null, deliverables: s.dl, variant: VARIANT };
+    return client.from("timeline_projects").insert(row).select().single();
+  }
+
+  async function updateProject(id, name){
+    if (!client) throw new Error("Persistence unavailable.");
+    var u = await getUser(); if (!u) throw new Error("Sign in to save projects.");
+    var s = collectState();
+    var patch = { client_name: name || s.n || null, due_date: s.d || null, deliverables: s.dl, variant: VARIANT };
+    return client.from("timeline_projects").update(patch).eq("id", id).select().single();
+  }
+
+  async function listProjects(){
+    if (!client) throw new Error("Persistence unavailable.");
+    return client.from("timeline_projects")
+      .select("id, client_name, due_date, variant, updated_at")
+      .order("updated_at", { ascending: false });
+  }
+
+  async function loadProject(id){
+    if (!client) throw new Error("Persistence unavailable.");
+    var res = await client.from("timeline_projects").select("*").eq("id", id).single();
+    if (res.error) throw res.error;
+    applyState(res.data, { readOnly: false });
+    return res.data;
+  }
+
+  async function deleteProject(id){
+    if (!client) throw new Error("Persistence unavailable.");
+    return client.from("timeline_projects").delete().eq("id", id);
+  }
+
+  window.TimelineDB = {
+    ready: ready,
+    client: function(){ return client; },
+    collectState: collectState,
+    applyState: applyState,
+    getUser: getUser,
+    sendMagicLink: sendMagicLink,
+    signOut: signOut,
+    saveProject: saveProject,
+    updateProject: updateProject,
+    listProjects: listProjects,
+    loadProject: loadProject,
+    deleteProject: deleteProject,
+    VARIANT: VARIANT
+  };
+  console.log("[TimelineDB] ready=" + ready() + " variant=" + VARIANT + " (M1 foundation; UI in M2/M3)");
+})();
+</script>
 </body>
 </html>
