@@ -264,6 +264,7 @@
 (function(){ try{
   var p=new URLSearchParams(location.search);
   if(p.get('share')) return;
+  if(p.get('p')){ document.body.classList.add('share-view'); return; }
   var tok=false;
   for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k && k.indexOf('sb-')===0 && k.indexOf('-auth-token')>0){ tok=true; break; } }
   if(!tok) document.body.classList.add('gated');
@@ -1427,7 +1428,7 @@ if (document.readyState === 'loading') {
   async function listProjects(){
     if (!client) throw new Error("Persistence unavailable.");
     return client.from("timeline_projects")
-      .select("id, client_name, due_date, variant, updated_at")
+      .select("id, client_name, due_date, variant, updated_at, share_token")
       .order("updated_at", { ascending: false });
   }
 
@@ -1467,7 +1468,7 @@ if (document.readyState === 'loading') {
 <script>
 (function(){
   "use strict";
-  if (new URLSearchParams(location.search).get('share')) return; // shared view: no auth UI at all
+  { var _q=new URLSearchParams(location.search); if(_q.get('share')||_q.get('p')) return; } // shared/token view: no auth UI
   var ALLOWED = "flimp.net";
   var emailUsed = "";
   function db(){ return window.TimelineDB; }
@@ -1515,7 +1516,9 @@ if (document.readyState === 'loading') {
           loadList();
         }).catch(function(err){ toast("Delete failed: "+((err&&err.message)||"")); });
       });
-      acts.appendChild(open); acts.appendChild(del);
+      var lnk=document.createElement("button"); lnk.textContent="Copy link";
+      lnk.addEventListener("click", function(){ var url=location.origin+location.pathname+"?p="+r.share_token; if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(function(){toast("View-only link copied.");},function(){window.prompt("Copy this view-only link:",url);}); } else { window.prompt("Copy this view-only link:",url); } });
+      acts.appendChild(lnk); acts.appendChild(open); acts.appendChild(del);
       row.appendChild(meta); row.appendChild(acts); box.appendChild(row);
     });
   }
@@ -1599,6 +1602,35 @@ if (document.readyState === 'loading') {
   }
 
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init); else init();
+})();
+</script>
+
+
+<!-- Phase 39 M4: backend token share viewer (?p=<token>, read-only, no login) -->
+<script>
+(function(){
+  "use strict";
+  var token = new URLSearchParams(location.search).get('p');
+  if(!token) return;
+  function showErr(t){
+    document.body.classList.add('share-view');
+    var rc=document.getElementById('results-container');
+    if(rc) rc.innerHTML='<div class="warning-box"><div class="warning-title">Could not open shared timeline</div><div class="warning-body">'+t+'</div></div>';
+  }
+  function go(){
+    var d=window.TimelineDB;
+    var c=(d && d.ready()) ? d.client() : null;
+    if(!c){ showErr("This shared link could not be opened right now. Please try again."); return; }
+    c.rpc('get_shared_timeline', { p_token: token }).then(function(res){
+      if(res.error || !res.data || !res.data.length){ showErr("This shared timeline link is invalid or was removed."); return; }
+      var row=res.data[0];
+      if(row.variant && d.VARIANT && row.variant!==d.VARIANT){ showErr("This link was created in a different version of the tool. Ask the sender for an updated link."); return; }
+      d.applyState({ client_name: row.client_name, due_date: row.due_date, deliverables: row.deliverables }, { readOnly:true });
+      var sub=document.getElementById('share-banner-sub');
+      if(sub) sub.textContent=(row.client_name ? row.client_name+' - ' : '')+'Estimated production timeline - view only.';
+    }).catch(function(){ showErr("This shared timeline link could not be opened."); });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
 </script>
 
